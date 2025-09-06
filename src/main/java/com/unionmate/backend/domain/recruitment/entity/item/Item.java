@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.recruitment.entity.item;
 
+import com.unionmate.backend.domain.applicant.entity.Application;
 import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.recruitment.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.entity.Recruitment;
@@ -48,4 +49,7 @@ public abstract class Item extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Recruitment recruitment;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Application application;
 }
