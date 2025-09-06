@@ -31,9 +31,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class School extends BaseEntity {
 
-  @Column(name = "name", nullable = false, unique = true)
+  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "domain", nullable = false, unique = true)
+  @Column(name = "domain", nullable = false)
   private String domain;
 }

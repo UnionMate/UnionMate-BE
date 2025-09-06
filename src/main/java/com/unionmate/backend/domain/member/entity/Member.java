@@ -30,7 +30,7 @@ public class Member extends BaseEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "email", nullable = false, unique = true)
+  @Column(name = "email", nullable = false)
   private String email;
 
   @Column(name = "password")
