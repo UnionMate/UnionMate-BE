@@ -1,5 +1,18 @@
 spring:
-  profiles:
-    active: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/piix_db
+    username: admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+
   jpa:
-    open-in-view: false
+    hibernate:
+      ddl-auto: "update"
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  forward-headers-strategy: FRAMEWORK
+  port: 8090
