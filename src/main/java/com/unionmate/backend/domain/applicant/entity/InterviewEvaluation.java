@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 public class InterviewEvaluation extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "countil_manager_id", nullable = false)
+  @JoinColumn(name = "council_manager_id", nullable = false)
   private CouncilManager councilManager;
 
   @Column(name = "evaluation", nullable = false, length = 1000)
