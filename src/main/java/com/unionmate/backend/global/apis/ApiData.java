@@ -2,8 +2,8 @@ package com.unionmate.backend.global.apis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.unionmate.exception.CommonErrorInfo;
-import com.unionmate.exception.ErrorInfo;
+import com.unionmate.backend.exception.CommonErrorInfo;
+import com.unionmate.backend.exception.ErrorInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

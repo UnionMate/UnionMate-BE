@@ -1,12 +1,12 @@
-package com.unionmate.exception.handler;
+package com.unionmate.backend.exception.handler;
 
 
-import static com.unionmate.exception.handler.ExceptionUtil.isClientAbort;
+import static com.unionmate.backend.exception.handler.ExceptionUtil.isClientAbort;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.unionmate.backend.global.apis.ApiData;
-import com.unionmate.exception.ApplicationException;
-import com.unionmate.exception.CommonErrorInfo;
+import com.unionmate.backend.exception.ApplicationException;
+import com.unionmate.backend.exception.CommonErrorInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.stream.Collectors;

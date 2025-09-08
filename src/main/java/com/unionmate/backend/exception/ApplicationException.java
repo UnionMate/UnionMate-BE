@@ -1,4 +1,4 @@
-package com.unionmate.exception;
+package com.unionmate.backend.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

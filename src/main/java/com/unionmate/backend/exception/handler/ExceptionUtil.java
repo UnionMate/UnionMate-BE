@@ -1,4 +1,4 @@
-package com.unionmate.exception.handler;
+package com.unionmate.backend.exception.handler;
 
 public abstract class ExceptionUtil {
 

@@ -1,4 +1,4 @@
-package com.unionmate.exception;
+package com.unionmate.backend.exception;
 
 public interface ErrorInfo {
 
