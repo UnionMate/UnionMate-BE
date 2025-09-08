@@ -36,7 +36,7 @@ public class ApiData<T> {
 
   private Boolean success;
   private T data;
-  private Integer code;
+  private int code;
   private Object message;
 
   public static <T> ApiData<T> ok(T data) {
@@ -92,7 +92,7 @@ public class ApiData<T> {
     return ApiData.error(errorInfo, httpStatus, MediaType.APPLICATION_JSON);
   }
 
-  public static ApiData<Map<?, ?>> error(ErrorInfo errorInfo, HttpStatus httpStatus,
+  private static ApiData<Map<?, ?>> error(ErrorInfo errorInfo, HttpStatus httpStatus,
       MediaType contentType) {
     return ApiData.<Map<?, ?>>builder()
         .httpStatus(httpStatus)
@@ -108,7 +108,7 @@ public class ApiData<T> {
     return ApiData.validationFailure(fieldErrors, MediaType.APPLICATION_JSON);
   }
 
-  public static ResponseEntity<ApiData<Map<?, ?>>> validationFailure(List<FieldError> fieldErrors,
+  private static ResponseEntity<ApiData<Map<?, ?>>> validationFailure(List<FieldError> fieldErrors,
       MediaType contentType) {
     Map<String, String> errors = new HashMap<>();
     fieldErrors.forEach(

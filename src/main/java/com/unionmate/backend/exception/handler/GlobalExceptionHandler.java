@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
       HttpRequestMethodNotSupportedException e,
       HttpServletRequest request) {
     log.debug(e.getMessage());
-    return ApiData.error(CommonErrorInfo.RESOURCE_NOT_FOUND, HttpStatus.NOT_FOUND);
+    return ApiData.error(CommonErrorInfo.RESOURCE_NOT_FOUND, HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
