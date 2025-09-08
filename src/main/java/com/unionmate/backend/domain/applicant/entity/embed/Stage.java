@@ -28,8 +28,12 @@ public record Stage(
 
   public Stage toNextStage() {
     switch (this.recruitmentStatus) {
-      case DOCUMENT_SCREENING ->  new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.SUBMITTED);
-      case INTERVIEW -> new Stage(RecruitmentStatus.FINAL, EvaluationStatus.SUBMITTED);
+      case DOCUMENT_SCREENING -> {
+        return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.SUBMITTED);
+      }
+      case INTERVIEW -> {
+        return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.SUBMITTED);
+      }
     }
     // TODO: 예외 처리 로직 확정되면 예외 처리
     throw new IllegalStateException();

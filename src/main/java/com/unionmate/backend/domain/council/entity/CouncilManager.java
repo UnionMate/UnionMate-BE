@@ -12,14 +12,24 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "council_managers")
+@Table(
+    name = "council_managers",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_council_member",
+            columnNames = {"member_id", "council_id"}
+        )
+    }
+)
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,18 +37,19 @@ import lombok.experimental.SuperBuilder;
 public class CouncilManager extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "members_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "schools_id")
+  @JoinColumn(name = "school_id", nullable = false)
   private School school;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "council_id")
+  @JoinColumn(name = "council_id", nullable = false)
   private Council council;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private CouncilRole councilRole;
+  @Builder.Default
+  private CouncilRole councilRole = CouncilRole.MEMBER;
 }

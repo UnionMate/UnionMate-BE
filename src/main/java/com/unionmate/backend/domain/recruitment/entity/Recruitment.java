@@ -43,8 +43,10 @@ public class Recruitment extends BaseEntity {
   private Boolean isActive = false;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private RecruitmentStatus recruitmentStatus;
 
   @OneToMany(mappedBy = "recruitment", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private List<Item> items = new ArrayList<>();
 }

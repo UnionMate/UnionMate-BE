@@ -11,7 +11,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +33,5 @@ public class SelectItem extends Item {
   @Convert(converter = AnswerConverter.class)
   @Lob
   // [ { title(제목) : boolean(선택여부) }, ... ] 형태
-  private Answer<List<Map<String, Boolean>>> answer;
+  private Answer<List<Long>> answer;
 }

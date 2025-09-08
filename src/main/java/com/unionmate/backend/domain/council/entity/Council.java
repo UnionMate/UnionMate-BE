@@ -30,6 +30,6 @@ public class Council extends BaseEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "invitation_code", nullable = false)
+  @Column(name = "invitation_code", nullable = false, length = 36)
   private String invitationCode;
 }

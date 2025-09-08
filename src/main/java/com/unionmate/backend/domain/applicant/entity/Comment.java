@@ -5,6 +5,7 @@ import com.unionmate.backend.domain.council.entity.CouncilManager;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -22,11 +23,13 @@ import lombok.experimental.SuperBuilder;
 public class Comment extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "application_id", nullable = false)
   private Application application;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private CouncilManager councilManagers;
+  @JoinColumn(name = "council_manager_id", nullable = false)
+  private CouncilManager councilManager;
 
-  @Column(name = "content")
+  @Column(name = "content", length = 1000, nullable = false)
   private String content;
 }

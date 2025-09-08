@@ -1,12 +1,17 @@
 package com.unionmate.backend.domain.applicant.entity;
 
 import com.unionmate.backend.domain.applicant.entity.embed.Interview;
+import com.unionmate.backend.domain.recruitment.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.entity.item.Item;
 import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.applicant.entity.embed.Stage;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -43,7 +48,11 @@ public class Application extends BaseEntity {
   @Builder.Default
   private Stage stage = Stage.init();
 
-  @OneToMany(mappedBy = "application")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "recruitment_id", nullable = false)
+  private Recruitment recruitment;
+
+  @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<Item> answers = new ArrayList<>();
 }

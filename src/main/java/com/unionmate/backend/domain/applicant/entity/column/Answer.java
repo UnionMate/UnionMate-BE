@@ -7,7 +7,4 @@ public record Answer<T>(
     T answer
 ) {
 
-  public Class<T> getAnswerClass() {
-    return (Class<T>) this.answer.getClass();
-  }
 }
