@@ -1,12 +1,10 @@
 package com.unionmate.backend.exception.handler;
 
 
-import static com.unionmate.backend.exception.handler.ExceptionUtil.isClientAbort;
-
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.unionmate.backend.global.apis.ApiData;
 import com.unionmate.backend.exception.ApplicationException;
 import com.unionmate.backend.exception.CommonErrorInfo;
+import com.unionmate.backend.global.apis.ApiData;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,12 +38,6 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Exception.class)
   public ApiData<Map<?, ?>> handleAnyUnexpectedException(Exception e, HttpServletRequest req) {
-
-    if (isClientAbort(e)) {
-      log.info("Client aborted while writing response: {} {}?{} - {}",
-          req.getMethod(), req.getRequestURI(), req.getQueryString(), e.getMessage());
-      return ApiData.error(CommonErrorInfo.CLIENT_ABORTED, HttpStatus.NO_CONTENT);
-    }
 
     log.error("[Unexpected Error] \"{}\" Occurred", e.getMessage(), e);
     return ApiData.error(CommonErrorInfo.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
