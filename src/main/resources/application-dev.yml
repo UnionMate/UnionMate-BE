@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: unionmate-prod
   datasource:
     url: ${DB_URL}
     username: ${RDS_USER_NAME}
