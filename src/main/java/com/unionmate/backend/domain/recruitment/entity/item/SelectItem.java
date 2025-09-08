@@ -2,7 +2,7 @@ package com.unionmate.backend.domain.recruitment.entity.item;
 
 import com.unionmate.backend.domain.applicant.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.entity.enums.ItemType.DiscriminationValue;
-import com.unionmate.backend.global.converter.AnswerConverter;
+import com.unionmate.backend.global.converter.LongArrayAnswerConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
@@ -30,8 +30,8 @@ public class SelectItem extends Item {
   @Builder.Default
   private List<SelectItemOption> selectItemOptions = new ArrayList<>();
 
-  @Convert(converter = AnswerConverter.class)
+  @Convert(converter = LongArrayAnswerConverter.class)
   @Lob
-  // [ { title(제목) : boolean(선택여부) }, ... ] 형태
+  // 선택된 SelectItemOption의 PK 리스트
   private Answer<List<Long>> answer;
 }

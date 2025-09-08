@@ -9,9 +9,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unionmate.backend.domain.applicant.entity.column.Answer;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.util.List;
 
 @Converter(autoApply = false)
-public class AnswerConverter implements AttributeConverter<Answer<?>, String> {
+public class LongArrayAnswerConverter implements AttributeConverter<Answer<List<Long>>, String> {
 
   private static final ObjectMapper OBJECT_MAPPER =
       JsonMapper.builder()
@@ -19,8 +20,9 @@ public class AnswerConverter implements AttributeConverter<Answer<?>, String> {
           .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
           .build();
 
+
   @Override
-  public String convertToDatabaseColumn(Answer<?> attribute) {
+  public String convertToDatabaseColumn(Answer<List<Long>> attribute) {
     if (attribute == null) {
       return null;
     }
@@ -33,12 +35,12 @@ public class AnswerConverter implements AttributeConverter<Answer<?>, String> {
   }
 
   @Override
-  public Answer<?> convertToEntityAttribute(String dbData) {
+  public Answer<List<Long>> convertToEntityAttribute(String dbData) {
     if (dbData == null || dbData.isEmpty()) {
       return null;
     }
     try {
-      return OBJECT_MAPPER.readValue(dbData, new TypeReference<Answer<?>>() {
+      return OBJECT_MAPPER.readValue(dbData, new TypeReference<>() {
       });
     } catch (Exception e) {
       // TODO: 예외 처리 로직 완성되면 예외 처리

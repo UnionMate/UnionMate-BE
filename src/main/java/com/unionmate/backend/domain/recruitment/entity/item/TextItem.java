@@ -2,7 +2,7 @@ package com.unionmate.backend.domain.recruitment.entity.item;
 
 import com.unionmate.backend.domain.applicant.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.entity.enums.ItemType.DiscriminationValue;
-import com.unionmate.backend.global.converter.AnswerConverter;
+import com.unionmate.backend.global.converter.StringAnswerConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
@@ -25,7 +25,7 @@ public class TextItem extends Item{
   @Column(name = "text", nullable = false, length = 500)
   private String text;
 
-  @Convert(converter = AnswerConverter.class)
+  @Convert(converter = StringAnswerConverter.class)
   @Lob
   private Answer<String> answer;
 }
