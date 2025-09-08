@@ -13,3 +13,5 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+server-uri: ENC(ADvQZvUiEY6KHiaoUlImBAxMCbavYyrtNecYgfkx1ZxVOp4PhWAKrA==)
