@@ -1,0 +1,28 @@
+name: unionmate prod CD 파이프라인
+
+on:
+  workflow_run:
+    workflows: ["unionmate CI pipeline"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+
+    steps:
+      - name: Docker 이미지 dev 서버 배포
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.PROD_HOST}}
+          username: ${{secrets.PROD_USERNAME}}
+          key: ${{secrets.PROD_KEY}}
+          script: |
+            cd /home/ubuntu
+            docker rm -f unionmate-be || true
+            docker compose pull unionmate-be
+            docker compose up -d --no-deps --force-recreate --pull always unionmate-be
+            docker image prune -f
