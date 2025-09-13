@@ -1,8 +1,10 @@
 spring:
+  application:
+    name: unionmate-dev
   datasource:
-    url: ${DB_URL}
-    username: ${RDS_USER_NAME}
-    password: ${RDS_USER_PW}
+    url: ENC(oRO52DvZxINLWMbcjagDrioNN7qY4StaIIdkGcb9Ijle0YjTBT233KnhoFpD0vAefjSagLxkVcFEszXiIhgqAO9CDBIs7DEnvQzEFLVSLfYE3oZ9Q0c9Z4+qt9NMijau)
+    username: ENC(TSk7cZHU52AV+++x9lsqKw==)
+    password: ENC(iLEfoMz6wqCHbf8DAo+7XaUC3sfvxp9i)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
@@ -11,3 +13,5 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+server-uri: ENC(H4s4yDrko9ywgpBMdg8jirml7A5q32cV8VQcuOigdAg=)

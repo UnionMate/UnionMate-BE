@@ -1,20 +1,31 @@
 package com.unionmate.backend.global.config.swagger;
 
+import java.util.List;
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+    @Value("${server-uri}")
+    String serverUri;
+
     private static final String JWT_SCHEME = "jwtAuth";
 
     @Bean
     public OpenAPI openAPI() {
+
+        Server server = new Server();
+        server.setUrl(serverUri);
+
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
                 .addSecurityItem(new SecurityRequirement().addList(JWT_SCHEME))
@@ -28,6 +39,7 @@ public class SwaggerConfig {
                                         .name("Authorization")
                         )
                 )
+                .servers(List.of(server))
                 .info(apiInfo());
     }
 
