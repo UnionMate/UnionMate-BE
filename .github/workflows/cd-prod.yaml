@@ -28,7 +28,7 @@ jobs:
           key: ${{secrets.PROD_KEY}}
           script: |
             cd /home/ubuntu
-            docker rm -f unionmate-be || true
-            docker compose pull unionmate-be
-            docker compose up -d --no-deps --force-recreate --pull always unionmate-be
+            docker rm -f unionmate-prod || true
+            docker compose pull unionmate-prod
+            docker compose up -d --no-deps --force-recreate --pull always unionmate-prod
             docker image prune -f
