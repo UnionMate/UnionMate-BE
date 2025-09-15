@@ -7,7 +7,7 @@ spring:
     password: ENC(ty3a5W2bwzaTvMkDwN0+447T5z60RSzE)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
