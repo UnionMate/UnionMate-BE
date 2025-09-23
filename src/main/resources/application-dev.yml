@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   application:
     name: unionmate-dev
@@ -13,5 +15,15 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://3.34.87.16:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 
 server-uri: ENC(H4s4yDrko9ywgpBMdg8jirml7A5q32cV8VQcuOigdAg=)
