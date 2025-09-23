@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: unionmate-dev
+    name: backend-service
   datasource:
     url: ENC(oRO52DvZxINLWMbcjagDrioNN7qY4StaIIdkGcb9Ijle0YjTBT233KnhoFpD0vAefjSagLxkVcFEszXiIhgqAO9CDBIs7DEnvQzEFLVSLfYE3oZ9Q0c9Z4+qt9NMijau)
     username: ENC(TSk7cZHU52AV+++x9lsqKw==)
