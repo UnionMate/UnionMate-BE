@@ -1,4 +1,8 @@
+server:
+  port: 8080
 spring:
+  application:
+    name: backend-service
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -11,5 +15,14 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server-uri: http://localhost:8080
