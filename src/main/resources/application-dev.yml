@@ -1,6 +1,8 @@
+server:
+  port: 8080
 spring:
   application:
-    name: unionmate-dev
+    name: backend-service
   datasource:
     url: ENC(oRO52DvZxINLWMbcjagDrioNN7qY4StaIIdkGcb9Ijle0YjTBT233KnhoFpD0vAefjSagLxkVcFEszXiIhgqAO9CDBIs7DEnvQzEFLVSLfYE3oZ9Q0c9Z4+qt9NMijau)
     username: ENC(TSk7cZHU52AV+++x9lsqKw==)
@@ -13,5 +15,15 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ENC(2Na13DVcC+KIm2zTPbStHdNqU/S0PMS0IDdKjderWsXYcoCwBMpf9w==)
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 
 server-uri: ENC(H4s4yDrko9ywgpBMdg8jirml7A5q32cV8VQcuOigdAg=)
