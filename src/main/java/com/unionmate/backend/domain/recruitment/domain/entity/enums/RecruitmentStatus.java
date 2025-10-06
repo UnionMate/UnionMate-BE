@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.recruitment.entity.enums;
+package com.unionmate.backend.domain.recruitment.domain.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

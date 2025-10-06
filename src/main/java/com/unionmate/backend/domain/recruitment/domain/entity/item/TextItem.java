@@ -1,14 +1,13 @@
-package com.unionmate.backend.domain.recruitment.entity.item;
+package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
 import com.unionmate.backend.domain.applicant.entity.column.Answer;
-import com.unionmate.backend.domain.recruitment.entity.enums.ItemType.DiscriminationValue;
-import com.unionmate.backend.global.converter.LocalDateAnswerConverter;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
+import com.unionmate.backend.global.converter.StringAnswerConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,13 +19,13 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@DiscriminatorValue(DiscriminationValue.CALENDAR)
-public class CalendarItem extends Item {
+@DiscriminatorValue(DiscriminationValue.TEXT)
+public class TextItem extends Item{
 
-  @Column(name = "date", nullable = false)
-  private LocalDate date;
+  @Column(name = "text", nullable = false, length = 500)
+  private String text;
 
-  @Convert(converter = LocalDateAnswerConverter.class)
+  @Convert(converter = StringAnswerConverter.class)
   @Lob
-  private Answer<LocalDate> answer;
+  private Answer<String> answer;
 }

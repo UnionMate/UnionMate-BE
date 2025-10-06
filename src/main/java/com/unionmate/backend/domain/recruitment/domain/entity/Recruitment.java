@@ -1,8 +1,8 @@
-package com.unionmate.backend.domain.recruitment.entity;
+package com.unionmate.backend.domain.recruitment.domain.entity;
 
 import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.recruitment.entity.item.Item;
-import com.unionmate.backend.domain.recruitment.entity.enums.RecruitmentStatus;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
