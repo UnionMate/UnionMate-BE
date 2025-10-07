@@ -4,6 +4,7 @@ import com.unionmate.backend.domain.applicant.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.LongArrayAnswerConverter;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -29,6 +30,10 @@ public class SelectItem extends Item {
   @OneToMany(mappedBy = "selectItem", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<SelectItemOption> selectItemOptions = new ArrayList<>();
+
+  @Column(name = "multiple", nullable = false)
+  @Builder.Default
+  private boolean multiple = false;
 
   @Convert(converter = LongArrayAnswerConverter.class)
   @Lob
