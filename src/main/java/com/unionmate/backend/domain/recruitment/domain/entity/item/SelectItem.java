@@ -31,7 +31,9 @@ public class SelectItem extends Item {
   @Builder.Default
   private List<SelectItemOption> selectItemOptions = new ArrayList<>();
 
-  @Column(name = "multiple", nullable = false)
+  //Single table 전략인데 하위 타입 전용 컬럼인 multiple를 nullable = false로 해서는 안됩니다.
+  //items 테이블에 모든 하위 컬럼이 있고, SELECT 타입을 insert할 때 값이 없는데도 not null을 요구한다면 오류가 생깁니다.
+  @Column(name = "multiple")
   @Builder.Default
   private boolean multiple = false;
 

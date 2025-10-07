@@ -20,7 +20,7 @@ public class RecruitmentController {
 	private final RecruitmentUseCase recruitmentUseCase;
 
 	@PostMapping("/create")
-	@Operation(summary = "지원서 양식 생성에 성공했습니다.")
+	@Operation(summary = "지원서 양식을 생성합니다.")
 	public CommonResponse<Void> createRecruitment(@Valid @RequestBody CreateRecruitmentRequest request) {
 		recruitmentUseCase.createRecruitment(request);
 
