@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentNotFoundException;
+import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentGetMapper;
 import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentMapper;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentSaveService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class RecruitmentUseCase {
 	private final RecruitmentMapper recruitmentMapper;
 	private final RecruitmentSaveService recruitmentSaveService;
+	private final RecruitmentGetService recruitmentGetService;
+	private final RecruitmentGetMapper recruitmentGetMapper;
 
 	public void createRecruitment(CreateRecruitmentRequest rq) {
 		Recruitment recruitment = recruitmentMapper
@@ -30,5 +36,11 @@ public class RecruitmentUseCase {
 			}
 		}
 		recruitmentSaveService.save(recruitment);
+	}
+
+	public RecruitmentResponse getRecruitmentForm(Long id) {
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
+
+		return recruitmentGetMapper.toRecruitmentResponse(recruitment);
 	}
 }
