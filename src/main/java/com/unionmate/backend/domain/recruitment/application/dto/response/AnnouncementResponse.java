@@ -10,5 +10,5 @@ public record AnnouncementResponse(
 	Integer order,
 	String description,
 	String announcement
-) {
+) implements ItemResponse {
 }

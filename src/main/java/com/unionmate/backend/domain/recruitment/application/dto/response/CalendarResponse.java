@@ -12,5 +12,5 @@ public record CalendarResponse(
 	Integer order,
 	String description,
 	LocalDate date
-) {
+) implements ItemResponse {
 }

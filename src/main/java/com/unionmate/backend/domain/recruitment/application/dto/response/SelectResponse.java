@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.recruitment.application.dto.response;
 
+import java.util.List;
+
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 
 public record SelectResponse(
@@ -11,5 +13,5 @@ public record SelectResponse(
 	String description,
 	boolean multiple,
 	List<SelectOptionResponse> options
-) {
+) implements ItemResponse {
 }

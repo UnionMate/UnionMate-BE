@@ -10,5 +10,5 @@ public record TextResponse(
 	Integer order,
 	String description,
 	String text
-) {
+) implements ItemResponse {
 }
