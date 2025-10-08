@@ -26,4 +26,4 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 
-server-uri: ENC(H4s4yDrko9ywgpBMdg8jirml7A5q32cV8VQcuOigdAg=)
+server-uri: ENC(dJGHLEvJ0SpJney5vRsxYSGZI97+brfpKvDNSgkCfNw=)
