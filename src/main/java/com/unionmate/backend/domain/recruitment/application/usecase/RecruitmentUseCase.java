@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
-import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentNotFoundException;
 import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentGetMapper;
 import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentMapper;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;

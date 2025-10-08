@@ -14,7 +14,6 @@ public interface RecruitmentRepository extends JpaRepository<Recruitment, Long> 
 		select distinct r
 		from Recruitment r
 		  left join fetch r.items i
-		  left join fetch treat(i as SelectItem).selectItemOptions o
 		where r.id = :id
 		""")
 	Optional<Recruitment> findFormById(@Param("id") Long id);
