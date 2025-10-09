@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
-import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentGetMapper;
-import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentMapper;
+import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentResponseMapper;
+import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentRequestMapper;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
@@ -20,19 +20,19 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RecruitmentUseCase {
-	private final RecruitmentMapper recruitmentMapper;
+	private final RecruitmentRequestMapper recruitmentRequestMapper;
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
-	private final RecruitmentGetMapper recruitmentGetMapper;
+	private final RecruitmentResponseMapper recruitmentResponseMapper;
 
 	@Transactional
 	public void createRecruitment(CreateRecruitmentRequest rq) {
-		Recruitment recruitment = recruitmentMapper
+		Recruitment recruitment = recruitmentRequestMapper
 			.toRecruitment(rq.name(), LocalDateTime.now(), rq.endAt(), rq.isActive(), rq.recruitmentStatus());
 
 		if (rq.items() != null) {
 			for (CreateItemRequest ir : rq.items()) {
-				Item item = recruitmentMapper.toItem(recruitment, ir);
+				Item item = recruitmentRequestMapper.toItem(recruitment, ir);
 				recruitment.getItems().add(item);
 			}
 		}
@@ -42,6 +42,6 @@ public class RecruitmentUseCase {
 	public RecruitmentResponse getRecruitmentForm(Long id) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
 
-		return recruitmentGetMapper.toRecruitmentResponse(recruitment);
+		return recruitmentResponseMapper.toRecruitmentResponse(recruitment);
 	}
 }

@@ -21,7 +21,7 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 
 @Component
-public class RecruitmentGetMapper {
+public class RecruitmentResponseMapper {
 	public RecruitmentResponse toRecruitmentResponse(Recruitment recruitment) {
 		List<ItemResponse> items = recruitment.getItems().stream()
 			.map(this::toItemResponse)

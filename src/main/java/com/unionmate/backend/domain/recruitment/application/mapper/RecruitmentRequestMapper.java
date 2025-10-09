@@ -17,7 +17,7 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOpt
 import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 
 @Component
-public class RecruitmentMapper {
+public class RecruitmentRequestMapper {
 	public Recruitment toRecruitment(
 		String name, LocalDateTime startAt, LocalDateTime endAt, Boolean isActive, RecruitmentStatus recruitmentStatus
 	) {
