@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.recruitment.application.usecase;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
@@ -24,6 +25,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 	private final RecruitmentGetMapper recruitmentGetMapper;
 
+	@Transactional
 	public void createRecruitment(CreateRecruitmentRequest rq) {
 		Recruitment recruitment = recruitmentMapper
 			.toRecruitment(rq.name(), LocalDateTime.now(), rq.endAt(), rq.isActive(), rq.recruitmentStatus());
