@@ -7,6 +7,8 @@ public sealed interface ItemResponse permits TextResponse, SelectResponse, Calen
 
 	ItemType type();
 
+	boolean required();
+
 	String title();
 
 	Integer order();
