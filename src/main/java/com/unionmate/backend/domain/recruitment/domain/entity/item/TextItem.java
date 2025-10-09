@@ -27,6 +27,9 @@ public class TextItem extends Item{
   @Column(name = "text", length = 500)
   private String text;
 
+  @Column(name = "text_max_length")
+  private Integer maxLength;
+
   @Convert(converter = StringAnswerConverter.class)
   @Lob
   private Answer<String> answer;

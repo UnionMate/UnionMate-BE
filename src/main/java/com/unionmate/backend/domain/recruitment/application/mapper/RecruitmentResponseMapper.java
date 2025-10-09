@@ -49,7 +49,8 @@ public class RecruitmentResponseMapper {
 				ti.getTitle(),
 				ti.getOrder(),
 				ti.getDescription(),
-				ti.getText()
+				ti.getText(),
+				ti.getMaxLength()
 			);
 		}
 

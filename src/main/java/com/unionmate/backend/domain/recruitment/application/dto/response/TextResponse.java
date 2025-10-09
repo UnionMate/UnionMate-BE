@@ -9,6 +9,7 @@ public record TextResponse(
 	String title,
 	Integer order,
 	String description,
-	String text
+	String text,
+	Integer maxLength
 ) implements ItemResponse {
 }

@@ -26,6 +26,7 @@ public record CreateItemRequest(
 
 	//text용
 	String text,
+	Integer maxLength,
 
 	//calendar용
 	LocalDate date,
