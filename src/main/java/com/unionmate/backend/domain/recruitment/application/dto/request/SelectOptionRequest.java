@@ -4,6 +4,6 @@ public record SelectOptionRequest(
 	String title,
 	Integer order,
 	Boolean isEtc,
-	String ectTitle
+	String etcTitle
 ) {
 }

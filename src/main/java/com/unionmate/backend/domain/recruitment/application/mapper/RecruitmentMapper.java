@@ -45,7 +45,7 @@ public class RecruitmentMapper {
 				if (ir.options() != null) {
 					for (SelectOptionRequest or : ir.options()) {
 						selectItem.getSelectItemOptions().add(
-							toSelectItemOption(or.title(), or.order(), Boolean.TRUE.equals(or.isEtc()), or.ectTitle(), selectItem));
+							toSelectItemOption(or.title(), or.order(), Boolean.TRUE.equals(or.isEtc()), or.etcTitle(), selectItem));
 					}
 				}
 				yield selectItem;
