@@ -11,6 +11,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.response.Recruit
 import com.unionmate.backend.domain.recruitment.application.dto.response.SelectOptionResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.SelectResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.TextResponse;
+import com.unionmate.backend.domain.recruitment.application.exception.ItemTypeNotExistException;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.AnnouncementItem;
@@ -100,6 +101,6 @@ public class RecruitmentGetMapper {
 				announcementItem.getAnnouncement()
 			);
 		}
-		throw new IllegalArgumentException("Invalid item type");
+		throw new ItemTypeNotExistException();
 	}
 }
