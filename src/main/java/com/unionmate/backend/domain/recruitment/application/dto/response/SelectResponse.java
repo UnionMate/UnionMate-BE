@@ -28,6 +28,7 @@ public record SelectResponse(
 	@Schema(description = "단일/복수 선택 여부", example = "true")
 	boolean multiple,
 
+	@Schema(description = "선택지 항목 목록")
 	List<SelectOptionResponse> options
 ) implements ItemResponse {
 }

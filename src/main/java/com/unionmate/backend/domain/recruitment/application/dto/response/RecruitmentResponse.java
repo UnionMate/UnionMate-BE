@@ -26,6 +26,7 @@ public record RecruitmentResponse(
 	@Schema(description = "지원서 진행 상태(DOCUMENT_SCREENING, INTERVIEW, FINAL", example = "FINAL")
 	RecruitmentStatus recruitmentStatus,
 
+	@Schema(description = "지원서에 들어갈 항목들 목록")
 	List<ItemResponse> items
 ) {
 }
