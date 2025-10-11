@@ -37,8 +37,6 @@ public record CreateItemRequest(
 	List<SelectOptionRequest> options,
 
 	//text용
-	String text,
-
 	@Schema(description = "답변 최대 글자 수", example = "700")
 	Integer maxLength,
 

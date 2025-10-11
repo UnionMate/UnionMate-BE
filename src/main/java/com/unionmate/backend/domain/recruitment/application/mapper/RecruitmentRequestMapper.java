@@ -36,7 +36,7 @@ public class RecruitmentRequestMapper {
 
 		return switch (ir.type()) {
 			case TEXT ->
-				toTextItem(recruitment, required, ir.title(), ir.order(), ir.description(), ir.text(), ir.maxLength());
+				toTextItem(recruitment, required, ir.title(), ir.order(), ir.description(), ir.maxLength());
 
 			case SELECT -> {
 				SelectItem selectItem = toSelectItem(
@@ -60,7 +60,7 @@ public class RecruitmentRequestMapper {
 	}
 
 	private TextItem toTextItem(
-		Recruitment recruitment, Boolean required, String title, Integer order, String description, String text, Integer maxLength
+		Recruitment recruitment, Boolean required, String title, Integer order, String description, Integer maxLength
 	) {
 		return TextItem.builder()
 			.recruitment(recruitment)
@@ -68,7 +68,6 @@ public class RecruitmentRequestMapper {
 			.title(title)
 			.order(order)
 			.description(description)
-			.text(text)
 			.maxLength(maxLength)
 			.build();
 	}
