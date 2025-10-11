@@ -13,8 +13,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        default_batch_fetch_size: 100
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 eureka:
   client:
@@ -25,4 +26,4 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-server-uri: http://localhost:8080
+server-uri: http://localhost:8000

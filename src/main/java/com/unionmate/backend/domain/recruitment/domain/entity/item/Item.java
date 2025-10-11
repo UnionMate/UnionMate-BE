@@ -1,9 +1,9 @@
-package com.unionmate.backend.domain.recruitment.entity.item;
+package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
 import com.unionmate.backend.domain.applicant.entity.Application;
 import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.recruitment.entity.enums.ItemType;
-import com.unionmate.backend.domain.recruitment.entity.Recruitment;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;

@@ -1,7 +1,7 @@
-package com.unionmate.backend.domain.recruitment.entity.item;
+package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
 import com.unionmate.backend.domain.applicant.entity.column.Answer;
-import com.unionmate.backend.domain.recruitment.entity.enums.ItemType.DiscriminationValue;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.StringAnswerConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -22,8 +22,8 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue(DiscriminationValue.TEXT)
 public class TextItem extends Item{
 
-  @Column(name = "text", nullable = false, length = 500)
-  private String text;
+  @Column(name = "text_max_length")
+  private Integer maxLength;
 
   @Convert(converter = StringAnswerConverter.class)
   @Lob
