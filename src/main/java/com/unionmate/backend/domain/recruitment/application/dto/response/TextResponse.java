@@ -9,7 +9,7 @@ public record TextResponse(
 	@Schema(description = "단답/장문형 답변 id", example = "5")
 	Long id,
 
-	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT", example = "TEXT")
+	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT)", example = "TEXT")
 	ItemType type,
 
 	@Schema(description = "필수 입력 여부", example = "true")

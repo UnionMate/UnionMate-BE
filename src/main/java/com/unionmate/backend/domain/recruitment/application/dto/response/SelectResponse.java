@@ -10,7 +10,7 @@ public record SelectResponse(
 	@Schema(description = "선택지 id", example = "4")
 	Long id,
 
-	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT", example = "SELECT")
+	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT)", example = "SELECT")
 	ItemType type,
 
 	@Schema(description = "필수 입력 여부", example = "true")

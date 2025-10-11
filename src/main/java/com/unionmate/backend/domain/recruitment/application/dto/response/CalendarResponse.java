@@ -10,7 +10,7 @@ public record CalendarResponse(
 	@Schema(description = "날짜 id", example = "2")
 	Long id,
 
-	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT", example = "CALENDAR")
+	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT)", example = "CALENDAR")
 	ItemType type,
 
 	@Schema(description = "필수 입력 여부", example = "true")

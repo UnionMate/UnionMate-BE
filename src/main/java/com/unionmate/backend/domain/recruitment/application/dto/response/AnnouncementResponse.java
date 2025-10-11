@@ -8,7 +8,7 @@ public record AnnouncementResponse(
 	@Schema(description = "공지 내용 id", example = "1")
 	Long id,
 
-	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT", example = "ANNOUNCEMENT")
+	@Schema(description = "항목 타입 (TEXT, SELECT, CALENDAR, ANNOUNCEMENT)", example = "ANNOUNCEMENT")
 	ItemType type,
 
 	@Schema(description = "필수 입력 여부", example = "false")
