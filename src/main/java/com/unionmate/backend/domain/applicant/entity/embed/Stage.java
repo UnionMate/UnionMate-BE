@@ -1,7 +1,7 @@
 package com.unionmate.backend.domain.applicant.entity.embed;
 
 import com.unionmate.backend.domain.applicant.entity.enums.EvaluationStatus;
-import com.unionmate.backend.domain.recruitment.entity.enums.RecruitmentStatus;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;

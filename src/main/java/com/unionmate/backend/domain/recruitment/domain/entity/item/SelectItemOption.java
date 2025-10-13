@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.recruitment.entity.item;
+package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
 import com.unionmate.backend.global.entity.BaseEntity;
 import jakarta.persistence.Column;
