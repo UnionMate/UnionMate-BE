@@ -41,4 +41,8 @@ public class SelectItem extends Item {
   @Lob
   // 선택된 SelectItemOption의 PK 리스트
   private Answer<List<Long>> answer;
+
+  public void updateAnswer(Answer<List<Long>> answer){
+    this.answer = answer;
+  }
 }

@@ -28,4 +28,8 @@ public class TextItem extends Item{
   @Convert(converter = StringAnswerConverter.class)
   @Lob
   private Answer<String> answer;
+
+  public void updateAnswer(Answer<String> answer){
+	  this.answer = answer;
+  }
 }

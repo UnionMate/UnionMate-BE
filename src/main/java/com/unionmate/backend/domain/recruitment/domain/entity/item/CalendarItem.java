@@ -31,4 +31,8 @@ public class CalendarItem extends Item {
   @Convert(converter = LocalDateAnswerConverter.class)
   @Lob
   private Answer<LocalDate> answer;
+
+  public void updateAnswer(Answer<LocalDate> answer){
+    this.answer = answer;
+  }
 }

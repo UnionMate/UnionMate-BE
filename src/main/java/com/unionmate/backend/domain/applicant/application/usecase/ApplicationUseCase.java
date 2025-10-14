@@ -1,15 +1,30 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unionmate.backend.domain.applicant.application.dto.request.AnswerRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.CalendarAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnswerRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
+import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
+import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationSaveService;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationUseCase {
 	private final ApplicationSaveService applicationSaveService;
 	private final RecruitmentGetService recruitmentGetService;
+	private final ApplicationRequestMapper applicationRequestMapper;
 
 	@Transactional
 	public void submitApplication(Long recruitmentId, CreateApplicantRequest createApplicantRequest) {
@@ -26,5 +42,86 @@ public class ApplicationUseCase {
 
 		Map<Long, Item> templateById = recruitment.getItems()
 			.stream().collect(Collectors.toMap(Item::getId, item -> item));
+
+		Application application = applicationRequestMapper.toApplication(
+			createApplicantRequest.name(), createApplicantRequest.email(), createApplicantRequest.tel(), recruitment
+		);
+
+		Set<Long> answerIds = new HashSet<>();
+		if (createApplicantRequest.answers() != null) {
+			for (AnswerRequest answer : createApplicantRequest.answers()) {
+				Item itemTemplate = templateById.get(answer.itemId());
+
+				switch (itemTemplate.getItemType()) {
+					case TEXT -> {
+						if (!(answer instanceof TextAnswerRequest textAnswerRequest)
+							|| !(itemTemplate instanceof TextItem textItem)) {
+							throw new RuntimeException();
+						}
+
+						String text = textAnswerRequest.text();
+
+						TextItem textAnswer = applicationRequestMapper.toTextItem(
+							application, textItem.getRequired(), textItem.getTitle(), textItem.getOrder(),
+							textItem.getDescription(), textItem.getMaxLength(), textItem.getItemType()
+						);
+
+						writeTextAnswer(textAnswer, text);
+						application.getAnswers().add(textAnswer);
+						answerIds.add(textAnswer.getId());
+					}
+
+					case SELECT -> {
+						if (!(answer instanceof SelectAnswerRequest selectAnswerRequest)
+							|| !(itemTemplate instanceof SelectItem selectItem)) {
+							throw new RuntimeException();
+						}
+
+						List<Long> selection = Optional.ofNullable(selectAnswerRequest.optionIds()).orElse(List.of());
+
+						SelectItem selectAnswer = applicationRequestMapper.toSelectItem(
+							application, selectItem.getRequired(), selectItem.getTitle(), selectItem.getOrder(),
+							selectItem.getDescription(), selectItem.isMultiple(), selectItem.getItemType()
+						);
+
+						writeSelectAnswer(selectAnswer, selection);
+						application.getAnswers().add(selectAnswer);
+						answerIds.add(selectAnswer.getId());
+					}
+
+					case CALENDAR -> {
+						if (!(answer instanceof CalendarAnswerRequest calendarAnswerRequest)
+							|| !(itemTemplate instanceof CalendarItem calendarItem)) {
+							throw new RuntimeException();
+						}
+
+						LocalDate date = calendarAnswerRequest.date();
+
+						CalendarItem calendarAnswer = applicationRequestMapper.toCalendarItem(
+							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
+							calendarItem.getDescription(), calendarItem.getDate(), calendarItem.getItemType()
+						);
+
+						writeCalendarAnswer(calendarAnswer, date);
+						application.getAnswers().add(calendarAnswer);
+						answerIds.add(calendarAnswer.getId());
+					}
+				}
+			}
+		}
+
+		applicationSaveService.save(application);
+	}
+
+	private void writeTextAnswer(TextItem textItem, String value) {
+		textItem.updateAnswer(new Answer<>(value));
+	}
+
+	private void writeSelectAnswer(SelectItem selectItem, List<Long> value) {
+		selectItem.updateAnswer(new Answer<>(value));
+	}
+
+	private void writeCalendarAnswer(CalendarItem calendarItem, LocalDate value) {
+		calendarItem.updateAnswer(new Answer<>(value));
 	}
 }
