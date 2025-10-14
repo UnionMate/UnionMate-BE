@@ -16,6 +16,11 @@ import com.unionmate.backend.domain.applicant.application.dto.request.CalendarAn
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
+import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
+import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
+import com.unionmate.backend.domain.applicant.application.exception.OptionNotInvalidException;
+import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
+import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
 import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
@@ -51,15 +56,25 @@ public class ApplicationUseCase {
 		if (createApplicantRequest.answers() != null) {
 			for (AnswerRequest answer : createApplicantRequest.answers()) {
 				Item itemTemplate = templateById.get(answer.itemId());
+				if (itemTemplate == null) {
+					throw new ItemNotFoundException();
+				}
 
 				switch (itemTemplate.getItemType()) {
 					case TEXT -> {
 						if (!(answer instanceof TextAnswerRequest textAnswerRequest)
 							|| !(itemTemplate instanceof TextItem textItem)) {
-							throw new RuntimeException();
+							throw new ItemTypeMismatchException();
 						}
 
 						String text = textAnswerRequest.text();
+						if (Boolean.TRUE.equals(textItem.getRequired()) && (text == null || text.isBlank())) {
+							throw new RequiredAnswerMissingException();
+						}
+						if (textItem.getMaxLength() != null && text != null
+							&& text.length() > textItem.getMaxLength()) {
+							throw new TextTooLongException();
+						}
 
 						TextItem textAnswer = applicationRequestMapper.toTextItem(
 							application, textItem.getRequired(), textItem.getTitle(), textItem.getOrder(),
@@ -74,10 +89,17 @@ public class ApplicationUseCase {
 					case SELECT -> {
 						if (!(answer instanceof SelectAnswerRequest selectAnswerRequest)
 							|| !(itemTemplate instanceof SelectItem selectItem)) {
-							throw new RuntimeException();
+							throw new ItemTypeMismatchException();
 						}
 
 						List<Long> selection = Optional.ofNullable(selectAnswerRequest.optionIds()).orElse(List.of());
+
+						if (Boolean.TRUE.equals(selectItem.getRequired()) && selection.isEmpty()) {
+							throw new RequiredAnswerMissingException();
+						}
+						if (!selectItem.isMultiple() && selection.size() > 1) {
+							throw new OptionNotInvalidException();
+						}
 
 						SelectItem selectAnswer = applicationRequestMapper.toSelectItem(
 							application, selectItem.getRequired(), selectItem.getTitle(), selectItem.getOrder(),
@@ -92,10 +114,14 @@ public class ApplicationUseCase {
 					case CALENDAR -> {
 						if (!(answer instanceof CalendarAnswerRequest calendarAnswerRequest)
 							|| !(itemTemplate instanceof CalendarItem calendarItem)) {
-							throw new RuntimeException();
+							throw new ItemTypeMismatchException();
 						}
 
 						LocalDate date = calendarAnswerRequest.date();
+
+						if (Boolean.TRUE.equals(calendarItem.getRequired()) && date == null) {
+							throw new RequiredAnswerMissingException();
+						}
 
 						CalendarItem calendarAnswer = applicationRequestMapper.toCalendarItem(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
