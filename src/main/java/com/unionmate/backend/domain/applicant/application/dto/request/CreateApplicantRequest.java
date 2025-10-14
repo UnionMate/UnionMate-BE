@@ -18,7 +18,7 @@ public record CreateApplicantRequest(
 
 	@Schema(description = "지원자 연락처", example = "010123411234")
 	@NotBlank
-	Integer number,
+	String tel,
 
 	@Schema(description = "문항별 답변 목록")
 	@NotNull
