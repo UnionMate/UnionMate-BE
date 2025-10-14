@@ -9,15 +9,19 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateApplicantRequest(
 	@Schema(description = "지원자 이름", example = "김가천")
-	@NotBlank String name,
+	@NotBlank
+	String name,
 
 	@Schema(description = "지원자 이메일", example = "unionmate@unionmate.com")
-	@NotBlank String email,
+	@NotBlank
+	String email,
 
 	@Schema(description = "지원자 연락처", example = "010123411234")
-	@NotBlank Integer number,
+	@NotBlank
+	Integer number,
 
 	@Schema(description = "문항별 답변 목록")
-	@NotNull List<@Valid AnswerRequest> answers
+	@NotNull
+	List<@Valid AnswerRequest> answers
 ) {
 }
