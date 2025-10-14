@@ -12,7 +12,6 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 
 @Component
-
 public class ApplicationRequestMapper {
 	public Application toApplication(
 		String name, String email, String tel, Recruitment recruitment
