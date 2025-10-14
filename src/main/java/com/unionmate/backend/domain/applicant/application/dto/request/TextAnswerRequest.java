@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.applicant.dto.request;
+package com.unionmate.backend.domain.applicant.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

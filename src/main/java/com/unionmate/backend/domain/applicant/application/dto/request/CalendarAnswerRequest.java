@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.applicant.dto.request;
+package com.unionmate.backend.domain.applicant.application.dto.request;
 
 import java.time.LocalDate;
 

@@ -1,10 +1,10 @@
-package com.unionmate.backend.domain.applicant.entity;
+package com.unionmate.backend.domain.applicant.domain.entity;
 
-import com.unionmate.backend.domain.applicant.entity.embed.Interview;
+import com.unionmate.backend.domain.applicant.domain.entity.embed.Interview;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.applicant.entity.embed.Stage;
+import com.unionmate.backend.domain.applicant.domain.entity.embed.Stage;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

@@ -1,6 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
-import com.unionmate.backend.domain.applicant.entity.column.Answer;
+import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.StringAnswerConverter;
 import jakarta.persistence.Column;
