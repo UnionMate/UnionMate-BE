@@ -12,7 +12,7 @@ public enum ErrorCode implements ErrorInfo {
 	ITEM_TYPE_MISMATCH("문항 형식이 일치하지 않습니다.", 2103),
 	REQUIRED_ANSWER_MISSING("필수 문항의 답변이 누락되었습니다.", 2104),
 	TEXT_TOO_LONG("최대 글자 수를 초과했습니다.", 2015),
-	OPTION_NOT_INVALID("유효하지 않은 선택지입니다.", 2106),
+	OPTION_INVALID("유효하지 않은 선택지입니다.", 2106),
 	RECRUITMENT_CLOSED("현재 지원 기간이 아닙니다.", 2107);
 
 	private final String message;
