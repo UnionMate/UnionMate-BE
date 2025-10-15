@@ -145,7 +145,7 @@ public class ApplicationUseCase {
 			.filter(item -> item.getItemType() != ItemType.ANNOUNCEMENT)
 			.filter(item -> Boolean.TRUE.equals(item.getRequired()))
 			.anyMatch(item -> !answerIds.contains(item.getId()));
-		if (!isItemAllWritten) {
+		if (isItemAllWritten) {
 			throw new RequiredAnswerMissingException();
 		}
 
