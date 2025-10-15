@@ -141,11 +141,11 @@ public class ApplicationUseCase {
 			}
 		}
 
-		boolean isItemAllWritten = recruitment.getItems().stream()
+		boolean hasMissingRequiredAnswer = recruitment.getItems().stream()
 			.filter(item -> item.getItemType() != ItemType.ANNOUNCEMENT)
 			.filter(item -> Boolean.TRUE.equals(item.getRequired()))
 			.anyMatch(item -> !answerIds.contains(item.getId()));
-		if (isItemAllWritten) {
+		if (hasMissingRequiredAnswer) {
 			throw new RequiredAnswerMissingException();
 		}
 
