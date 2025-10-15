@@ -1,6 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
-import com.unionmate.backend.domain.applicant.entity.column.Answer;
+import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.LongArrayAnswerConverter;
 import jakarta.persistence.CascadeType;
@@ -41,4 +41,8 @@ public class SelectItem extends Item {
   @Lob
   // 선택된 SelectItemOption의 PK 리스트
   private Answer<List<Long>> answer;
+
+  public void updateAnswer(Answer<List<Long>> answer){
+    this.answer = answer;
+  }
 }

@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.applicant.entity.embed;
+package com.unionmate.backend.domain.applicant.domain.entity.embed;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

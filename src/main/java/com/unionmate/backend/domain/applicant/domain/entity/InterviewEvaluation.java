@@ -1,7 +1,7 @@
-package com.unionmate.backend.domain.applicant.entity;
+package com.unionmate.backend.domain.applicant.domain.entity;
 
-import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.council.entity.CouncilManager;
+import com.unionmate.backend.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,21 +15,21 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "interview_evaluations")
 @Getter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Comment extends BaseEntity {
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "application_id", nullable = false)
-  private Application application;
+public class InterviewEvaluation extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "council_manager_id", nullable = false)
   private CouncilManager councilManager;
 
-  @Column(name = "content", length = 1000, nullable = false)
-  private String content;
+  @Column(name = "evaluation", nullable = false, length = 1000)
+  private String evaluation;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "application_id", nullable = false)
+  private Application application;
 }
