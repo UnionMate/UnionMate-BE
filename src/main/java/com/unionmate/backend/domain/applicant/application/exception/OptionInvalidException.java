@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 
 import com.unionmate.backend.exception.ApplicationException;
 
-public class OptionNotInvalidException extends ApplicationException {
-	public OptionNotInvalidException() {
+public class OptionInvalidException extends ApplicationException {
+	public OptionInvalidException() {
 		super(ErrorCode.OPTION_NOT_INVALID, HttpStatus.BAD_REQUEST);
 	}
 }

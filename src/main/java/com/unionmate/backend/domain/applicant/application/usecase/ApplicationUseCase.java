@@ -19,7 +19,7 @@ import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnsw
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
-import com.unionmate.backend.domain.applicant.application.exception.OptionNotInvalidException;
+import com.unionmate.backend.domain.applicant.application.exception.OptionInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
 import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
@@ -103,7 +103,7 @@ public class ApplicationUseCase {
 							throw new RequiredAnswerMissingException();
 						}
 						if (!selectItem.isMultiple() && selection.size() > 1) {
-							throw new OptionNotInvalidException();
+							throw new OptionInvalidException();
 						}
 
 						SelectItem selectAnswer = applicationRequestMapper.toSelectItem(
