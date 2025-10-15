@@ -22,7 +22,6 @@ import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMism
 import com.unionmate.backend.domain.applicant.application.exception.OptionNotInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
-import com.unionmate.backend.domain.applicant.application.exception.RequiredItemNotAnsweredException;
 import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
 import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
@@ -147,7 +146,7 @@ public class ApplicationUseCase {
 			.filter(item -> Boolean.TRUE.equals(item.getRequired()))
 			.anyMatch(item -> !answerIds.contains(item.getId()));
 		if (!isItemAllWritten) {
-			throw new RequiredItemNotAnsweredException();
+			throw new RequiredAnswerMissingException();
 		}
 
 		applicationSaveService.save(application);
