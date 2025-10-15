@@ -1,6 +1,7 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswer
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
 import com.unionmate.backend.domain.applicant.application.exception.OptionNotInvalidException;
+import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
 import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
 import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
@@ -44,6 +46,8 @@ public class ApplicationUseCase {
 	@Transactional
 	public void submitApplication(Long recruitmentId, CreateApplicantRequest createApplicantRequest) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+
+		validateRecruitmentOpen(recruitment);
 
 		Map<Long, Item> templateById = recruitment.getItems()
 			.stream().collect(Collectors.toMap(Item::getId, item -> item));
@@ -137,6 +141,14 @@ public class ApplicationUseCase {
 		}
 
 		applicationSaveService.save(application);
+	}
+
+	private void validateRecruitmentOpen(Recruitment recruitment) {
+		LocalDateTime now = LocalDateTime.now();
+		if (Boolean.FALSE.equals(recruitment.getIsActive()) || now.isBefore(recruitment.getStartAt())
+			|| now.isAfter(recruitment.getEndAt())) {
+			throw new RecruitmentInvalidException();
+		}
 	}
 
 	private void writeTextAnswer(TextItem textItem, String value) {
