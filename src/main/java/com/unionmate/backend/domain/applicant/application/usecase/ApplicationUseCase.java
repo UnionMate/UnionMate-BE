@@ -22,12 +22,14 @@ import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMism
 import com.unionmate.backend.domain.applicant.application.exception.OptionNotInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
+import com.unionmate.backend.domain.applicant.application.exception.RequiredItemNotAnsweredException;
 import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
 import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationSaveService;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
@@ -138,6 +140,14 @@ public class ApplicationUseCase {
 					}
 				}
 			}
+		}
+
+		boolean isItemAllWritten = recruitment.getItems().stream()
+			.filter(item -> item.getItemType() != ItemType.ANNOUNCEMENT)
+			.filter(item -> Boolean.TRUE.equals(item.getRequired()))
+			.anyMatch(item -> !answerIds.contains(item.getId()));
+		if (!isItemAllWritten) {
+			throw new RequiredItemNotAnsweredException();
 		}
 
 		applicationSaveService.save(application);
