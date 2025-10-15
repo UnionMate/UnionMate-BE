@@ -88,7 +88,7 @@ public class ApplicationUseCase {
 
 						writeTextAnswer(textAnswer, text);
 						application.getAnswers().add(textAnswer);
-						answerIds.add(textAnswer.getId());
+						answerIds.add(textItem.getId());
 					}
 
 					case SELECT -> {
@@ -113,7 +113,7 @@ public class ApplicationUseCase {
 
 						writeSelectAnswer(selectAnswer, selection);
 						application.getAnswers().add(selectAnswer);
-						answerIds.add(selectAnswer.getId());
+						answerIds.add(selectItem.getId());
 					}
 
 					case CALENDAR -> {
@@ -135,7 +135,7 @@ public class ApplicationUseCase {
 
 						writeCalendarAnswer(calendarAnswer, date);
 						application.getAnswers().add(calendarAnswer);
-						answerIds.add(calendarAnswer.getId());
+						answerIds.add(calendarItem.getId());
 					}
 				}
 			}
