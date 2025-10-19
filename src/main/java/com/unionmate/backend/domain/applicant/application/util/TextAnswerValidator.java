@@ -12,6 +12,7 @@ public class TextAnswerValidator implements AnswerValidator<TextItem, TextAnswer
 	@Override
 	public void validate(TextItem textItem, TextAnswerRequest textAnswerRequest) {
 		String text = textAnswerRequest.text();
+
 		if (Boolean.TRUE.equals(textItem.getRequired()) && (text == null || text.isBlank())) {
 			throw new RequiredAnswerMissingException();
 		}
