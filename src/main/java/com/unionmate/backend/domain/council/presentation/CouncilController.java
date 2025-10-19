@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.council.presentation;
 import static com.unionmate.backend.domain.council.presentation.CouncilResponseCode.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -27,5 +28,12 @@ public class CouncilController {
 		CreateCouncilRequest request) {
 		CreateCouncilResponse response = councilManageUsecase.createCouncil(memberId, request);
 		return CommonResponse.success(CREATE_COUNCIL, response);
+	}
+
+	@PostMapping("/invitation/{invitationCode}")
+	public CommonResponse<CreateCouncilResponse> signUpCouncilManager(@RequestHeader long memberId,
+		@PathVariable String invitationCode) {
+		CreateCouncilResponse response = councilManageUsecase.signUpCouncilManager(memberId, invitationCode);
+		return CommonResponse.success(COUNCIL_MANAGER_SIGNUP, response);
 	}
 }

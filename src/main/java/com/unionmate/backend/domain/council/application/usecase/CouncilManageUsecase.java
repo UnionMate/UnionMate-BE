@@ -7,6 +7,7 @@ import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
+import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerSaveService;
@@ -27,6 +28,7 @@ public class CouncilManageUsecase {
 	private final CouncilSaveService councilSaveService;
 	private final CouncilManagerSaveService councilManagerSaveService;
 	private final CouncilManagerGetService councilManagerGetService;
+	private final CouncilGetService councilGetService;
 
 	@Transactional
 	public CreateCouncilResponse createCouncil(long memberId, CreateCouncilRequest dto) {
@@ -41,6 +43,20 @@ public class CouncilManageUsecase {
 		// CouncilManager 생성 (회장)
 		CouncilManager vice = CouncilManager.LinkToVice(member, school, council);
 		councilManagerSaveService.save(vice);
+
+		return new CreateCouncilResponse(council.getId(), council.getName());
+	}
+
+	@Transactional
+	public CreateCouncilResponse signUpCouncilManager(long memberId, String invitationCode) {
+		Member member = memberGetService.getMemberById(memberId);
+		validateCouncilManagerExists(member);
+		Council council = councilGetService.getCouncilById(invitationCode);
+
+		School school = schoolGetService.getSchoolByEmailDomain(member.getEmail());
+
+		CouncilManager manager = CouncilManager.LinkToMember(member, school, council);
+		councilManagerSaveService.save(manager);
 
 		return new CreateCouncilResponse(council.getId(), council.getName());
 	}
