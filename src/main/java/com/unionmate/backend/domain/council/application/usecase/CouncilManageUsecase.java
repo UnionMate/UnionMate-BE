@@ -7,8 +7,10 @@ import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
+import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerSaveService;
+import com.unionmate.backend.domain.council.exception.CouncilManagerAlreadyExistsException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
@@ -24,11 +26,12 @@ public class CouncilManageUsecase {
 	private final SchoolGetService schoolGetService;
 	private final CouncilSaveService councilSaveService;
 	private final CouncilManagerSaveService councilManagerSaveService;
+	private final CouncilManagerGetService councilManagerGetService;
 
 	@Transactional
 	public CreateCouncilResponse createCouncil(long memberId, CreateCouncilRequest dto) {
 		Member member = memberGetService.getMemberById(memberId);
-		//TODO: 이미 생성된 학생회가 있는 경우 예외처리 추가
+		validateCouncilManagerExists(member);
 
 		School school = schoolGetService.getSchoolByEmailDomain(member.getEmail());
 
@@ -40,5 +43,11 @@ public class CouncilManageUsecase {
 		councilManagerSaveService.save(vice);
 
 		return new CreateCouncilResponse(council.getId(), council.getName());
+	}
+
+	public void validateCouncilManagerExists(Member member) {
+		if (councilManagerGetService.existsByMember(member)) {
+			throw new CouncilManagerAlreadyExistsException();
+		}
 	}
 }
