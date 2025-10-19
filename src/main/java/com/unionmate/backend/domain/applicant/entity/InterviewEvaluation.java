@@ -1,6 +1,6 @@
 package com.unionmate.backend.domain.applicant.entity;
 
-import com.unionmate.backend.domain.council.entity.CouncilManager;
+import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
