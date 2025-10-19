@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import com.unionmate.backend.domain.applicant.application.exception.DuplicateSelectException;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -103,6 +105,12 @@ public class ApplicationUseCase {
 							throw new RequiredAnswerMissingException();
 						}
 						if (!selectItem.isMultiple() && selection.size() > 1) {
+							throw new DuplicateSelectException();
+						}
+
+						Set<Long> validOptions = selectItem.getSelectItemOptions().stream()
+							.map(SelectItemOption::getId).collect(Collectors.toSet());
+						if (!validOptions.containsAll(selection)) {
 							throw new OptionInvalidException();
 						}
 
