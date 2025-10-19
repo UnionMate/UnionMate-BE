@@ -67,7 +67,7 @@ public class CouncilManager extends BaseEntity {
         .member(member)
         .school(school)
         .council(council)
-        .councilRole(CouncilRole.MEMBER)
+        .councilRole(CouncilRole.VICE)
         .build();
   }
 }
