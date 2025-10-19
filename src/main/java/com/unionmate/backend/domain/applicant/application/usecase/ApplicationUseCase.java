@@ -1,7 +1,9 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
 import com.unionmate.backend.domain.applicant.application.exception.PluralSelectException;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -65,6 +67,10 @@ public class ApplicationUseCase {
 				Item itemTemplate = templateById.get(answer.itemId());
 				if (itemTemplate == null) {
 					throw new ItemNotFoundException();
+				}
+
+				if (!answerIds.add(answer.itemId())) {
+					throw new DuplicateItemAnswerException();
 				}
 
 				switch (itemTemplate.getItemType()) {
