@@ -52,7 +52,9 @@ public class ApplicationUseCase {
 	public void submitApplication(Long recruitmentId, CreateApplicantRequest createApplicantRequest) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
-		validateRecruitmentOpen(recruitment);
+		if (!recruitment.isOpen(LocalDateTime.now())) {
+			throw new RecruitmentInvalidException();
+		}
 
 		Map<Long, Item> templateById = recruitment.getItems()
 			.stream().collect(Collectors.toMap(Item::getId, item -> item));
@@ -164,14 +166,6 @@ public class ApplicationUseCase {
 		}
 
 		applicationSaveService.save(application);
-	}
-
-	private void validateRecruitmentOpen(Recruitment recruitment) {
-		LocalDateTime now = LocalDateTime.now();
-		if (Boolean.FALSE.equals(recruitment.getIsActive()) || now.isBefore(recruitment.getStartAt())
-			|| now.isAfter(recruitment.getEndAt())) {
-			throw new RecruitmentInvalidException();
-		}
 	}
 
 	private void writeTextAnswer(TextItem textItem, String value) {
