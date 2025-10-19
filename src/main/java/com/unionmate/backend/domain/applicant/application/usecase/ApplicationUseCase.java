@@ -2,6 +2,9 @@ package com.unionmate.backend.domain.applicant.application.usecase;
 
 import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
 import com.unionmate.backend.domain.applicant.application.exception.PluralSelectException;
+import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
+import com.unionmate.backend.domain.applicant.application.util.SelectAnswerValidator;
+import com.unionmate.backend.domain.applicant.application.util.TextAnswerValidator;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 
 import java.time.LocalDate;
@@ -48,6 +51,10 @@ public class ApplicationUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 	private final ApplicationRequestMapper applicationRequestMapper;
 
+	private final TextAnswerValidator textAnswerValidator;
+	private final SelectAnswerValidator selectAnswerValidator;
+	private final CalendarAnswerValidator calendarAnswerValidator;
+
 	@Transactional
 	public void submitApplication(Long recruitmentId, CreateApplicantRequest createApplicantRequest) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
@@ -82,21 +89,14 @@ public class ApplicationUseCase {
 							throw new ItemTypeMismatchException();
 						}
 
-						String text = textAnswerRequest.text();
-						if (Boolean.TRUE.equals(textItem.getRequired()) && (text == null || text.isBlank())) {
-							throw new RequiredAnswerMissingException();
-						}
-						if (textItem.getMaxLength() != null && text != null
-							&& text.length() > textItem.getMaxLength()) {
-							throw new TextTooLongException();
-						}
+						textAnswerValidator.validate(textItem, textAnswerRequest);
 
 						TextItem textAnswer = applicationRequestMapper.toTextItem(
 							application, textItem.getRequired(), textItem.getTitle(), textItem.getOrder(),
 							textItem.getDescription(), textItem.getMaxLength(), textItem.getItemType()
 						);
 
-						writeTextAnswer(textAnswer, text);
+						textAnswer.updateAnswer(new Answer<>(textAnswerRequest.text()));
 						application.getAnswers().add(textAnswer);
 						answerIds.add(textItem.getId());
 					}
@@ -107,27 +107,16 @@ public class ApplicationUseCase {
 							throw new ItemTypeMismatchException();
 						}
 
-						List<Long> selection = Optional.ofNullable(selectAnswerRequest.optionIds()).orElse(List.of());
-
-						if (Boolean.TRUE.equals(selectItem.getRequired()) && selection.isEmpty()) {
-							throw new RequiredAnswerMissingException();
-						}
-						if (!selectItem.isMultiple() && selection.size() > 1) {
-							throw new PluralSelectException();
-						}
-
-						Set<Long> validOptions = selectItem.getSelectItemOptions().stream()
-							.map(SelectItemOption::getId).collect(Collectors.toSet());
-						if (!validOptions.containsAll(selection)) {
-							throw new OptionInvalidException();
-						}
+						selectAnswerValidator.validate(selectItem, selectAnswerRequest);
 
 						SelectItem selectAnswer = applicationRequestMapper.toSelectItem(
 							application, selectItem.getRequired(), selectItem.getTitle(), selectItem.getOrder(),
 							selectItem.getDescription(), selectItem.isMultiple(), selectItem.getItemType()
 						);
 
-						writeSelectAnswer(selectAnswer, selection);
+						List<Long> selection = Optional.ofNullable(selectAnswerRequest.optionIds()).orElse(List.of());
+
+						selectAnswer.updateAnswer(new Answer<>(selection));
 						application.getAnswers().add(selectAnswer);
 						answerIds.add(selectItem.getId());
 					}
@@ -138,18 +127,14 @@ public class ApplicationUseCase {
 							throw new ItemTypeMismatchException();
 						}
 
-						LocalDate date = calendarAnswerRequest.date();
-
-						if (Boolean.TRUE.equals(calendarItem.getRequired()) && date == null) {
-							throw new RequiredAnswerMissingException();
-						}
+						calendarAnswerValidator.validate(calendarItem, calendarAnswerRequest);
 
 						CalendarItem calendarAnswer = applicationRequestMapper.toCalendarItem(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
 							calendarItem.getDescription(), calendarItem.getDate(), calendarItem.getItemType()
 						);
 
-						writeCalendarAnswer(calendarAnswer, date);
+						calendarAnswer.updateAnswer(new Answer<>(calendarAnswerRequest.date()));
 						application.getAnswers().add(calendarAnswer);
 						answerIds.add(calendarItem.getId());
 					}
@@ -166,17 +151,5 @@ public class ApplicationUseCase {
 		}
 
 		applicationSaveService.save(application);
-	}
-
-	private void writeTextAnswer(TextItem textItem, String value) {
-		textItem.updateAnswer(new Answer<>(value));
-	}
-
-	private void writeSelectAnswer(SelectItem selectItem, List<Long> value) {
-		selectItem.updateAnswer(new Answer<>(value));
-	}
-
-	private void writeCalendarAnswer(CalendarItem calendarItem, LocalDate value) {
-		calendarItem.updateAnswer(new Answer<>(value));
 	}
 }
