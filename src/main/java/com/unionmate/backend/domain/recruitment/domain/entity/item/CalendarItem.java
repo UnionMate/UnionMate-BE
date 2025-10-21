@@ -1,6 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
-import com.unionmate.backend.domain.applicant.entity.column.Answer;
+import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.LocalDateAnswerConverter;
 import jakarta.persistence.Column;
@@ -31,4 +31,8 @@ public class CalendarItem extends Item {
   @Convert(converter = LocalDateAnswerConverter.class)
   @Lob
   private Answer<LocalDate> answer;
+
+  public void updateAnswer(Answer<LocalDate> answer){
+    this.answer = answer;
+  }
 }

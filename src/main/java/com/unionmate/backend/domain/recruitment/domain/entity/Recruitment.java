@@ -49,4 +49,10 @@ public class Recruitment extends BaseEntity {
   @OneToMany(mappedBy = "recruitment", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<Item> items = new ArrayList<>();
+
+  public boolean isOpen(LocalDateTime now) {
+    return Boolean.TRUE.equals(isActive)
+        && !now.isBefore(startAt)
+        && !now.isAfter(endAt);
+  }
 }
