@@ -1,9 +1,9 @@
-package com.unionmate.backend.domain.council.entity;
+package com.unionmate.backend.domain.council.domain.entity;
 
-import com.unionmate.backend.domain.member.entity.Member;
-import com.unionmate.backend.domain.member.entity.School;
+import com.unionmate.backend.domain.member.domain.entity.Member;
+import com.unionmate.backend.domain.member.domain.entity.School;
 import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.council.entity.enums.CouncilRole;
+import com.unionmate.backend.domain.council.domain.entity.enums.CouncilRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -52,4 +52,22 @@ public class CouncilManager extends BaseEntity {
   @Column(nullable = false)
   @Builder.Default
   private CouncilRole councilRole = CouncilRole.MEMBER;
+
+  public static CouncilManager LinkToMember(Member member, School school, Council council) {
+    return CouncilManager.builder()
+        .member(member)
+        .school(school)
+        .council(council)
+        .councilRole(CouncilRole.MEMBER)
+        .build();
+  }
+
+  public static CouncilManager LinkToVice(Member member, School school, Council council) {
+    return CouncilManager.builder()
+        .member(member)
+        .school(school)
+        .council(council)
+        .councilRole(CouncilRole.VICE)
+        .build();
+  }
 }

@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.member.entity;
+package com.unionmate.backend.domain.member.domain.entity;
 
 import com.unionmate.backend.global.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -13,15 +13,11 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(
-    name = "schools",
+    name = "members",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_school_name",
-            columnNames = {"name"}
-        ),
-        @UniqueConstraint(
-            name = "uk_school_domain",
-            columnNames = {"domain"}
+            name = "uk_member_email",
+            columnNames = {"email"}
         )
     }
 )
@@ -29,11 +25,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class School extends BaseEntity {
+public class Member extends BaseEntity {
 
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "domain", nullable = false)
-  private String domain;
+  @Column(name = "email", nullable = false)
+  private String email;
+
+  @Column(name = "password")
+  private String password;
 }
