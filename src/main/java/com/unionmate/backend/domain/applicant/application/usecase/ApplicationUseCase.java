@@ -1,13 +1,10 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
 import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
-import com.unionmate.backend.domain.applicant.application.exception.PluralSelectException;
 import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
 import com.unionmate.backend.domain.applicant.application.util.SelectAnswerValidator;
 import com.unionmate.backend.domain.applicant.application.util.TextAnswerValidator;
-import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -26,10 +23,8 @@ import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnsw
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
-import com.unionmate.backend.domain.applicant.application.exception.OptionInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
-import com.unionmate.backend.domain.applicant.application.exception.TextTooLongException;
 import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
