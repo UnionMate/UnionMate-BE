@@ -1,4 +1,4 @@
-package com.unionmate.backend.domain.applicant.entity;
+package com.unionmate.backend.domain.applicant.domain.entity;
 
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.global.entity.BaseEntity;

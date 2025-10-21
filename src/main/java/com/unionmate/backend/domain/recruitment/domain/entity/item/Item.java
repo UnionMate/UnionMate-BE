@@ -1,6 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.entity.item;
 
-import com.unionmate.backend.domain.applicant.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
