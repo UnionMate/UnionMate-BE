@@ -1,9 +1,12 @@
 package com.unionmate.backend.domain.council.domain.entity;
 
+import com.unionmate.backend.domain.council.domain.entity.enums.CouncilRole;
+import com.unionmate.backend.domain.council.exception.DifferentCouncilException;
+import com.unionmate.backend.domain.council.exception.NotCouncilViceException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
 import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.council.domain.entity.enums.CouncilRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,13 +25,13 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(
-    name = "council_managers",
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_council_member",
-            columnNames = {"member_id", "council_id"}
-        )
-    }
+	name = "council_managers",
+	uniqueConstraints = {
+		@UniqueConstraint(
+			name = "uk_council_member",
+			columnNames = {"member_id", "council_id"}
+		)
+	}
 )
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -36,38 +39,58 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CouncilManager extends BaseEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id", nullable = false)
-  private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", nullable = false)
+	private Member member;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "school_id", nullable = false)
-  private School school;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "school_id", nullable = false)
+	private School school;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "council_id", nullable = false)
-  private Council council;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "council_id", nullable = false)
+	private Council council;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  @Builder.Default
-  private CouncilRole councilRole = CouncilRole.MEMBER;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	@Builder.Default
+	private CouncilRole councilRole = CouncilRole.MEMBER;
 
-  public static CouncilManager LinkToMember(Member member, School school, Council council) {
-    return CouncilManager.builder()
-        .member(member)
-        .school(school)
-        .council(council)
-        .councilRole(CouncilRole.MEMBER)
-        .build();
-  }
+	public static CouncilManager LinkToMember(Member member, School school, Council council) {
+		return CouncilManager.builder()
+			.member(member)
+			.school(school)
+			.council(council)
+			.councilRole(CouncilRole.MEMBER)
+			.build();
+	}
 
-  public static CouncilManager LinkToVice(Member member, School school, Council council) {
-    return CouncilManager.builder()
-        .member(member)
-        .school(school)
-        .council(council)
-        .councilRole(CouncilRole.VICE)
-        .build();
-  }
+	public static CouncilManager LinkToVice(Member member, School school, Council council) {
+		return CouncilManager.builder()
+			.member(member)
+			.school(school)
+			.council(council)
+			.councilRole(CouncilRole.VICE)
+			.build();
+	}
+
+	public void validateIsVice() {
+		if (this.councilRole != CouncilRole.VICE) {
+			throw new NotCouncilViceException();
+		}
+	}
+
+	public void validateSameCouncil(CouncilManager other) {
+		if (!this.council.getId().equals(other.getCouncil().getId())) {
+			throw new DifferentCouncilException();
+		}
+	}
+
+	public void delegateToMember() {
+		this.councilRole = CouncilRole.MEMBER;
+	}
+
+	public void promoteToVice() {
+		this.councilRole = CouncilRole.VICE;
+	}
 }
