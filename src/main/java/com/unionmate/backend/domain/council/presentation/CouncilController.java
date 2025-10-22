@@ -19,6 +19,8 @@ import com.unionmate.backend.domain.council.application.dto.CreateCouncilRespons
 import com.unionmate.backend.domain.council.application.dto.DelegateViceRequest;
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
+import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeResponse;
 import com.unionmate.backend.domain.council.application.usecase.CouncilManageUsecase;
 import com.unionmate.backend.domain.council.application.usecase.CouncilMemberManageUsecase;
 import com.unionmate.backend.global.response.CommonResponse;
@@ -61,12 +63,22 @@ public class CouncilController {
 	}
 
 	@PatchMapping("/{councilId}/names")
-	public CommonResponse<UpdateCouncilNameResponse> getAllCouncilMembers(
+	public CommonResponse<UpdateCouncilNameResponse> updateCouncilName(
 		@RequestHeader long memberId,
 		@PathVariable long councilId,
 		@RequestBody UpdateCouncilNameRequest request
 	) {
 		UpdateCouncilNameResponse response = councilManageUsecase.updateCouncilName(memberId, councilId, request);
 		return CommonResponse.success(UPDATE_COUNCIL_NAME, response);
+	}
+
+	@PatchMapping("/{councilId}/invitation-codes")
+	public CommonResponse<UpdateInvitationCodeResponse> updateInvitationCode(
+		@RequestHeader long memberId,
+		@PathVariable long councilId,
+		@RequestBody UpdateInvitationCodeRequest request
+	) {
+		UpdateInvitationCodeResponse response = councilManageUsecase.updateInvitationCode(memberId, councilId, request);
+		return CommonResponse.success(UPDATE_INVITATION_CODE, response);
 	}
 }
