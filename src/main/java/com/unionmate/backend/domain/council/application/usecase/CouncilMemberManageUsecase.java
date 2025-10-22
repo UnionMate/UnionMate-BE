@@ -30,7 +30,7 @@ public class CouncilMemberManageUsecase {
 
 		CouncilManager newManager = councilManagerGetService.getCouncilManager(newPresidentId);
 
-		currentManager.validateIsVice();
+		currentManager.isVice();
 		currentManager.validateSameCouncil(newManager);
 
 		currentManager.delegateToMember();

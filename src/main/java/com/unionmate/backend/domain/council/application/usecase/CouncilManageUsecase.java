@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
@@ -59,6 +61,18 @@ public class CouncilManageUsecase {
 		councilManagerSaveService.save(manager);
 
 		return CreateCouncilResponse.from(council);
+	}
+
+	@Transactional
+	public UpdateCouncilNameResponse updateCouncilName(long memberId, long councilId,
+		UpdateCouncilNameRequest request) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.isViceOfCouncil(council);
+
+		council.updateName(request.name());
+
+		return UpdateCouncilNameResponse.from(council);
 	}
 
 	private void validateCouncilManagerExists(Member member) {
