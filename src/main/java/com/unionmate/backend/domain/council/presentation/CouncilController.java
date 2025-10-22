@@ -17,6 +17,8 @@ import com.unionmate.backend.domain.council.application.dto.CouncilMemberRespons
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.application.dto.DelegateViceRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
 import com.unionmate.backend.domain.council.application.usecase.CouncilManageUsecase;
 import com.unionmate.backend.domain.council.application.usecase.CouncilMemberManageUsecase;
 import com.unionmate.backend.global.response.CommonResponse;
@@ -56,5 +58,15 @@ public class CouncilController {
 		@PathVariable long councilId) {
 		List<CouncilMemberResponse> response = councilMemberManageUsecase.getAllCouncilMembers(councilId);
 		return CommonResponse.success(GET_ALL_COUNCIL_MEMBERS, response);
+	}
+
+	@PatchMapping("/{councilId}/names")
+	public CommonResponse<UpdateCouncilNameResponse> getAllCouncilMembers(
+		@RequestHeader long memberId,
+		@PathVariable long councilId,
+		@RequestBody UpdateCouncilNameRequest request
+	) {
+		UpdateCouncilNameResponse response = councilManageUsecase.updateCouncilName(memberId, councilId, request);
+		return CommonResponse.success(UPDATE_COUNCIL_NAME, response);
 	}
 }
