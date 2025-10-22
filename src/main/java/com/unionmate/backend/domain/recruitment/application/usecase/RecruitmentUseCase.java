@@ -30,13 +30,14 @@ public class RecruitmentUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 
 	@Transactional
-	public void createRecruitment(CreateRecruitmentRequest rq) {
-		Recruitment recruitment = Recruitment.createRecruitment(rq.name(), LocalDateTime.now(), rq.endAt(),
-			rq.isActive(), rq.recruitmentStatus());
+	public void createRecruitment(CreateRecruitmentRequest createRecruitmentRequest) {
+		Recruitment recruitment = Recruitment.createRecruitment(createRecruitmentRequest.name(), LocalDateTime.now(),
+			createRecruitmentRequest.endAt(), createRecruitmentRequest.isActive(),
+			createRecruitmentRequest.recruitmentStatus());
 
-		if (rq.items() != null) {
-			for (CreateItemRequest ir : rq.items()) {
-				Item item = createItem(recruitment, ir);
+		if (createRecruitmentRequest.items() != null) {
+			for (CreateItemRequest createItemRequest : createRecruitmentRequest.items()) {
+				Item item = createItem(recruitment, createItemRequest);
 				recruitment.getItems().add(item);
 			}
 		}
