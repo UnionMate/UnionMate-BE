@@ -43,4 +43,12 @@ public class Council extends BaseEntity {
 			.invitationCode(invitationCode)
 			.build();
 	}
+
+	public void updateName(String name) {
+		this.name = name;
+	}
+
+	public void updateInvitationCode(String invitationCode) {
+		this.invitationCode = invitationCode;
+	}
 }

@@ -74,7 +74,13 @@ public class CouncilManager extends BaseEntity {
 			.build();
 	}
 
-	public void validateIsVice() {
+	public void isViceOfCouncil(Council council) {
+		if (this.councilRole != CouncilRole.VICE && this.council == council) {
+			throw new NotCouncilViceException();
+		}
+	}
+
+	public void isVice() {
 		if (this.councilRole != CouncilRole.VICE) {
 			throw new NotCouncilViceException();
 		}
