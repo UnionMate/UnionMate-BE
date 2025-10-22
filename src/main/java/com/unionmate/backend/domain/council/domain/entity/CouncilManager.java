@@ -56,7 +56,7 @@ public class CouncilManager extends BaseEntity {
 	@Builder.Default
 	private CouncilRole councilRole = CouncilRole.MEMBER;
 
-	public static CouncilManager LinkToMember(Member member, School school, Council council) {
+	public static CouncilManager createMember(Member member, School school, Council council) {
 		return CouncilManager.builder()
 			.member(member)
 			.school(school)
@@ -65,7 +65,7 @@ public class CouncilManager extends BaseEntity {
 			.build();
 	}
 
-	public static CouncilManager LinkToVice(Member member, School school, Council council) {
+	public static CouncilManager createVice(Member member, School school, Council council) {
 		return CouncilManager.builder()
 			.member(member)
 			.school(school)
