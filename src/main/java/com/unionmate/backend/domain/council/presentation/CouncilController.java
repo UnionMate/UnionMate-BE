@@ -2,6 +2,9 @@ package com.unionmate.backend.domain.council.presentation;
 
 import static com.unionmate.backend.domain.council.presentation.CouncilResponseCode.*;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unionmate.backend.domain.council.application.dto.CouncilMemberResponse;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.application.dto.DelegateViceRequest;
@@ -45,5 +49,12 @@ public class CouncilController {
 		@RequestBody DelegateViceRequest request) {
 		councilMemberManageUsecase.delegateVice(memberId, request.newPresidentId());
 		return CommonResponse.success(DELEGATE_VICE);
+	}
+
+	@GetMapping("/{councilId}/members")
+	public CommonResponse<List<CouncilMemberResponse>> getAllCouncilMembers(
+		@PathVariable long councilId) {
+		List<CouncilMemberResponse> response = councilMemberManageUsecase.getAllCouncilMembers(councilId);
+		return CommonResponse.success(GET_ALL_COUNCIL_MEMBERS, response);
 	}
 }
