@@ -44,8 +44,7 @@ public class CouncilManageUsecase {
 		CouncilManager vice = CouncilManager.createVice(member, school, council);
 		councilManagerSaveService.save(vice);
 
-		//TODO: 정적 팩토리 메서드로 바꾸기
-		return new CreateCouncilResponse(council.getId(), council.getName());
+		return CreateCouncilResponse.from(council);
 	}
 
 	@Transactional
@@ -59,7 +58,7 @@ public class CouncilManageUsecase {
 		CouncilManager manager = CouncilManager.createMember(member, school, council);
 		councilManagerSaveService.save(manager);
 
-		return new CreateCouncilResponse(council.getId(), council.getName());
+		return CreateCouncilResponse.from(council);
 	}
 
 	public void validateCouncilManagerExists(Member member) {
