@@ -54,6 +54,7 @@ public class CouncilMemberManageUsecase {
 		CouncilManager targetManager = councilManagerGetService.getCouncilManager(councilManagerId);
 
 		requester.validateSameCouncil(targetManager);
+		targetManager.validateNotVice();
 
 		councilManagerDeleteService.delete(targetManager);
 	}
