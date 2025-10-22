@@ -9,6 +9,7 @@ import com.unionmate.backend.domain.council.application.dto.CouncilMemberRespons
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
+import com.unionmate.backend.domain.council.domain.service.CouncilManagerDeleteService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class CouncilMemberManageUsecase {
 	private final MemberGetService memberGetService;
 	private final CouncilManagerGetService councilManagerGetService;
+	private final CouncilManagerDeleteService councilManagerDeleteService;
 	private final CouncilGetService councilGetService;
 
 	@Transactional
@@ -44,5 +46,15 @@ public class CouncilMemberManageUsecase {
 			.stream()
 			.map(CouncilMemberResponse::from)
 			.toList();
+	}
+
+	@Transactional
+	public void removeCouncilMember(long memberId, long councilManagerId) {
+		CouncilManager requester = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		CouncilManager targetManager = councilManagerGetService.getCouncilManager(councilManagerId);
+
+		requester.validateSameCouncil(targetManager);
+
+		councilManagerDeleteService.delete(targetManager);
 	}
 }
