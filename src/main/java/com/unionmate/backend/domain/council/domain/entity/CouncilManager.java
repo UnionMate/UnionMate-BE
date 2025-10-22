@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.council.domain.entity;
 import com.unionmate.backend.domain.council.domain.entity.enums.CouncilRole;
 import com.unionmate.backend.domain.council.exception.DifferentCouncilException;
 import com.unionmate.backend.domain.council.exception.NotCouncilViceException;
+import com.unionmate.backend.domain.council.exception.ViceCannotLeaveException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
 import com.unionmate.backend.global.entity.BaseEntity;
@@ -98,5 +99,11 @@ public class CouncilManager extends BaseEntity {
 
 	public void promoteToVice() {
 		this.councilRole = CouncilRole.VICE;
+	}
+
+	public void validateNotVice() {
+		if (this.councilRole == CouncilRole.VICE) {
+			throw new ViceCannotLeaveException();
+		}
 	}
 }
