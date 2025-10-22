@@ -61,7 +61,7 @@ public class CouncilManageUsecase {
 		return CreateCouncilResponse.from(council);
 	}
 
-	public void validateCouncilManagerExists(Member member) {
+	private void validateCouncilManagerExists(Member member) {
 		if (councilManagerGetService.existsByMember(member)) {
 			throw new CouncilManagerAlreadyExistsException();
 		}
