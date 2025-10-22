@@ -4,6 +4,7 @@ import static com.unionmate.backend.domain.council.presentation.CouncilResponseC
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,5 +81,14 @@ public class CouncilController {
 	) {
 		UpdateInvitationCodeResponse response = councilManageUsecase.updateInvitationCode(memberId, councilId, request);
 		return CommonResponse.success(UPDATE_INVITATION_CODE, response);
+	}
+
+	@DeleteMapping("/members/{councilManagerId}")
+	public CommonResponse<Void> removeCouncilMember(
+		@RequestHeader long memberId,
+		@PathVariable long councilManagerId
+	) {
+		councilMemberManageUsecase.removeCouncilMember(memberId, councilManagerId);
+		return CommonResponse.success(REMOVE_COUNCIL_MEMBER);
 	}
 }
