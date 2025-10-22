@@ -25,7 +25,6 @@ import com.unionmate.backend.domain.applicant.application.exception.ItemNotFound
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
-import com.unionmate.backend.domain.applicant.application.mapper.ApplicationRequestMapper;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationSaveService;
@@ -44,8 +43,6 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationUseCase {
 	private final ApplicationSaveService applicationSaveService;
 	private final RecruitmentGetService recruitmentGetService;
-	private final ApplicationRequestMapper applicationRequestMapper;
-
 	private final TextAnswerValidator textAnswerValidator;
 	private final SelectAnswerValidator selectAnswerValidator;
 	private final CalendarAnswerValidator calendarAnswerValidator;
@@ -61,7 +58,7 @@ public class ApplicationUseCase {
 		Map<Long, Item> templateById = recruitment.getItems()
 			.stream().collect(Collectors.toMap(Item::getId, item -> item));
 
-		Application application = applicationRequestMapper.toApplication(
+		Application application = Application.createApplication(
 			createApplicantRequest.name(), createApplicantRequest.email(), createApplicantRequest.tel(), recruitment
 		);
 
@@ -86,7 +83,7 @@ public class ApplicationUseCase {
 
 						textAnswerValidator.validate(textItem, textAnswerRequest);
 
-						TextItem textAnswer = applicationRequestMapper.toTextItem(
+						TextItem textAnswer = TextItem.createApplicationText(
 							application, textItem.getRequired(), textItem.getTitle(), textItem.getOrder(),
 							textItem.getDescription(), textItem.getMaxLength(), textItem.getItemType()
 						);
@@ -104,7 +101,7 @@ public class ApplicationUseCase {
 
 						selectAnswerValidator.validate(selectItem, selectAnswerRequest);
 
-						SelectItem selectAnswer = applicationRequestMapper.toSelectItem(
+						SelectItem selectAnswer = SelectItem.createApplicationSelect(
 							application, selectItem.getRequired(), selectItem.getTitle(), selectItem.getOrder(),
 							selectItem.getDescription(), selectItem.isMultiple(), selectItem.getItemType()
 						);
@@ -124,7 +121,7 @@ public class ApplicationUseCase {
 
 						calendarAnswerValidator.validate(calendarItem, calendarAnswerRequest);
 
-						CalendarItem calendarAnswer = applicationRequestMapper.toCalendarItem(
+						CalendarItem calendarAnswer = CalendarItem.createApplicationCalendar(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
 							calendarItem.getDescription(), calendarItem.getDate(), calendarItem.getItemType()
 						);
