@@ -1,6 +1,7 @@
 package com.unionmate.backend.domain.recruitment.application.usecase;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
-import com.unionmate.backend.domain.recruitment.application.mapper.RecruitmentResponseMapper;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.AnnouncementItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
@@ -27,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class RecruitmentUseCase {
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
-	private final RecruitmentResponseMapper recruitmentResponseMapper;
 
 	@Transactional
 	public void createRecruitment(CreateRecruitmentRequest rq) {
@@ -46,7 +46,10 @@ public class RecruitmentUseCase {
 	public RecruitmentResponse getRecruitmentForm(Long id) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
 
-		return recruitmentResponseMapper.toRecruitmentResponse(recruitment);
+		List<ItemResponse> items = recruitment.getItems().stream()
+			.map(ItemResponse::from)
+			.toList();
+		return RecruitmentResponse.from(recruitment, items);
 	}
 
 	private Item createItem(Recruitment recruitment, CreateItemRequest createItemRequest) {

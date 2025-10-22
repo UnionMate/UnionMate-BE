@@ -1,6 +1,7 @@
 package com.unionmate.backend.domain.recruitment.application.dto.response;
 
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -27,4 +28,16 @@ public record TextResponse(
 	@Schema(description = "최대 글자 수", example = "700")
 	Integer maxLength
 ) implements ItemResponse {
+
+	public static TextResponse from(TextItem textItem, ItemType itemType) {
+		return new TextResponse(
+			textItem.getId(),
+			itemType,
+			textItem.getRequired(),
+			textItem.getTitle(),
+			textItem.getOrder(),
+			textItem.getDescription(),
+			textItem.getMaxLength()
+		);
+	}
 }

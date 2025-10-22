@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.recruitment.application.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,4 +30,15 @@ public record RecruitmentResponse(
 	@Schema(description = "지원서에 들어갈 항목들 목록")
 	List<ItemResponse> items
 ) {
+	public static RecruitmentResponse from(Recruitment recruitment, List<ItemResponse> items) {
+		return new RecruitmentResponse(
+			recruitment.getId(),
+			recruitment.getName(),
+			recruitment.getStartAt(),
+			recruitment.getEndAt(),
+			recruitment.getIsActive(),
+			recruitment.getRecruitmentStatus(),
+			items
+		);
+	}
 }
