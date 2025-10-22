@@ -15,5 +15,6 @@ import com.unionmate.backend.domain.member.domain.entity.Member;
 public interface CouncilManagerRepository extends JpaRepository<CouncilManager, Long> {
 	boolean existsByMember(Member member);
 	Optional<CouncilManager> findByMember(Member member);
+	Optional<CouncilManager> findByMemberId(long memberId);
 	List<CouncilManager> findAllByCouncil(Council council);
 }
