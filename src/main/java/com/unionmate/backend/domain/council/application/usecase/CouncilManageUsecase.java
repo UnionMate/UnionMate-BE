@@ -9,8 +9,8 @@ import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
-import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerSaveService;
+import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.exception.CouncilManagerAlreadyExistsException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
@@ -41,9 +41,10 @@ public class CouncilManageUsecase {
 		Council council = councilSaveService.createCouncil(Council.createCouncil(dto.name()));
 
 		// CouncilManager 생성 (회장)
-		CouncilManager vice = CouncilManager.LinkToVice(member, school, council);
+		CouncilManager vice = CouncilManager.createVice(member, school, council);
 		councilManagerSaveService.save(vice);
 
+		//TODO: 정적 팩토리 메서드로 바꾸기
 		return new CreateCouncilResponse(council.getId(), council.getName());
 	}
 
@@ -55,7 +56,7 @@ public class CouncilManageUsecase {
 
 		School school = schoolGetService.getSchoolByEmailDomain(member.getEmail());
 
-		CouncilManager manager = CouncilManager.LinkToMember(member, school, council);
+		CouncilManager manager = CouncilManager.createMember(member, school, council);
 		councilManagerSaveService.save(manager);
 
 		return new CreateCouncilResponse(council.getId(), council.getName());
