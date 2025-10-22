@@ -31,6 +31,11 @@ public class CouncilManagerGetService {
 			.orElseThrow(CouncilManagerNotFoundException::new);
 	}
 
+	public CouncilManager getCouncilManagerByMemberId(long memberId) {
+		return councilManagerRepository.findByMemberId(memberId)
+			.orElseThrow(CouncilManagerNotFoundException::new);
+	}
+
 	public List<CouncilManager> getAllCouncilMembers(Council council) {
 		return councilManagerRepository.findAllByCouncil(council);
 	}
