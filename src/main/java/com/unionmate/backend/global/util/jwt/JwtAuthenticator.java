@@ -30,7 +30,7 @@ public class JwtAuthenticator {
 
   public void verifyAccessToken(String token) {
     try {
-      Claims claims = Jwts.parser()
+      Jwts.parser()
           .verifyWith(accessKey)
           .build()
           .parseSignedClaims(token)
@@ -44,7 +44,7 @@ public class JwtAuthenticator {
 
   public void verifyRefreshToken(String token) {
     try {
-      Claims claims = Jwts.parser()
+      Jwts.parser()
           .verifyWith(refreshKey)
           .build()
           .parseSignedClaims(token)
@@ -53,7 +53,7 @@ public class JwtAuthenticator {
     } catch (SignatureException | DeserializationException | MalformedJwtException e) {
       throw new InvalidJwtException();
     } catch (ExpiredJwtException e) {
-      throw new ExpiredJwtException();
+      throw new ExpireJwtException();
     }
   }
 }
