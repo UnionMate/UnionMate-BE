@@ -6,7 +6,9 @@ import com.unionmate.backend.domain.auth.application.dto.request.ManagerLoginReq
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerRegisterRequest;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerLoginResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerRegisterResponse;
+import com.unionmate.backend.domain.auth.application.dto.response.ReissueResponse;
 import com.unionmate.backend.domain.auth.application.usecase.AuthUseCase;
+import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,16 @@ public class AuthController {
     return CommonResponse.success(
         MANAGER_LOGIN_SUCCESS,
         this.authUseCase.managerLogin(managerLoginRequest)
+    );
+  }
+
+  @PostMapping("/reissue")
+  public CommonResponse<ReissueResponse> postReissue(
+      @CurrentMemberId Long memberId
+  ) {
+    return CommonResponse.success(
+        REISSUE_SUCCESS,
+        this.authUseCase.reissue(memberId)
     );
   }
 }
