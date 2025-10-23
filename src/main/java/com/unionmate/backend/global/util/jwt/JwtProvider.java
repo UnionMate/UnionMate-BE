@@ -38,7 +38,7 @@ public class JwtProvider {
         member.getName()
     );
   }
-  
+
   public String generateAccessToken(
       Long userId,
       String email,
