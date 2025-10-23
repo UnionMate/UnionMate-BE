@@ -3,7 +3,6 @@ package com.unionmate.backend.domain.recruitment.domain.entity.item;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
-import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.LongArrayAnswerConverter;
 
@@ -53,7 +52,7 @@ public class SelectItem extends Item {
 	}
 
 	public static SelectItem createApplicationSelect(Application application, Boolean required, String title,
-		Integer order, String description, Boolean multiple, ItemType itemType) {
+		Integer order, String description, Boolean multiple) {
 		return SelectItem.builder()
 			.application(application)
 			.required(required)
@@ -61,7 +60,6 @@ public class SelectItem extends Item {
 			.order(order)
 			.description(description)
 			.multiple(multiple)
-			.itemType(itemType)
 			.build();
 	}
 

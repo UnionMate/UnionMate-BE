@@ -3,7 +3,6 @@ package com.unionmate.backend.domain.recruitment.domain.entity.item;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
-import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.LocalDateAnswerConverter;
 
@@ -43,7 +42,7 @@ public class CalendarItem extends Item {
 	}
 
 	public static CalendarItem createApplicationCalendar(Application application, Boolean required, String title,
-		Integer order, String description, LocalDate date, ItemType itemType) {
+		Integer order, String description, LocalDate date) {
 		return CalendarItem.builder()
 			.application(application)
 			.required(required)
@@ -51,7 +50,6 @@ public class CalendarItem extends Item {
 			.order(order)
 			.description(description)
 			.date(date)
-			.itemType(itemType)
 			.build();
 	}
 

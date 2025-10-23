@@ -85,7 +85,7 @@ public class ApplicationUseCase {
 
 						TextItem textAnswer = TextItem.createApplicationText(
 							application, textItem.getRequired(), textItem.getTitle(), textItem.getOrder(),
-							textItem.getDescription(), textItem.getMaxLength(), textItem.getItemType()
+							textItem.getDescription(), textItem.getMaxLength()
 						);
 
 						textAnswer.updateAnswer(new Answer<>(textAnswerRequest.text()));
@@ -103,7 +103,7 @@ public class ApplicationUseCase {
 
 						SelectItem selectAnswer = SelectItem.createApplicationSelect(
 							application, selectItem.getRequired(), selectItem.getTitle(), selectItem.getOrder(),
-							selectItem.getDescription(), selectItem.isMultiple(), selectItem.getItemType()
+							selectItem.getDescription(), selectItem.isMultiple()
 						);
 
 						List<Long> selection = Optional.ofNullable(selectAnswerRequest.optionIds()).orElse(List.of());
@@ -123,7 +123,7 @@ public class ApplicationUseCase {
 
 						CalendarItem calendarAnswer = CalendarItem.createApplicationCalendar(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
-							calendarItem.getDescription(), calendarItem.getDate(), calendarItem.getItemType()
+							calendarItem.getDescription(), calendarItem.getDate()
 						);
 
 						calendarAnswer.updateAnswer(new Answer<>(calendarAnswerRequest.date()));

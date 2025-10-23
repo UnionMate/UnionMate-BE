@@ -3,7 +3,6 @@ package com.unionmate.backend.domain.recruitment.domain.entity.item;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
-import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType.DiscriminationValue;
 import com.unionmate.backend.global.converter.StringAnswerConverter;
 
@@ -38,7 +37,7 @@ public class TextItem extends Item {
 	}
 
 	public static TextItem createApplicationText(Application application, Boolean required, String title, Integer order,
-		String description, Integer maxLength, ItemType itemType) {
+		String description, Integer maxLength) {
 		return TextItem.builder()
 			.application(application)
 			.required(required)
@@ -46,7 +45,6 @@ public class TextItem extends Item {
 			.order(order)
 			.description(description)
 			.maxLength(maxLength)
-			.itemType(itemType)
 			.build();
 	}
 
