@@ -1,6 +1,6 @@
 package com.unionmate.backend.global.auth.resolver;
 
-import com.unionmate.backend.global.auth.annotation.CurrentUserId;
+import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.exception.common.InvalidJwtException;
 import com.unionmate.backend.global.util.jwt.JwtAuthenticator;
 import com.unionmate.backend.global.util.jwt.JwtExtractor;
@@ -17,7 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResolver {
+public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
@@ -27,7 +27,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.hasParameterAnnotation(CurrentUserId.class)
+    return parameter.hasParameterAnnotation(CurrentMemberId.class)
         && Long.class.isAssignableFrom(parameter.getParameterType());
   }
 
@@ -57,14 +57,14 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
       return handleInvalidToken(parameter);
     }
 
-    return extractUserId(token, parameter);
+    return extractMemberId(token, parameter);
   }
 
   private String extractToken(String authorizationHeader) {
     return authorizationHeader.substring(BEARER_PREFIX.length());
   }
 
-  private Long extractUserId(String token, MethodParameter parameter) {
+  private Long extractMemberId(String token, MethodParameter parameter) {
     this.jwtAuthenticator.verifyAccessToken(token);
 
     Claims claims = this.jwtExtractor.parseAccessTokenPayloads(token);
@@ -82,7 +82,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
   }
 
   private Long handleMissingToken(MethodParameter parameter) {
-    CurrentUserId annotation = parameter.getParameterAnnotation(CurrentUserId.class);
+    CurrentMemberId annotation = parameter.getParameterAnnotation(CurrentMemberId.class);
     if (annotation != null && !annotation.required()) {
       return null;
     }
@@ -90,7 +90,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
   }
 
   private Long handleInvalidToken(MethodParameter parameter) {
-    CurrentUserId annotation = parameter.getParameterAnnotation(CurrentUserId.class);
+    CurrentMemberId annotation = parameter.getParameterAnnotation(CurrentMemberId.class);
     if (annotation != null && !annotation.required()) {
       return null;
     }

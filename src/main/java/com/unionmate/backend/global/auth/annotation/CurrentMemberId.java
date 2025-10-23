@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CurrentUserId {
+public @interface CurrentMemberId {
 
   /**
    * 사용자 ID가 필수인지 여부
