@@ -23,4 +23,9 @@ public class MemberGetService {
 	public boolean existsByEmail(String email) {
 		return this.memberRepository.existsByEmail(email);
 	}
+
+	public Member getMemberByEmail(String email) {
+		return this.memberRepository.findByEmail(email)
+			.orElseThrow(MemberNotFoundException::new);
+	}
 }

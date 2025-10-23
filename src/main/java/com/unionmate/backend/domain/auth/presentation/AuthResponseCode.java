@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum AuthResponseCode implements ResponseCodeInterface {
 
   MANAGER_REGISTER_SUCCESS(201, HttpStatus.CREATED, "회원가입에 성공했습니다"),
+  MANAGER_LOGIN_SUCCESS(200, HttpStatus.OK, "로그인에 성공했습니다"),
 
   ;
 

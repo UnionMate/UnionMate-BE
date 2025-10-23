@@ -1,9 +1,12 @@
 package com.unionmate.backend.domain.auth.application.usecase;
 
+import com.unionmate.backend.domain.auth.application.dto.request.ManagerLoginRequest;
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerRegisterRequest;
+import com.unionmate.backend.domain.auth.application.dto.response.ManagerLoginResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerRegisterResponse;
 import com.unionmate.backend.domain.auth.domain.service.AuthService;
 import com.unionmate.backend.domain.auth.exception.EmailDuplicateException;
+import com.unionmate.backend.domain.auth.exception.PasswordNotMatchException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.domain.member.domain.service.MemberSaveService;
@@ -43,5 +46,18 @@ public class AuthUseCase {
     String refreshToken = this.jwtProvider.generateRefreshToken(persisted.getId());
 
     return ManagerRegisterResponse.of(accessToken, refreshToken);
+  }
+
+  public ManagerLoginResponse managerLogin(ManagerLoginRequest managerLoginRequest) {
+    Member member = this.memberGetService.getMemberByEmail(managerLoginRequest.email());
+
+    if (!this.authService.isValidPassword(managerLoginRequest.password(), member.getPassword())) {
+      throw new PasswordNotMatchException();
+    }
+
+    String accessToken = this.jwtProvider.generateAccessToken(member);
+    String refreshToken = this.jwtProvider.generateRefreshToken(member.getId());
+
+    return ManagerLoginResponse.of(accessToken, refreshToken);
   }
 }
