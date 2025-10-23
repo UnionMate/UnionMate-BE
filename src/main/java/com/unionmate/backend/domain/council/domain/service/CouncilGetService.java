@@ -17,4 +17,9 @@ public class CouncilGetService {
 		return councilRepository.findByInvitationCode(invitationCode)
 			.orElseThrow(CouncilNotFoundException::new);
 	}
+
+	public Council getCouncilById(long councilId) {
+		return councilRepository.findById(councilId)
+			.orElseThrow(CouncilNotFoundException::new);
+	}
 }
