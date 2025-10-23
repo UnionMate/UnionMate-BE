@@ -52,7 +52,7 @@ public class SelectItem extends Item {
 	}
 
 	public static SelectItem createApplicationSelect(Application application, Boolean required, String title,
-		Integer order, String description, Boolean multiple) {
+		Integer order, String description, boolean multiple) {
 		return SelectItem.builder()
 			.application(application)
 			.required(required)
