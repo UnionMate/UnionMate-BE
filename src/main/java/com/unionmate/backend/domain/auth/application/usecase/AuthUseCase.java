@@ -10,6 +10,7 @@ import com.unionmate.backend.domain.member.domain.service.MemberSaveService;
 import com.unionmate.backend.global.util.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class AuthUseCase {
   private final MemberSaveService memberSaveService;
   private final JwtProvider jwtProvider;
 
+  @Transactional
   public ManagerRegisterResponse managerRegister(ManagerRegisterRequest managerRegisterRequest) {
     if (this.memberGetService.existsByEmail(managerRegisterRequest.email())) {
       throw new EmailDuplicateException();
