@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.recruitment.application.dto.response;
 import java.time.LocalDate;
 
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -28,4 +29,16 @@ public record CalendarResponse(
 	@Schema(description = "날짜 지정", example = "2025-12-31")
 	LocalDate date
 ) implements ItemResponse {
+
+	public static CalendarResponse from(CalendarItem calendarItem, ItemType itemType) {
+		return new CalendarResponse(
+			calendarItem.getId(),
+			itemType,
+			calendarItem.getRequired(),
+			calendarItem.getTitle(),
+			calendarItem.getOrder(),
+			calendarItem.getDescription(),
+			calendarItem.getDate()
+		);
+	}
 }
