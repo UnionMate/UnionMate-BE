@@ -64,7 +64,7 @@ public class SelectItem extends Item {
 	}
 
 	public static SelectItem createRecruitmentSelect(Recruitment recruitment, Boolean required, String title,
-		Integer order, String description, Boolean multiple) {
+		Integer order, String description, boolean multiple) {
 		return SelectItem.builder()
 			.recruitment(recruitment)
 			.required(required)
