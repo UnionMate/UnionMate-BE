@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
 import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
 import com.unionmate.backend.domain.applicant.application.util.SelectAnswerValidator;
@@ -27,6 +28,7 @@ import com.unionmate.backend.domain.applicant.application.exception.RecruitmentI
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
+import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationSaveService;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
@@ -40,9 +42,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ApplicationUseCase {
 	private final ApplicationSaveService applicationSaveService;
 	private final RecruitmentGetService recruitmentGetService;
+	private final ApplicationGetService applicationGetService;
 	private final TextAnswerValidator textAnswerValidator;
 	private final SelectAnswerValidator selectAnswerValidator;
 	private final CalendarAnswerValidator calendarAnswerValidator;
@@ -143,5 +147,12 @@ public class ApplicationUseCase {
 		}
 
 		applicationSaveService.save(application);
+	}
+
+	public List<GetMyApplicationsResponse> getMyApplications(String name, String email) {
+		return applicationGetService.getMyApplications(name, email)
+			.stream()
+			.map(GetMyApplicationsResponse::from)
+			.toList();
 	}
 }
