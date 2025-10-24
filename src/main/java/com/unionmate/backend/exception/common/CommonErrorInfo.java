@@ -1,5 +1,6 @@
-package com.unionmate.backend.exception;
+package com.unionmate.backend.exception.common;
 
+import com.unionmate.backend.exception.ErrorInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,7 +21,12 @@ public enum CommonErrorInfo implements ErrorInfo {
 
     CLIENT_ABORTED("클라이언트가 응답을 중단했습니다.", 9998),
 
-    RESOURCE_NOT_FOUND("요청한 리소스를 찾을 수 없습니다.", 10011);
+    RESOURCE_NOT_FOUND("요청한 리소스를 찾을 수 없습니다.", 10011),
+
+    INVALID_JWT("잘못된 토큰입니다", 10001),
+    EXPIRED_JWT("만료된 토큰입니다", 10002),
+
+    ;
 
     private final String message;
     private final Integer code;
