@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
 import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
@@ -154,5 +155,11 @@ public class ApplicationUseCase {
 			.stream()
 			.map(GetMyApplicationsResponse::from)
 			.toList();
+	}
+
+	public GetApplicationResponse getApplication(Long applicationId) {
+		Application application = applicationGetService.getApplicationById(applicationId);
+
+		return GetApplicationResponse.from(application);
 	}
 }
