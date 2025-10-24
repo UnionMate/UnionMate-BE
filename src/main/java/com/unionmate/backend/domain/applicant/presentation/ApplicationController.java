@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
 import com.unionmate.backend.global.response.CommonResponse;
@@ -40,5 +41,13 @@ public class ApplicationController {
 		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(name, email);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
+	}
+
+	@GetMapping("/{applicationId}")
+	@Operation(summary = "특정 지원서를 조회합니다.")
+	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId) {
+		GetApplicationResponse application = applicationUseCase.getApplication(applicationId);
+
+		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATION, application);
 	}
 }
