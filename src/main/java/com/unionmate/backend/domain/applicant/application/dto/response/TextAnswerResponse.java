@@ -9,7 +9,7 @@ public record TextAnswerResponse(
 	Integer order,
 	String description,
 	Integer maxLength,
-	String text
+	String answer
 ) implements ApplicationAnswerResponse {
 
 	public static TextAnswerResponse from(TextItem textItem) {
