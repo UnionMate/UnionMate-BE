@@ -10,6 +10,9 @@ public record GetApplicationResponse(
 	Long applicationId,
 	Long recruitmentId,
 	String recruitmentName,
+	String name,
+	String email,
+	String tel,
 	List<ApplicationAnswerResponse> answers
 ) {
 	public static GetApplicationResponse from(Application application) {
@@ -22,6 +25,9 @@ public record GetApplicationResponse(
 			application.getId(),
 			application.getRecruitment().getId(),
 			application.getRecruitment().getName(),
+			application.getName(),
+			application.getEmail(),
+			application.getTel(),
 			answer
 		);
 	}
