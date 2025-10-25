@@ -35,7 +35,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.SUBMIT_APPLICATION);
 	}
 
-	@GetMapping("/{name}/{email}")
+	@GetMapping("/mine")
 	@Operation(summary = "자신이 작성한 지원서 목록을 조회합니다.")
 	public CommonResponse<List<GetMyApplicationsResponse>> getMyApplications(
 		GetMyApplicationsRequest getMyApplicationsRequest) {
