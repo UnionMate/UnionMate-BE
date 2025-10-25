@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
@@ -150,8 +151,9 @@ public class ApplicationUseCase {
 		applicationSaveService.save(application);
 	}
 
-	public List<GetMyApplicationsResponse> getMyApplications(String name, String email) {
-		return applicationGetService.getMyApplications(name, email)
+	public List<GetMyApplicationsResponse> getMyApplications(GetMyApplicationsRequest getMyApplicationsRequest) {
+		return applicationGetService.getMyApplications(
+				getMyApplicationsRequest.name(), getMyApplicationsRequest.email())
 			.stream()
 			.map(GetMyApplicationsResponse::from)
 			.toList();

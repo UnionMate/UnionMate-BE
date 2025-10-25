@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
@@ -37,8 +38,8 @@ public class ApplicationController {
 	@GetMapping("/{name}/{email}")
 	@Operation(summary = "자신이 작성한 지원서 목록을 조회합니다.")
 	public CommonResponse<List<GetMyApplicationsResponse>> getMyApplications(
-		@PathVariable String name, @PathVariable String email) {
-		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(name, email);
+		@RequestBody GetMyApplicationsRequest getMyApplicationsRequest) {
+		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationsRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
 	}
