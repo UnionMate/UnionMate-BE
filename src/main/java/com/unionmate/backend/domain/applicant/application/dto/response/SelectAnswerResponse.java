@@ -16,7 +16,7 @@ public record SelectAnswerResponse(
 
 	public static SelectAnswerResponse from(SelectItem selectItem) {
 		return new SelectAnswerResponse(
-			ItemType.TEXT,
+			ItemType.SELECT,
 			selectItem.getTitle(),
 			selectItem.getOrder(),
 			selectItem.getDescription(),
