@@ -16,7 +16,8 @@ public enum ErrorCode implements ErrorInfo {
 	PLURAL_SELECT_INVALID("중복 선택이 불가능한 항목입니다.", 2107),
 	RECRUITMENT_CLOSED("현재 지원 기간이 아닙니다.", 2108),
 	ITEM_ANSWER_DUPLICATE("동일한 질문에 중복된 답변을 하였습니다.", 2109),
-	APPLICATION_NOT_FOUND("해당 지원서를 찾을 수 없습니다.", 2110);
+	APPLICATION_NOT_FOUND("해당 지원서를 찾을 수 없습니다.", 2110),
+	APPLICATION_UPDATE_INVALID("해당 지원서를 수정할 수 있는 기간이 아닙니다.", 2111);
 
 	private final String message;
 	private final Integer code;

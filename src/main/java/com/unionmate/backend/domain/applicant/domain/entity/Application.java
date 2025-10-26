@@ -59,6 +59,15 @@ public class Application extends BaseEntity {
 	@Builder.Default
 	private List<Item> answers = new ArrayList<>();
 
+	public void updateIfPresent(String name, String email, String tel) {
+		if (name != null)
+			this.name = name;
+		if (email != null)
+			this.email = email;
+		if (tel != null)
+			this.tel = tel;
+	}
+
 	public static Application createApplication(String name, String email, String tel, Recruitment recruitment) {
 		return Application.builder()
 			.name(name)
