@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.applicant.presentation;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
@@ -33,6 +35,16 @@ public class ApplicationController {
 		applicationUseCase.submitApplication(recruitmentId, createApplicantRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.SUBMIT_APPLICATION);
+	}
+
+	@PatchMapping("/{applicationId}")
+	@Operation(summary = "지원서를 수정합니다.")
+	public CommonResponse<Void> updateApplication(
+		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest
+	) {
+		applicationUseCase.updateApplication(applicationId, updateApplicationRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.UPDATE_APPLICATION);
 	}
 
 	@GetMapping("/mine")
