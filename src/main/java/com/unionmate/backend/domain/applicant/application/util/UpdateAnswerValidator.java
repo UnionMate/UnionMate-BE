@@ -46,19 +46,19 @@ public class UpdateAnswerValidator {
 					case TEXT -> {
 						TextItem textItem = (TextItem)answer;
 						Answer<String> a = textItem.getAnswer();
-						yield a != null & Objects.requireNonNull(a).answer() != null && !a.answer().isBlank();
+						yield a != null && Objects.requireNonNull(a).answer() != null && !a.answer().isBlank();
 					}
 
 					case SELECT -> {
 						SelectItem selectItem = (SelectItem)answer;
 						Answer<List<Long>> a = selectItem.getAnswer();
-						yield a != null & Objects.requireNonNull(a).answer() != null && !a.answer().isEmpty();
+						yield a != null && Objects.requireNonNull(a).answer() != null && !a.answer().isEmpty();
 					}
 
 					case CALENDAR -> {
 						CalendarItem calendarItem = (CalendarItem)answer;
 						Answer<LocalDate> a = calendarItem.getAnswer();
-						yield a != null & Objects.requireNonNull(a).answer() != null;
+						yield a != null && Objects.requireNonNull(a).answer() != null;
 					}
 
 					case ANNOUNCEMENT -> true;
