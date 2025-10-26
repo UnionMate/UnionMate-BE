@@ -173,7 +173,7 @@ public class ApplicationUseCase {
 		Map<Long, Item> templateById = recruitment.getItems()
 			.stream().collect(Collectors.toMap(Item::getId, item -> item));
 
-		Map<Long, Item> existingAnswer = ExistingAnswers(application, recruitment);
+		Map<Long, Item> existingAnswer = existingAnswers(application, recruitment);
 
 		if (updateApplicationRequest.answers() != null) {
 			Set<Long> seen = new HashSet<>();
@@ -281,7 +281,7 @@ public class ApplicationUseCase {
 		return GetApplicationResponse.from(application);
 	}
 
-	private Map<Long, Item> ExistingAnswers(Application application, Recruitment recruitment) {
+	private Map<Long, Item> existingAnswers(Application application, Recruitment recruitment) {
 		Map<Long, Item> map = new HashMap<>();
 		List<Item> answers = application.getAnswers();
 
