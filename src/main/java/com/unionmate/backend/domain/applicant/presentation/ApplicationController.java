@@ -50,7 +50,7 @@ public class ApplicationController {
 	@GetMapping("/mine")
 	@Operation(summary = "자신이 작성한 지원서 목록을 조회합니다.")
 	public CommonResponse<List<GetMyApplicationsResponse>> getMyApplications(
-		GetMyApplicationsRequest getMyApplicationsRequest) {
+		@Valid GetMyApplicationsRequest getMyApplicationsRequest) {
 		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationsRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
