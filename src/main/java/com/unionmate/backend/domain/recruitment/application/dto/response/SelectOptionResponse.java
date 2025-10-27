@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.recruitment.application.dto.response;
 
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record SelectOptionResponse(
@@ -18,4 +20,13 @@ public record SelectOptionResponse(
 	@Schema(description = "기타 항목 이름", example = "null")
 	String etcTitle
 ) {
+	public static SelectOptionResponse from(SelectItemOption selectItemOption) {
+		return new SelectOptionResponse(
+			selectItemOption.getId(),
+			selectItemOption.getTitle(),
+			selectItemOption.getOrder(),
+			selectItemOption.getIsEtc(),
+			selectItemOption.getEtcTitle()
+		);
+	}
 }

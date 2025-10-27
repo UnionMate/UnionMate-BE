@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.recruitment.application.dto.response;
 import java.util.List;
 
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -31,4 +32,22 @@ public record SelectResponse(
 	@Schema(description = "선택지 항목 목록")
 	List<SelectOptionResponse> options
 ) implements ItemResponse {
+
+	public static SelectResponse from(SelectItem selectItem, ItemType itemType) {
+		List<SelectOptionResponse> selectOptions = selectItem.getSelectItemOptions()
+			.stream()
+			.map(SelectOptionResponse::from)
+			.toList();
+
+		return new SelectResponse(
+			selectItem.getId(),
+			itemType,
+			selectItem.getRequired(),
+			selectItem.getTitle(),
+			selectItem.getOrder(),
+			selectItem.getDescription(),
+			selectItem.isMultiple(),
+			selectOptions
+		);
+	}
 }
