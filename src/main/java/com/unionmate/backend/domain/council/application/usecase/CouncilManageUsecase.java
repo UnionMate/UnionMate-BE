@@ -5,12 +5,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
+import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeRequest;
+import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeResponse;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
-import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerSaveService;
+import com.unionmate.backend.domain.council.domain.service.CouncilSaveService;
 import com.unionmate.backend.domain.council.exception.CouncilManagerAlreadyExistsException;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
@@ -41,10 +45,10 @@ public class CouncilManageUsecase {
 		Council council = councilSaveService.createCouncil(Council.createCouncil(dto.name()));
 
 		// CouncilManager 생성 (회장)
-		CouncilManager vice = CouncilManager.LinkToVice(member, school, council);
+		CouncilManager vice = CouncilManager.createVice(member, school, council);
 		councilManagerSaveService.save(vice);
 
-		return new CreateCouncilResponse(council.getId(), council.getName());
+		return CreateCouncilResponse.from(council);
 	}
 
 	@Transactional
@@ -55,13 +59,37 @@ public class CouncilManageUsecase {
 
 		School school = schoolGetService.getSchoolByEmailDomain(member.getEmail());
 
-		CouncilManager manager = CouncilManager.LinkToMember(member, school, council);
+		CouncilManager manager = CouncilManager.createMember(member, school, council);
 		councilManagerSaveService.save(manager);
 
-		return new CreateCouncilResponse(council.getId(), council.getName());
+		return CreateCouncilResponse.from(council);
 	}
 
-	public void validateCouncilManagerExists(Member member) {
+	@Transactional
+	public UpdateCouncilNameResponse updateCouncilName(long memberId, long councilId,
+		UpdateCouncilNameRequest request) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.isViceOfCouncil(council);
+
+		council.updateName(request.name());
+
+		return UpdateCouncilNameResponse.from(council);
+	}
+
+	@Transactional
+	public UpdateInvitationCodeResponse updateInvitationCode(long memberId, long councilId,
+		UpdateInvitationCodeRequest request) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.isViceOfCouncil(council);
+
+		council.updateInvitationCode(request.invitationCode());
+
+		return UpdateInvitationCodeResponse.from(council);
+	}
+
+	private void validateCouncilManagerExists(Member member) {
 		if (councilManagerGetService.existsByMember(member)) {
 			throw new CouncilManagerAlreadyExistsException();
 		}

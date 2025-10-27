@@ -22,6 +22,7 @@ public class SchoolGetService {
 			.orElseThrow(SchoolNotFoundException::new);
 	}
 
+	//TODO: 이메일 형식 검증 로직 강화 필요
 	private String extractDomainFromEmail(String email) {
 		String[] parts = email.split("@");
 		if (parts.length != 2) {
