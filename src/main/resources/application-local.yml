@@ -27,3 +27,11 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server-uri: http://localhost:8000
+
+jwt:
+  access:
+    secret: YmJhZHNmZHNhZ2dmYWRiYXNkZmFiYmFkc2Zkc2FnZ2ZhZGJhc2RmYWJiYWRzZmRzYWdnZmFkYmFzZGZh
+    validity: ${JWT_ACCESS_VALIDITY:86400000}
+  refresh:
+    secret: YmJhZHNmZHNhZ2dmYWRiYXNkZmFiYmFkc2Zkc2FnZ2ZhZGJhc2RmYWJiYWRzZmRzYWdnZmFkYmFzZGZh
+    validity: ${JWT_REFRESH_VALIDITY:604800000}
