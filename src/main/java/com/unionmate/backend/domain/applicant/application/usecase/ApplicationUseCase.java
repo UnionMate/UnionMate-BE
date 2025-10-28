@@ -60,10 +60,12 @@ public class ApplicationUseCase {
 	private final UpdateAnswerValidator updateAnswerValidator;
 
 	@Transactional
-	public void submitApplication(Long recruitmentId, CreateApplicantRequest createApplicantRequest) {
+	public void submitApplication(
+		Long recruitmentId, CreateApplicantRequest createApplicantRequest, LocalDateTime now
+	) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
-		if (!recruitment.isOpen(LocalDateTime.now())) {
+		if (!recruitment.isOpen(now)) {
 			throw new RecruitmentInvalidException();
 		}
 

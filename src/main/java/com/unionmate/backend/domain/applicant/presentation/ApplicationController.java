@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.presentation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,8 @@ public class ApplicationController {
 	@Operation(summary = "지원서를 작성합니다.")
 	public CommonResponse<Void> submitApplication(
 		@PathVariable Long recruitmentId, @Valid @RequestBody CreateApplicantRequest createApplicantRequest) {
-		applicationUseCase.submitApplication(recruitmentId, createApplicantRequest);
+		LocalDateTime now = LocalDateTime.now();
+		applicationUseCase.submitApplication(recruitmentId, createApplicantRequest, now);
 
 		return CommonResponse.success(ApplicationResponseCode.SUBMIT_APPLICATION);
 	}
