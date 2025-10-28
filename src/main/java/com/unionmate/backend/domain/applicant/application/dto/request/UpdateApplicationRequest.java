@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.applicant.application.dto.request;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 
 public record UpdateApplicationRequest(
 	@Schema(description = "지원자 이름", example = "김가천")
@@ -15,6 +16,6 @@ public record UpdateApplicationRequest(
 	String tel,
 
 	@Schema(description = "문항별 답변 목록")
-	List<AnswerRequest> answers
+	List<@Valid AnswerRequest> answers
 ) {
 }
