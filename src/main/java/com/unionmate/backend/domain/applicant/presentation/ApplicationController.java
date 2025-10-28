@@ -1,5 +1,10 @@
 package com.unionmate.backend.domain.applicant.presentation;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
 import com.unionmate.backend.global.response.CommonResponse;
 
@@ -24,8 +33,36 @@ public class ApplicationController {
 	@Operation(summary = "지원서를 작성합니다.")
 	public CommonResponse<Void> submitApplication(
 		@PathVariable Long recruitmentId, @Valid @RequestBody CreateApplicantRequest createApplicantRequest) {
-		applicationUseCase.submitApplication(recruitmentId, createApplicantRequest);
+		LocalDateTime now = LocalDateTime.now();
+		applicationUseCase.submitApplication(recruitmentId, createApplicantRequest, now);
 
 		return CommonResponse.success(ApplicationResponseCode.SUBMIT_APPLICATION);
+	}
+
+	@PatchMapping("/{applicationId}")
+	@Operation(summary = "지원서를 수정합니다.")
+	public CommonResponse<Void> updateApplication(
+		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest
+	) {
+		applicationUseCase.updateApplication(applicationId, updateApplicationRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.UPDATE_APPLICATION);
+	}
+
+	@GetMapping("/mine")
+	@Operation(summary = "자신이 작성한 지원서 목록을 조회합니다.")
+	public CommonResponse<List<GetMyApplicationsResponse>> getMyApplications(
+		@Valid GetMyApplicationsRequest getMyApplicationsRequest) {
+		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationsRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
+	}
+
+	@GetMapping("/{applicationId}")
+	@Operation(summary = "특정 지원서를 조회합니다.")
+	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId) {
+		GetApplicationResponse application = applicationUseCase.getApplication(applicationId);
+
+		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATION, application);
 	}
 }
