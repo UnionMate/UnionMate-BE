@@ -27,3 +27,11 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server-uri: ENC(ADvQZvUiEY6KHiaoUlImBAxMCbavYyrtNecYgfkx1ZxVOp4PhWAKrA==)
+
+jwt:
+  access:
+    secret: ENC(IFvNM2Z7dhbxX4VNwwgSA4E9k+hjaTFnQpyHHzolXKMiIdFRwnmMMPLHufWTar9ptGoHeDzhsdgizSKkXlkEtkNhamoOrr4yX3/+KVxgIUn56hfdpVgWPlkA3BwfuCSx)
+    validity: ${JWT_ACCESS_VALIDITY:86400000}
+  refresh:
+    secret: ENC(IFvNM2Z7dhbxX4VNwwgSA4E9k+hjaTFnQpyHHzolXKMiIdFRwnmMMPLHufWTar9ptGoHeDzhsdgizSKkXlkEtkNhamoOrr4yX3/+KVxgIUn56hfdpVgWPlkA3BwfuCSx)
+    validity: ${JWT_REFRESH_VALIDITY:604800000}
