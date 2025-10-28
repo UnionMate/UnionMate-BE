@@ -3,7 +3,7 @@ package com.unionmate.backend.exception.handler;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.unionmate.backend.exception.ApplicationException;
-import com.unionmate.backend.exception.CommonErrorInfo;
+import com.unionmate.backend.exception.common.CommonErrorInfo;
 import com.unionmate.backend.global.apis.ApiData;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
