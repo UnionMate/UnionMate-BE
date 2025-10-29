@@ -18,6 +18,8 @@ public enum ErrorCode implements ErrorInfo {
 	ITEM_ANSWER_DUPLICATE("동일한 질문에 중복된 답변을 하였습니다.", 2109),
 	APPLICATION_NOT_FOUND("해당 지원서를 찾을 수 없습니다.", 2110),
 	APPLICATION_UPDATE_INVALID("해당 지원서를 수정할 수 있는 기간이 아닙니다.", 2111),
+	APPLICATION_EVALUATION_FORBIDDEN("해당 지원서에 대한 평가 권한이 없습니다.", 2112),
+	APPLICATION_EVALUATION_INVALID_STAGE("현재 전형 단계에서는 요청한 평가 변경을 수행할 수 없습니다.", 2113),
 
 	// Comment 관련
 	COMMENT_NOT_FOUND("해당 코멘트를 찾을 수 없습니다.", 2130),
