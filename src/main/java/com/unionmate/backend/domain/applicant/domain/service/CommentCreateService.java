@@ -15,8 +15,8 @@ public class CommentCreateService {
 	private final CommentRepository commentRepository;
 
 	@Transactional
-	public Comment create(Comment comment) {
+	public void create(Comment comment) {
 
-		return commentRepository.save(comment);
+		commentRepository.save(comment);
 	}
 }
