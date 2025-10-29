@@ -48,6 +48,7 @@ public record CommentResponse(
 		String content,
 		LocalDateTime createdAt,
 		LocalDateTime updatedAt) {
+
 		return new CommentResponse(commentId, councilManagerId, councilManagerName, content, createdAt, updatedAt);
 	}
 }
