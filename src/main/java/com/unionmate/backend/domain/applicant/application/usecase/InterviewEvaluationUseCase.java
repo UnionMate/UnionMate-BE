@@ -44,7 +44,6 @@ public class InterviewEvaluationUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateRecruitmentStatus(application);
 		validateSameCouncil(councilManager, application);
 
@@ -56,7 +55,6 @@ public class InterviewEvaluationUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateRecruitmentStatus(application);
 		validateSameCouncil(councilManager, application);
 
@@ -75,7 +73,6 @@ public class InterviewEvaluationUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateRecruitmentStatus(application);
 		validateSameCouncil(councilManager, application);
 

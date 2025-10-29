@@ -23,8 +23,6 @@ public class InterviewEvaluationUpdateService {
 	@Transactional
 	public void update(Application application, CouncilManager councilManager, Long evaluationId, String newEvaluation) {
 
-		councilManager.isVice();
-
 		if (application.getRecruitment().getRecruitmentStatus() != RecruitmentStatus.INTERVIEW) {
 			throw new InvalidRecruitmentStatusException();
 		}

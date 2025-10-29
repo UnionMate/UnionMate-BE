@@ -42,7 +42,6 @@ public class CommentUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateSameCouncil(councilManager, application);
 		Comment comment = Comment.createContent(application, councilManager, createCommentRequest.content());
 
@@ -62,7 +61,6 @@ public class CommentUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateSameCouncil(councilManager, application);
 
 		return CommentResponse.fromList(commentGetService.getAllByApplication(application));
@@ -73,7 +71,6 @@ public class CommentUseCase {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
-		councilManager.isVice();
 		validateSameCouncil(councilManager, application);
 
 		Comment comment = commentGetService.getByIdAndApplication(commentId, application);
