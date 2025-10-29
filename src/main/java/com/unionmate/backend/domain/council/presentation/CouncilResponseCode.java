@@ -16,7 +16,9 @@ public enum CouncilResponseCode implements ResponseCodeInterface {
 	GET_ALL_COUNCIL_MEMBERS(200, HttpStatus.OK, "학생회 멤버 조회에 성공했습니다."),
 	UPDATE_COUNCIL_NAME(200, HttpStatus.OK, "학생회 이름 변경에 성공했습니다."),
 	UPDATE_INVITATION_CODE(200, HttpStatus.OK, "초대 코드 변경에 성공했습니다."),
-	REMOVE_COUNCIL_MEMBER(200, HttpStatus.OK, "학생회 멤버 탈퇴에 성공했습니다.");
+	REMOVE_COUNCIL_MEMBER(200, HttpStatus.OK, "학생회 멤버 탈퇴에 성공했습니다."),
+	COUNCIL_DOCUMENT_LIST(200, HttpStatus.OK, "학생회 서류 심사 목록 조회에 성공했습니다."),
+	COUNCIL_INTERVIEW_LIST(200, HttpStatus.OK, "학생회 면접 심사 목록 조회에 성공했습니다.");
 
 	private final int code;
 	private final HttpStatus status;

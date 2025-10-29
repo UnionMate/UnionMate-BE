@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantResponse;
 import com.unionmate.backend.domain.council.application.dto.CouncilMemberResponse;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
@@ -40,15 +43,19 @@ public class CouncilController {
 
 	@Operation(summary = "학생회 생성", description = "새로운 학생회를 생성합니다.")
 	@PostMapping()
-	public CommonResponse<CreateCouncilResponse> createCouncil(@RequestHeader long memberId, @RequestBody CreateCouncilRequest request) {
+	public CommonResponse<CreateCouncilResponse> createCouncil(@RequestHeader long memberId,
+		@RequestBody CreateCouncilRequest request) {
 		CreateCouncilResponse response = councilManageUsecase.createCouncil(memberId, request);
+
 		return CommonResponse.success(CREATE_COUNCIL, response);
 	}
 
 	@Operation(summary = "학생회 가입", description = "초대 코드를 통해 학생회에 가입합니다.")
 	@PostMapping("/invitation/{invitationCode}")
-	public CommonResponse<CreateCouncilResponse> signUpCouncilManager(@RequestHeader long memberId, @PathVariable String invitationCode) {
+	public CommonResponse<CreateCouncilResponse> signUpCouncilManager(@RequestHeader long memberId,
+		@PathVariable String invitationCode) {
 		CreateCouncilResponse response = councilManageUsecase.signUpCouncilManager(memberId, invitationCode);
+
 		return CommonResponse.success(COUNCIL_MANAGER_SIGNUP, response);
 	}
 
@@ -56,6 +63,7 @@ public class CouncilController {
 	@PatchMapping("/vice")
 	public CommonResponse<Void> delegateVice(@RequestHeader long memberId, @RequestBody DelegateViceRequest request) {
 		councilMemberManageUsecase.delegateVice(memberId, request.newPresidentId());
+
 		return CommonResponse.success(DELEGATE_VICE);
 	}
 
@@ -63,19 +71,23 @@ public class CouncilController {
 	@GetMapping("/{councilId}/members")
 	public CommonResponse<List<CouncilMemberResponse>> getAllCouncilMembers(@PathVariable long councilId) {
 		List<CouncilMemberResponse> response = councilMemberManageUsecase.getAllCouncilMembers(councilId);
+
 		return CommonResponse.success(GET_ALL_COUNCIL_MEMBERS, response);
 	}
 
 	@Operation(summary = "학생회 이름 수정", description = "학생회 이름을 수정합니다.")
 	@PatchMapping("/{councilId}/names")
-	public CommonResponse<UpdateCouncilNameResponse> updateCouncilName(@RequestHeader long memberId, @PathVariable long councilId, @RequestBody UpdateCouncilNameRequest request) {
+	public CommonResponse<UpdateCouncilNameResponse> updateCouncilName(@RequestHeader long memberId,
+		@PathVariable long councilId, @RequestBody UpdateCouncilNameRequest request) {
 		UpdateCouncilNameResponse response = councilManageUsecase.updateCouncilName(memberId, councilId, request);
+
 		return CommonResponse.success(UPDATE_COUNCIL_NAME, response);
 	}
 
 	@Operation(summary = "초대 코드 수정", description = "학생회 초대 코드를 수정합니다.")
 	@PatchMapping("/{councilId}/invitation-codes")
-	public CommonResponse<UpdateInvitationCodeResponse> updateInvitationCode(@RequestHeader long memberId, @PathVariable long councilId, @RequestBody UpdateInvitationCodeRequest request) {
+	public CommonResponse<UpdateInvitationCodeResponse> updateInvitationCode(@RequestHeader long memberId,
+		@PathVariable long councilId, @RequestBody UpdateInvitationCodeRequest request) {
 		UpdateInvitationCodeResponse response = councilManageUsecase.updateInvitationCode(memberId, councilId, request);
 		return CommonResponse.success(UPDATE_INVITATION_CODE, response);
 	}
@@ -84,6 +96,41 @@ public class CouncilController {
 	@DeleteMapping("/members/{councilManagerId}")
 	public CommonResponse<Void> removeCouncilMember(@RequestHeader long memberId, @PathVariable long councilManagerId) {
 		councilMemberManageUsecase.removeCouncilMember(memberId, councilManagerId);
+
 		return CommonResponse.success(REMOVE_COUNCIL_MEMBER);
+	}
+
+	@Operation(
+		summary = "학생회 서류 심사 리스트 조회",
+		description = "RecruitmentStatus=DOCUMENT_SCREENING 대상. result(PASSED/FAILED)로 필터 가능. " +
+			"필터 미적용 시 기본 정렬은 FAILED가 먼저 오도록 함."
+	)
+	@GetMapping("/{councilId}/applications/document-screening")
+	public CommonResponse<List<CouncilApplicantResponse>> getDocumentScreeningApplicants(
+		@RequestHeader long memberId,
+		@PathVariable long councilId,
+		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
+	) {
+		List<CouncilApplicantResponse> response = councilManageUsecase.getDocumentScreeningApplicants(memberId,
+			councilId, evaluationStatus);
+
+		return CommonResponse.success(COUNCIL_DOCUMENT_LIST, response);
+	}
+
+	@Operation(
+		summary = "학생회 면접 심사 리스트 조회",
+		description = "RecruitmentStatus=INTERVIEW 대상. result(PASSED/FAILED)로 필터 가능. "
+			+ "필터 미적용 시 기본 정렬은 FAILED가 먼저 오도록 함."
+	)
+	@GetMapping("/{councilId}/applications/interview")
+	public CommonResponse<List<CouncilApplicantResponse>> getInterviewApplicants(
+		@RequestHeader long memberId,
+		@PathVariable long councilId,
+		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
+	) {
+		List<CouncilApplicantResponse> response = councilManageUsecase.getInterviewApplicants(memberId, councilId,
+			evaluationStatus);
+
+		return CommonResponse.success(COUNCIL_INTERVIEW_LIST, response);
 	}
 }
