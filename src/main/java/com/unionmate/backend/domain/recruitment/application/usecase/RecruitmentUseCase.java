@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
+import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
@@ -26,13 +29,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RecruitmentUseCase {
+	private final CouncilManagerGetService councilManagerGetService;
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
 
 	@Transactional
-	public void createRecruitment(CreateRecruitmentRequest createRecruitmentRequest) {
-		Recruitment recruitment = Recruitment.createRecruitment(createRecruitmentRequest.name(), LocalDateTime.now(),
-			createRecruitmentRequest.endAt(), createRecruitmentRequest.isActive(),
+	public void createRecruitment(long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilManager.getCouncil();
+
+		Recruitment recruitment = Recruitment.createRecruitment(council, createRecruitmentRequest.name(),
+			LocalDateTime.now(), createRecruitmentRequest.endAt(), createRecruitmentRequest.isActive(),
 			createRecruitmentRequest.recruitmentStatus());
 
 		if (createRecruitmentRequest.items() != null) {
