@@ -26,7 +26,7 @@ public class RecruitmentController {
 	@PostMapping
 	@Operation(summary = "지원서 양식을 생성합니다.")
 	public CommonResponse<Void> createRecruitment(
-		@CurrentMemberId long memberId, @Valid @RequestBody CreateRecruitmentRequest request
+		@CurrentMemberId Long memberId, @Valid @RequestBody CreateRecruitmentRequest request
 	) {
 		recruitmentUseCase.createRecruitment(memberId, request);
 

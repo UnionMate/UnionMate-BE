@@ -14,6 +14,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRe
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.exception.NotRecruitmentCouncilMemberException;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.AnnouncementItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
@@ -34,7 +35,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 
 	@Transactional
-	public void createRecruitment(long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
+	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Council council = councilManager.getCouncil();
 
@@ -51,8 +52,13 @@ public class RecruitmentUseCase {
 		recruitmentSaveService.save(recruitment);
 	}
 
-	public RecruitmentResponse getRecruitmentForm(Long id) {
+	public RecruitmentResponse getRecruitmentForm(Long memberId, Long id) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
+
+		if(!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
+			throw new NotRecruitmentCouncilMemberException();
+		}
 
 		List<ItemResponse> items = recruitment.getItems().stream()
 			.map(ItemResponse::from)
