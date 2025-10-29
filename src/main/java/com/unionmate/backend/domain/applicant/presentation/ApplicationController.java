@@ -73,7 +73,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATION, application);
 	}
 
-	@PostMapping("/{applicationId}/comments/")
+	@PostMapping("/{applicationId}/comments")
 	@Operation(summary = "지원서 서류 평가 코멘트를 생성합니다. (관리자 전용)")
 	public CommonResponse<Void> createComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @Valid @RequestBody CreateCommentRequest createCommentRequest) {
 		commentUseCase.createComment(memberId, applicationId, createCommentRequest);
@@ -89,7 +89,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_COMMENT);
 	}
 
-	@GetMapping("/{applicationId}}/comments/")
+	@GetMapping("/{applicationId}}/comments")
 	@Operation(summary = "지원서 서류 평가 코멘트 목록을 조회합니다. (임원 전용)")
 	public CommonResponse<List<CommentResponse>> getComments(@CurrentMemberId Long memberId, @PathVariable Long applicationId) {
 		List<CommentResponse> responses = commentUseCase.getComments(memberId, applicationId);
