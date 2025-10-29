@@ -14,5 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 	@EntityGraph(attributePaths = {"councilManager", "councilManager.member"})
 	List<Comment> findAllByApplicationOrderByCreatedAtDesc(Application application);
 
+	@EntityGraph(attributePaths = {"councilManager", "councilManager.member"})
 	Optional<Comment> findByIdAndApplication(Long commentId, Application application);
 }
