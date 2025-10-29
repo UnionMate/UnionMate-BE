@@ -1,6 +1,9 @@
 package com.unionmate.backend.domain.applicant.application.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.unionmate.backend.domain.applicant.domain.entity.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -22,4 +25,29 @@ public record CommentResponse(
 
 	@Schema(description = "평가 수정 시각", example = "2025-10-21T10:05:12")
 	LocalDateTime updatedAt
-) {}
+) {
+	public static CommentResponse from(Comment comment) {
+		String councilManagerName = comment.getCouncilManager().getMember().getName();
+		return new CommentResponse(
+			comment.getId(),
+			comment.getCouncilManager().getId(),
+			councilManagerName,
+			comment.getContent(),
+			comment.getCreatedAt(),
+			comment.getUpdatedAt()
+		);
+	}
+
+	public static List<CommentResponse> fromList(List<Comment> comments) {
+		return comments.stream().map(CommentResponse::from).toList();
+	}
+
+	public static CommentResponse of(Long commentId,
+		Long councilManagerId,
+		String councilManagerName,
+		String content,
+		LocalDateTime createdAt,
+		LocalDateTime updatedAt) {
+		return new CommentResponse(commentId, councilManagerId, councilManagerName, content, createdAt, updatedAt);
+	}
+}

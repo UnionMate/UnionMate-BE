@@ -1,7 +1,8 @@
 package com.unionmate.backend.domain.applicant.domain.entity;
 
-import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
+import com.unionmate.backend.global.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,4 +33,16 @@ public class Comment extends BaseEntity {
 
   @Column(name = "content", length = 1000, nullable = false)
   private String content;
+
+  public static Comment createContent(Application application, CouncilManager councilManager, String content) {
+    return Comment.builder()
+        .application(application)
+        .councilManager(councilManager)
+        .content(content)
+        .build();
+  }
+
+  public void updateContent(String content) {
+    this.content = content;
+  }
 }
