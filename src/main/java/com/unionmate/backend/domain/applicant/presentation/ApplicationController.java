@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateCommentRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.DecisionRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
-import com.unionmate.backend.domain.applicant.application.dto.request.InterviewDecisionRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.CommentResponse;
@@ -114,11 +114,12 @@ public class ApplicationController {
 
 	@PatchMapping("/{applicationId}/document/fail")
 	@Operation(summary = "서류 평가를 결과 확정합니다. (관리자 전용)")
-	public CommonResponse<Void> failOnDocument(
+	public CommonResponse<Void> decideOnDocument(
 		@CurrentMemberId Long memberId,
-		@PathVariable Long applicationId
+		@PathVariable Long applicationId,
+		@Valid @RequestBody DecisionRequest decisionRequest
 	) {
-		applicationDecisionUseCase.failOnDocument(memberId, applicationId);
+		applicationDecisionUseCase.decideOnDocument(memberId, applicationId, decisionRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.DOCUMENT_DECISION);
 	}
@@ -129,10 +130,10 @@ public class ApplicationController {
 	public CommonResponse<Void> decideOnInterview(
 		@CurrentMemberId Long memberId,
 		@PathVariable Long applicationId,
-		@Valid @RequestBody InterviewDecisionRequest interviewDecisionRequest
+		@Valid @RequestBody DecisionRequest decisionRequest
 	) {
-		applicationDecisionUseCase.decideOnInterview(memberId, applicationId, interviewDecisionRequest);
-		
+		applicationDecisionUseCase.decideOnInterview(memberId, applicationId, decisionRequest);
+
 		return CommonResponse.success(ApplicationResponseCode.INTERVIEW_EVALUATION_DECISION);
 	}
 }

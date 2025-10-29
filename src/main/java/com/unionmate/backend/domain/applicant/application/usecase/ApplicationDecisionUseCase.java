@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.unionmate.backend.domain.applicant.application.dto.request.InterviewDecisionRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.DecisionRequest;
 import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationForbiddenException;
 import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationInvalidStageException;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
@@ -29,26 +29,31 @@ public class ApplicationDecisionUseCase {
 	private final CouncilManagerGetService councilManagerGetService;
 
 	@Transactional
-	public void failOnDocument(Long memberId, Long applicationId) {
+	public void decideOnDocument(Long memberId, Long applicationId, DecisionRequest request) {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
 		validateSameCouncil(councilManager, application);
 		validateDocumentSubmitted(application);
 
-		application.updateStage(Stage.finalizeFailed());
+		if (request.decision() == DecisionRequest.Decision.PASSED) {
+			application.updateStage(Stage.finalizePassed());
+		} else {
+			application.updateStage(Stage.finalizeFailed());
+		}
+
 		applicationSaveService.save(application);
 	}
 
 	@Transactional
-	public void decideOnInterview(Long memberId, Long applicationId, InterviewDecisionRequest request) {
+	public void decideOnInterview(Long memberId, Long applicationId, DecisionRequest request) {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
 		validateSameCouncil(councilManager, application);
 		validateInterviewSubmitted(application);
 
-		if (request.decision() == InterviewDecisionRequest.Decision.PASSED) {
+		if (request.decision() == DecisionRequest.Decision.PASSED) {
 			application.updateStage(Stage.finalizePassed());
 		} else {
 			application.updateStage(Stage.finalizeFailed());
