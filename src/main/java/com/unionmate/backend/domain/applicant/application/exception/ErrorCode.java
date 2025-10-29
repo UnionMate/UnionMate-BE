@@ -17,7 +17,12 @@ public enum ErrorCode implements ErrorInfo {
 	RECRUITMENT_CLOSED("현재 지원 기간이 아닙니다.", 2108),
 	ITEM_ANSWER_DUPLICATE("동일한 질문에 중복된 답변을 하였습니다.", 2109),
 	APPLICATION_NOT_FOUND("해당 지원서를 찾을 수 없습니다.", 2110),
-	APPLICATION_UPDATE_INVALID("해당 지원서를 수정할 수 있는 기간이 아닙니다.", 2111);
+	APPLICATION_UPDATE_INVALID("해당 지원서를 수정할 수 있는 기간이 아닙니다.", 2111),
+
+	// Comment 관련
+	COMMENT_NOT_FOUND("해당 코멘트를 찾을 수 없습니다.", 2130),
+	COMMENT_APPLICATION_MISMATCH("코멘트와 지원서가 일치하지 않습니다.", 2131),
+	COMMENT_FORBIDDEN("코멘트에 접근 권한이 없습니다.", 2132);
 
 	private final String message;
 	private final Integer code;
