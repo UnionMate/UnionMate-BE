@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class CouncilManageUsecase {
 	private final MemberGetService memberGetService;
 	private final SchoolGetService schoolGetService;
-	private final ApplicationGetService applicantGetService;
+	private final ApplicationGetService applicationGetService;
 	private final CouncilManagerGetService councilManagerGetService;
 	private final CouncilGetService councilGetService;
 
@@ -112,7 +112,7 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		validateSameCouncil(councilManager, council);
 
-		List<CouncilApplicantRow> rows = applicantGetService.getDocumentScreeningApplicantsForCouncil(council,
+		List<CouncilApplicantRow> rows = applicationGetService.getDocumentScreeningApplicantsForCouncil(council,
 			evaluationFilterOrNull);
 
 		return rows.stream()
@@ -129,7 +129,7 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		validateSameCouncil(councilManager, council);
 
-		List<CouncilApplicantRow> rows = applicantGetService.getInterviewApplicantsForCouncil(council,
+		List<CouncilApplicantRow> rows = applicationGetService.getInterviewApplicantsForCouncil(council,
 			evaluationFilterOrNull);
 
 		return rows.stream()

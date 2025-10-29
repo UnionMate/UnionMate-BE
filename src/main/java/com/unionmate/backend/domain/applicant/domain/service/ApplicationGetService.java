@@ -28,23 +28,31 @@ public class ApplicationGetService {
 			.orElseThrow(ApplicationNotFoundException::new);
 	}
 
-	public List<CouncilApplicantRow> getDocumentScreeningApplicantsForCouncil(Council council,
-		EvaluationStatus evaluationFilterOrNull) {
+	public List<CouncilApplicantRow> getDocumentScreeningApplicantsForCouncil(
+		Council council, EvaluationStatus evaluationFilterOrNull
+	) {
+		List<RecruitmentStatus> statuses = List.of(
+			RecruitmentStatus.DOCUMENT_SCREENING,
+			RecruitmentStatus.INTERVIEW
+		);
 
 		return (evaluationFilterOrNull == null)
-			? applicationRepository.findApplicantsForCouncilNoFilter(council, RecruitmentStatus.DOCUMENT_SCREENING)
-			: applicationRepository.findApplicantsForCouncilWithFilter(
-			council, RecruitmentStatus.DOCUMENT_SCREENING, evaluationFilterOrNull
-		);
+			? applicationRepository.findApplicantsForCouncilByStatusesNoFilter(council, statuses)
+			: applicationRepository.findApplicantsForCouncilByStatusesWithFilter(council, statuses,
+			evaluationFilterOrNull);
 	}
 
-	public List<CouncilApplicantRow> getInterviewApplicantsForCouncil(Council council,
-		EvaluationStatus evaluationFilterOrNull) {
+	public List<CouncilApplicantRow> getInterviewApplicantsForCouncil(
+		Council council, EvaluationStatus evaluationFilterOrNull
+	) {
+		List<RecruitmentStatus> statuses = List.of(
+			RecruitmentStatus.INTERVIEW,
+			RecruitmentStatus.FINAL
+		);
 
 		return (evaluationFilterOrNull == null)
-			? applicationRepository.findApplicantsForCouncilNoFilter(council, RecruitmentStatus.INTERVIEW)
-			: applicationRepository.findApplicantsForCouncilWithFilter(
-			council, RecruitmentStatus.INTERVIEW, evaluationFilterOrNull
-		);
+			? applicationRepository.findApplicantsForCouncilByStatusesNoFilter(council, statuses)
+			: applicationRepository.findApplicantsForCouncilByStatusesWithFilter(council, statuses,
+			evaluationFilterOrNull);
 	}
 }
