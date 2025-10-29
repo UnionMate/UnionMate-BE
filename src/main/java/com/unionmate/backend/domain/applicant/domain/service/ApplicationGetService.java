@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.unionmate.backend.domain.applicant.application.exception.ApplicationNotFoundException;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.applicant.domain.repository.ApplicationRepository;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow;
+import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,5 +26,25 @@ public class ApplicationGetService {
 	public Application getApplicationById(Long applicationId) {
 		return applicationRepository.findById(applicationId)
 			.orElseThrow(ApplicationNotFoundException::new);
+	}
+
+	public List<CouncilApplicantRow> getDocumentScreeningApplicantsForCouncil(Council council,
+		EvaluationStatus evaluationFilterOrNull) {
+
+		return (evaluationFilterOrNull == null)
+			? applicationRepository.findApplicantsForCouncilNoFilter(council, RecruitmentStatus.DOCUMENT_SCREENING)
+			: applicationRepository.findApplicantsForCouncilWithFilter(
+			council, RecruitmentStatus.DOCUMENT_SCREENING, evaluationFilterOrNull
+		);
+	}
+
+	public List<CouncilApplicantRow> getInterviewApplicantsForCouncil(Council council,
+		EvaluationStatus evaluationFilterOrNull) {
+
+		return (evaluationFilterOrNull == null)
+			? applicationRepository.findApplicantsForCouncilNoFilter(council, RecruitmentStatus.INTERVIEW)
+			: applicationRepository.findApplicantsForCouncilWithFilter(
+			council, RecruitmentStatus.INTERVIEW, evaluationFilterOrNull
+		);
 	}
 }
