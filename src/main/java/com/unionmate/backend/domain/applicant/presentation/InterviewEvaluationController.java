@@ -30,7 +30,7 @@ public class InterviewEvaluationController {
 	private final InterviewEvaluationUseCase interviewEvaluationUseCase;
 
 	@PostMapping
-	@Operation(summary = "면접 평가 코멘트를 생성합니다. (관리자 전용)")
+	@Operation(summary = "면접 평가를 생성합니다. (관리자 전용)")
 	public CommonResponse<Void> createEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @Valid @RequestBody CreateInterviewEvaluationRequest request) {
 		interviewEvaluationUseCase.createEvaluation(memberId, applicationId, request);
 
@@ -38,7 +38,7 @@ public class InterviewEvaluationController {
 	}
 
 	@GetMapping
-	@Operation(summary = "면접 평가 코멘트 목록을 조회합니다. (관리자 전용)")
+	@Operation(summary = "면접 평가 목록을 조회합니다. (관리자 전용)")
 	public CommonResponse<List<InterviewEvaluationResponse>> getEvaluations(@CurrentMemberId Long memberId, @PathVariable Long applicationId) {
 		List<InterviewEvaluationResponse> responses = interviewEvaluationUseCase.getEvaluations(memberId, applicationId);
 
@@ -46,7 +46,7 @@ public class InterviewEvaluationController {
 	}
 
 	@PatchMapping("/{evaluationId}")
-	@Operation(summary = "면접 평가 코멘트를 수정합니다. (관리자 전용)")
+	@Operation(summary = "면접 평가를 수정합니다. (관리자 전용)")
 	public CommonResponse<Void> updateEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long evaluationId, @Valid @RequestBody UpdateInterviewEvaluationRequest request) {
 		interviewEvaluationUseCase.updateEvaluation(memberId, applicationId, evaluationId, request);
 
@@ -54,7 +54,7 @@ public class InterviewEvaluationController {
 	}
 
 	@DeleteMapping("/{evaluationId}")
-	@Operation(summary = "면접 평가 코멘트를 삭제합니다. (관리자 전용)")
+	@Operation(summary = "면접 평가를 삭제합니다. (관리자 전용)")
 	public CommonResponse<Void> deleteEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long evaluationId) {
 		interviewEvaluationUseCase.deleteEvaluation(memberId, applicationId, evaluationId);
 
