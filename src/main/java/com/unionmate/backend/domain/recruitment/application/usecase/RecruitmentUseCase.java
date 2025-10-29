@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
+import com.unionmate.backend.domain.council.exception.CouncilManagerNotFoundException;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
@@ -36,8 +37,7 @@ public class RecruitmentUseCase {
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
-		CouncilManager councilManager;
-		councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
 		Council council = councilManager.getCouncil();
 
