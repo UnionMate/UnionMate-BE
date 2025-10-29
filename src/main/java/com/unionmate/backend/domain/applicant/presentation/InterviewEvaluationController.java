@@ -31,7 +31,8 @@ public class InterviewEvaluationController {
 
 	@PostMapping
 	@Operation(summary = "면접 평가를 생성합니다. (관리자 전용)")
-	public CommonResponse<Void> createEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @Valid @RequestBody CreateInterviewEvaluationRequest request) {
+	public CommonResponse<Void> createEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@Valid @RequestBody CreateInterviewEvaluationRequest request) {
 		interviewEvaluationUseCase.createEvaluation(memberId, applicationId, request);
 
 		return CommonResponse.success(ApplicationResponseCode.CREATE_INTERVIEW_EVALUATION);
@@ -39,15 +40,18 @@ public class InterviewEvaluationController {
 
 	@GetMapping
 	@Operation(summary = "면접 평가 목록을 조회합니다. (관리자 전용)")
-	public CommonResponse<List<InterviewEvaluationResponse>> getEvaluations(@CurrentMemberId Long memberId, @PathVariable Long applicationId) {
-		List<InterviewEvaluationResponse> responses = interviewEvaluationUseCase.getEvaluations(memberId, applicationId);
+	public CommonResponse<List<InterviewEvaluationResponse>> getEvaluations(@CurrentMemberId Long memberId,
+		@PathVariable Long applicationId) {
+		List<InterviewEvaluationResponse> responses = interviewEvaluationUseCase.getEvaluations(memberId,
+			applicationId);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_INTERVIEW_EVALUATIONS, responses);
 	}
 
 	@PatchMapping("/{evaluationId}")
 	@Operation(summary = "면접 평가를 수정합니다. (관리자 전용)")
-	public CommonResponse<Void> updateEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long evaluationId, @Valid @RequestBody UpdateInterviewEvaluationRequest request) {
+	public CommonResponse<Void> updateEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@PathVariable Long evaluationId, @Valid @RequestBody UpdateInterviewEvaluationRequest request) {
 		interviewEvaluationUseCase.updateEvaluation(memberId, applicationId, evaluationId, request);
 
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_INTERVIEW_EVALUATION);
@@ -55,7 +59,8 @@ public class InterviewEvaluationController {
 
 	@DeleteMapping("/{evaluationId}")
 	@Operation(summary = "면접 평가를 삭제합니다. (관리자 전용)")
-	public CommonResponse<Void> deleteEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long evaluationId) {
+	public CommonResponse<Void> deleteEvaluation(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@PathVariable Long evaluationId) {
 		interviewEvaluationUseCase.deleteEvaluation(memberId, applicationId, evaluationId);
 
 		return CommonResponse.success(ApplicationResponseCode.DELETE_INTERVIEW_EVALUATION);

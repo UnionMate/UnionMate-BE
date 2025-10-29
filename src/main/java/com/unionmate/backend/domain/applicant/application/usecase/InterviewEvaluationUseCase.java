@@ -47,7 +47,8 @@ public class InterviewEvaluationUseCase {
 		validateRecruitmentStatus(application);
 		validateSameCouncil(councilManager, application);
 
-		InterviewEvaluation interviewEvaluation = InterviewEvaluation.createInterviewEvaluation(application, councilManager, request.evaluation());
+		InterviewEvaluation interviewEvaluation = InterviewEvaluation.createInterviewEvaluation(application,
+			councilManager, request.evaluation());
 		interviewEvaluationCreateService.create(interviewEvaluation);
 	}
 
@@ -62,7 +63,8 @@ public class InterviewEvaluationUseCase {
 	}
 
 	@Transactional
-	public void updateEvaluation(Long memberId, Long applicationId, Long evaluationId, UpdateInterviewEvaluationRequest request) {
+	public void updateEvaluation(Long memberId, Long applicationId, Long evaluationId,
+		UpdateInterviewEvaluationRequest request) {
 		Application application = applicationGetService.getApplicationById(applicationId);
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		interviewEvaluationUpdateService.update(application, councilManager, evaluationId, request.evaluation());

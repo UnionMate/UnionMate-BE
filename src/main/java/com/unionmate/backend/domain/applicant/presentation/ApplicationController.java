@@ -75,7 +75,8 @@ public class ApplicationController {
 
 	@PostMapping("/{applicationId}/comments")
 	@Operation(summary = "지원서 서류 평가 코멘트를 생성합니다. (관리자 전용)")
-	public CommonResponse<Void> createComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @Valid @RequestBody CreateCommentRequest createCommentRequest) {
+	public CommonResponse<Void> createComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@Valid @RequestBody CreateCommentRequest createCommentRequest) {
 		commentUseCase.createComment(memberId, applicationId, createCommentRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.CREATE_COMMENT);
@@ -83,7 +84,8 @@ public class ApplicationController {
 
 	@PatchMapping("/{applicationId}/comments/{commentId}")
 	@Operation(summary = "지원서 서류 평가 코멘트를 수정합니다. (관리자 전용)")
-	public CommonResponse<Void> updateComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest updateCommentRequest) {
+	public CommonResponse<Void> updateComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest updateCommentRequest) {
 		commentUseCase.updateComment(memberId, applicationId, commentId, updateCommentRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_COMMENT);
@@ -91,7 +93,8 @@ public class ApplicationController {
 
 	@GetMapping("/{applicationId}/comments")
 	@Operation(summary = "지원서 서류 평가 코멘트 목록을 조회합니다. (임원 전용)")
-	public CommonResponse<List<CommentResponse>> getComments(@CurrentMemberId Long memberId, @PathVariable Long applicationId) {
+	public CommonResponse<List<CommentResponse>> getComments(@CurrentMemberId Long memberId,
+		@PathVariable Long applicationId) {
 		List<CommentResponse> responses = commentUseCase.getComments(memberId, applicationId);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_COMMENTS, responses);
@@ -99,7 +102,8 @@ public class ApplicationController {
 
 	@DeleteMapping("/{applicationId}/comments/{commentId}")
 	@Operation(summary = "지원서 서류 평가 코멘트를 삭제합니다. (임원 전용)")
-	public CommonResponse<Void> deleteComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long commentId) {
+	public CommonResponse<Void> deleteComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
+		@PathVariable Long commentId) {
 		commentUseCase.deleteComment(memberId, applicationId, commentId);
 
 		return CommonResponse.success(ApplicationResponseCode.DELETE_COMMENT);

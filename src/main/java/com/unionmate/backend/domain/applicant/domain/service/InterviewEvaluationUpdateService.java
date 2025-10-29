@@ -21,7 +21,8 @@ public class InterviewEvaluationUpdateService {
 	private final InterviewEvaluationGetService interviewEvaluationGetService;
 
 	@Transactional
-	public void update(Application application, CouncilManager councilManager, Long evaluationId, String newEvaluation) {
+	public void update(Application application, CouncilManager councilManager, Long evaluationId,
+		String newEvaluation) {
 
 		if (application.getRecruitment().getRecruitmentStatus() != RecruitmentStatus.INTERVIEW) {
 			throw new InvalidRecruitmentStatusException();
