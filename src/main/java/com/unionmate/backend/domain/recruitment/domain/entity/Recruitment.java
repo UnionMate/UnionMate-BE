@@ -1,9 +1,13 @@
 package com.unionmate.backend.domain.recruitment.domain.entity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.unionmate.backend.domain.council.domain.entity.Council;
-import com.unionmate.backend.global.entity.BaseEntity;
-import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.global.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,14 +15,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +35,7 @@ import lombok.experimental.SuperBuilder;
 public class Recruitment extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@Column(name = "council_id", nullable = false)
+	@JoinColumn(name = "council_id", nullable = false)
 	private Council council;
 
 	@Column(name = "name", nullable = false)
