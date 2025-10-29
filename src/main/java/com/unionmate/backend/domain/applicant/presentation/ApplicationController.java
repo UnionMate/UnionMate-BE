@@ -112,7 +112,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.DELETE_COMMENT);
 	}
 
-	@PatchMapping("/{applicationId}/document/fail")
+	@PatchMapping("/{applicationId}/document/decision")
 	@Operation(summary = "서류 평가를 결과 확정합니다. (관리자 전용)")
 	public CommonResponse<Void> decideOnDocument(
 		@CurrentMemberId Long memberId,
@@ -124,7 +124,6 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.DOCUMENT_DECISION);
 	}
 
-	/** 면접 평가 (합격/불합격 결정) */
 	@PatchMapping("/{applicationId}/interview/evaluation")
 	@Operation(summary = "면접 평가 결과를 확정합니다. (관리자 전용)")
 	public CommonResponse<Void> decideOnInterview(
