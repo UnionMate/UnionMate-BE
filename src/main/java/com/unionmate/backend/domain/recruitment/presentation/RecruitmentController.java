@@ -35,8 +35,10 @@ public class RecruitmentController {
 
 	@GetMapping("/{recruitmentId}")
 	@Operation(summary = "지원서 양식을 조회합니다.")
-	public CommonResponse<RecruitmentResponse> getRecruitment(@PathVariable Long recruitmentId) {
-		RecruitmentResponse recruitmentResponse = recruitmentUseCase.getRecruitmentForm(recruitmentId);
+	public CommonResponse<RecruitmentResponse> getRecruitment(
+		@CurrentMemberId Long memberId, @PathVariable Long recruitmentId
+	) {
+		RecruitmentResponse recruitmentResponse = recruitmentUseCase.getRecruitmentForm(memberId, recruitmentId);
 
 		return CommonResponse.success(RecruitmentResponseCode.GET_RECRUITMENT, recruitmentResponse);
 	}
