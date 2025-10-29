@@ -36,10 +36,21 @@ public class ApplicationGetService {
 			RecruitmentStatus.INTERVIEW
 		);
 
-		return (evaluationFilterOrNull == null)
-			? applicationRepository.findApplicantsForCouncilByStatusesNoFilter(council, statuses)
-			: applicationRepository.findApplicantsForCouncilByStatusesWithFilter(council, statuses,
-			evaluationFilterOrNull);
+		if (evaluationFilterOrNull == null) {
+			
+			return applicationRepository.findApplicantsForCouncilByStatusesNoFilter(
+				council,
+				statuses,
+				EvaluationStatus.FAILED,
+				EvaluationStatus.PASSED
+			);
+		}
+
+		return applicationRepository.findApplicantsForCouncilByStatusesWithFilter(
+			council,
+			statuses,
+			evaluationFilterOrNull
+		);
 	}
 
 	public List<CouncilApplicantRow> getInterviewApplicantsForCouncil(
@@ -50,9 +61,20 @@ public class ApplicationGetService {
 			RecruitmentStatus.FINAL
 		);
 
-		return (evaluationFilterOrNull == null)
-			? applicationRepository.findApplicantsForCouncilByStatusesNoFilter(council, statuses)
-			: applicationRepository.findApplicantsForCouncilByStatusesWithFilter(council, statuses,
-			evaluationFilterOrNull);
+		if (evaluationFilterOrNull == null) {
+
+			return applicationRepository.findApplicantsForCouncilByStatusesNoFilter(
+				council,
+				statuses,
+				EvaluationStatus.FAILED,
+				EvaluationStatus.PASSED
+			);
+		}
+
+		return applicationRepository.findApplicantsForCouncilByStatusesWithFilter(
+			council,
+			statuses,
+			evaluationFilterOrNull
+		);
 	}
 }

@@ -16,7 +16,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	List<Application> findAllByNameAndEmailOrderByIdDesc(String name, String email);
 
 	@Query("""
-		select new com.unionmate.backend.domain.applicant.application.query.CouncilApplicantRow(
+		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
 		)
 		from Application a
@@ -25,15 +25,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		  and a.stage.recruitmentStatus in :statuses
 		order by
 		  case
-		    when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.FAILED then 0
-		    when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.PASSED then 1
+		    when a.stage.evaluationStatus = :failed then 0
+		    when a.stage.evaluationStatus = :passed then 1
 		    else 2
-		  end asc,
+		  end,
 		  a.id desc
 		""")
 	List<CouncilApplicantRow> findApplicantsForCouncilByStatusesNoFilter(
 		@Param("council") Council council,
-		@Param("statuses") List<RecruitmentStatus> statuses
+		@Param("statuses") List<RecruitmentStatus> statuses,
+		@Param("failed") EvaluationStatus failed,
+		@Param("passed") EvaluationStatus passed
 	);
 
 	@Query("""
