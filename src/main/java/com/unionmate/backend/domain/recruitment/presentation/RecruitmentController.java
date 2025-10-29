@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
 import com.unionmate.backend.domain.recruitment.application.usecase.RecruitmentUseCase;
+import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +25,10 @@ public class RecruitmentController {
 
 	@PostMapping
 	@Operation(summary = "지원서 양식을 생성합니다.")
-	public CommonResponse<Void> createRecruitment(@Valid @RequestBody CreateRecruitmentRequest request) {
-		recruitmentUseCase.createRecruitment(request);
+	public CommonResponse<Void> createRecruitment(
+		@CurrentMemberId Long memberId, @Valid @RequestBody CreateRecruitmentRequest request
+	) {
+		recruitmentUseCase.createRecruitment(memberId, request);
 
 		return CommonResponse.success(RecruitmentResponseCode.CREATE_RECRUITMENT);
 	}

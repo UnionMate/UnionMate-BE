@@ -15,6 +15,12 @@ public record RecruitmentResponse(
 	@Schema(description = "지원서 이름", example = "2025 가천대학교 컴퓨터공학과 학생회 부원 모집")
 	String name,
 
+	@Schema(description = "학생회 id", example = "1")
+	Long councilId,
+
+	@Schema(description = "학생회 이름", example = "제25대 컴퓨터공학과 학생회")
+	String councilName,
+
 	@Schema(description = "지원 시작 날짜", example = "2025-10-31T23:59:00")
 	LocalDateTime startAt,
 
@@ -34,6 +40,8 @@ public record RecruitmentResponse(
 		return new RecruitmentResponse(
 			recruitment.getId(),
 			recruitment.getName(),
+			recruitment.getCouncil().getId(),
+			recruitment.getCouncil().getName(),
 			recruitment.getStartAt(),
 			recruitment.getEndAt(),
 			recruitment.getIsActive(),
