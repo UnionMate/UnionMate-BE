@@ -54,13 +54,8 @@ public class RecruitmentUseCase {
 		recruitmentSaveService.save(recruitment);
 	}
 
-	public RecruitmentResponse getRecruitmentForm(Long memberId, Long id) {
-		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+	public RecruitmentResponse getRecruitmentForm(Long id) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
-
-		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
-			throw new NotRecruitmentCouncilMemberException();
-		}
 
 		List<ItemResponse> items = recruitment.getItems().stream()
 			.map(ItemResponse::from)
