@@ -36,7 +36,9 @@ public class RecruitmentUseCase {
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
-		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		CouncilManager councilManager;
+		councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+
 		Council council = councilManager.getCouncil();
 
 		Recruitment recruitment = Recruitment.createRecruitment(council, createRecruitmentRequest.name(),
@@ -56,7 +58,7 @@ public class RecruitmentUseCase {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(id);
 
-		if(!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
+		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
 			throw new NotRecruitmentCouncilMemberException();
 		}
 
