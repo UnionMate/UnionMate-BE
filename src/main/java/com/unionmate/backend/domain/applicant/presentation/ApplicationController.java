@@ -81,7 +81,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.CREATE_COMMENT);
 	}
 
-	@PatchMapping("/{{applicationId}}/comments/{commentId}")
+	@PatchMapping("/{applicationId}/comments/{commentId}")
 	@Operation(summary = "지원서 서류 평가 코멘트를 수정합니다. (관리자 전용)")
 	public CommonResponse<Void> updateComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest updateCommentRequest) {
 		commentUseCase.updateComment(memberId, applicationId, commentId, updateCommentRequest);
@@ -89,7 +89,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_COMMENT);
 	}
 
-	@GetMapping("/{applicationId}}/comments")
+	@GetMapping("/{applicationId}/comments")
 	@Operation(summary = "지원서 서류 평가 코멘트 목록을 조회합니다. (임원 전용)")
 	public CommonResponse<List<CommentResponse>> getComments(@CurrentMemberId Long memberId, @PathVariable Long applicationId) {
 		List<CommentResponse> responses = commentUseCase.getComments(memberId, applicationId);
@@ -97,7 +97,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.GET_COMMENTS, responses);
 	}
 
-	@DeleteMapping("/{{applicationId}}/comments/{commentId}")
+	@DeleteMapping("/{applicationId}/comments/{commentId}")
 	@Operation(summary = "지원서 서류 평가 코멘트를 삭제합니다. (임원 전용)")
 	public CommonResponse<Void> deleteComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId, @PathVariable Long commentId) {
 		commentUseCase.deleteComment(memberId, applicationId, commentId);
