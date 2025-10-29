@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.entity;
 
+import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
@@ -9,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -30,6 +33,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Recruitment extends BaseEntity {
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(name = "council_id", nullable = false)
+	private Council council;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -59,9 +66,10 @@ public class Recruitment extends BaseEntity {
 			&& !now.isAfter(endAt);
 	}
 
-	public static Recruitment createRecruitment(String name, LocalDateTime startAt, LocalDateTime endAt,
-		Boolean isActive, RecruitmentStatus recruitmentStatus) {
+	public static Recruitment createRecruitment(Council council, String name, LocalDateTime startAt,
+		LocalDateTime endAt, Boolean isActive, RecruitmentStatus recruitmentStatus) {
 		return Recruitment.builder()
+			.council(council)
 			.name(name)
 			.startAt(startAt)
 			.endAt(endAt)
