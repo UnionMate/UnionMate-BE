@@ -17,7 +17,11 @@ public enum ApplicationResponseCode implements ResponseCodeInterface {
 	CREATE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 생성되었습니다."),
 	UPDATE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 수정되었습니다."),
 	GET_COMMENTS(200, HttpStatus.OK, "지원서 코멘트 목록 조회에 성공했습니다."),
-	DELETE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 삭제되었습니다.");
+	DELETE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 삭제되었습니다."),
+	CREATE_INTERVIEW_EVALUATION(200, HttpStatus.OK, "면접 평가 코멘트가 성공적으로 생성되었습니다."),
+	GET_INTERVIEW_EVALUATIONS(200, HttpStatus.OK, "면접 평가 코멘트 목록 조회에 성공했습니다."),
+	UPDATE_INTERVIEW_EVALUATION(200, HttpStatus.OK, "면접 평가 코멘트가 성공적으로 수정되었습니다."),
+	DELETE_INTERVIEW_EVALUATION(200, HttpStatus.OK, "면접 평가 코멘트가 성공적으로 삭제되었습니다.");
 
 	private final int code;
 	private final HttpStatus status;
