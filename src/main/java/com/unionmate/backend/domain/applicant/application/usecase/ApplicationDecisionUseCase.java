@@ -37,9 +37,9 @@ public class ApplicationDecisionUseCase {
 		validateDocumentSubmitted(application);
 
 		if (request.decision() == DecisionRequest.Decision.PASSED) {
-			application.updateStage(Stage.finalizePassed());
+			application.updateStage(Stage.documentDecisionPassed());
 		} else {
-			application.updateStage(Stage.finalizeFailed());
+			application.updateStage(Stage.documentDecisionFailed());
 		}
 
 		applicationSaveService.save(application);

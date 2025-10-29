@@ -18,6 +18,13 @@ public record Stage(
 	@Column(nullable = false)
 	EvaluationStatus evaluationStatus
 ) {
+	public static Stage documentDecisionPassed() {
+		return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.PASSED);
+	}
+
+	public static Stage documentDecisionFailed() {
+		return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.FAILED);
+	}
 
 	public static Stage finalizeFailed() {
 		return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.FAILED);
