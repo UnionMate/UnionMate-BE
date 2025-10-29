@@ -19,8 +19,8 @@ public class CommentUpdateService {
 	private final CommentGetService commentGetService;
 
 	@Transactional
-	public void update(Application application, Long commentId, CouncilManager requestCouncilManager, String newContent) {
-		requestCouncilManager.isVice();
+	public void update(Application application, Long commentId, CouncilManager requestCouncilManager,
+		String newContent) {
 		Long managerCouncilId = requestCouncilManager.getCouncil().getId();
 		Long applicationCouncilId = application.getRecruitment().getCouncil().getId();
 

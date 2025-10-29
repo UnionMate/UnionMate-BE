@@ -22,7 +22,11 @@ public enum ErrorCode implements ErrorInfo {
 	// Comment 관련
 	COMMENT_NOT_FOUND("해당 코멘트를 찾을 수 없습니다.", 2130),
 	COMMENT_APPLICATION_MISMATCH("코멘트와 지원서가 일치하지 않습니다.", 2131),
-	COMMENT_FORBIDDEN("코멘트에 접근 권한이 없습니다.", 2132);
+	COMMENT_FORBIDDEN("코멘트에 접근 권한이 없습니다.", 2132),
+
+	// InterviewEvaluation 관련
+	INTERVIEW_EVALUATION_NOT_FOUND("해당 면접 평가를 찾을 수 없습니다.", 2133),
+	RECRUITMENT_STATUS_INVALID("서류 통과가 아닌 상태에서는 면접 평가를 진행할 수 없습니다.", 2134);
 
 	private final String message;
 	private final Integer code;

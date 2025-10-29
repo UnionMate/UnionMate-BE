@@ -2,6 +2,7 @@ package com.unionmate.backend.domain.applicant.domain.entity;
 
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.global.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,4 +33,16 @@ public class InterviewEvaluation extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "application_id", nullable = false)
   private Application application;
+
+  public static InterviewEvaluation createInterviewEvaluation(Application application, CouncilManager councilManager, String evaluation) {
+    return InterviewEvaluation.builder()
+        .application(application)
+        .councilManager(councilManager)
+        .evaluation(evaluation)
+        .build();
+  }
+
+  public void updateEvaluation(String newEvaluation) {
+    this.evaluation = newEvaluation;
+  }
 }

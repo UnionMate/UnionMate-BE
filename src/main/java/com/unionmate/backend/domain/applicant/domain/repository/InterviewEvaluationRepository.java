@@ -7,13 +7,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
-import com.unionmate.backend.domain.applicant.domain.entity.Comment;
+import com.unionmate.backend.domain.applicant.domain.entity.InterviewEvaluation;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-
-	@EntityGraph(attributePaths = {"councilManager", "councilManager.member"})
-	List<Comment> findAllByApplicationOrderByCreatedAtDesc(Application application);
+public interface InterviewEvaluationRepository extends JpaRepository<InterviewEvaluation, Long> {
 
 	@EntityGraph(attributePaths = {"councilManager", "councilManager.member"})
-	Optional<Comment> findByIdAndApplication(Long commentId, Application application);
+	List<InterviewEvaluation> findAllByApplicationOrderByCreatedAtDesc(Application application);
+
+	Optional<InterviewEvaluation> findByIdAndApplication(Long id, Application application);
 }
