@@ -1,12 +1,10 @@
 package com.unionmate.backend.domain.council.application.usecase;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationForbiddenException;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
 import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
@@ -110,7 +108,7 @@ public class CouncilManageUsecase {
 	) {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Council council = councilGetService.getCouncilById(councilId);
-		validateSameCouncil(councilManager, council);
+		councilManager.validateBelongsToCouncil(councilManager, council);
 
 		List<CouncilApplicantQueryRow> rows = applicationGetService.getDocumentScreeningApplicantsForCouncil(council,
 			evaluationFilterOrNull);
@@ -127,7 +125,7 @@ public class CouncilManageUsecase {
 	) {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Council council = councilGetService.getCouncilById(councilId);
-		validateSameCouncil(councilManager, council);
+		councilManager.validateBelongsToCouncil(councilManager, council);
 
 		List<CouncilApplicantQueryRow> rows = applicationGetService.getInterviewApplicantsForCouncil(council,
 			evaluationFilterOrNull);
@@ -137,13 +135,5 @@ public class CouncilManageUsecase {
 				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus()
 			))
 			.toList();
-	}
-
-	private void validateSameCouncil(CouncilManager councilManager, Council council) {
-		Long managerCouncilId = councilManager.getCouncil().getId();
-		Long targetCouncilId = council.getId();
-		if (!Objects.equals(managerCouncilId, targetCouncilId)) {
-			throw new ApplicationEvaluationForbiddenException();
-		}
 	}
 }
