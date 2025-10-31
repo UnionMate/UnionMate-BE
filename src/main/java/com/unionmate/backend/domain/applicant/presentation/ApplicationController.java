@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateCommentRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.DecisionRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.CommentResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
+import com.unionmate.backend.domain.applicant.application.usecase.ApplicationDecisionUseCase;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
 import com.unionmate.backend.domain.applicant.application.usecase.CommentUseCase;
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
@@ -35,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationController {
 	private final ApplicationUseCase applicationUseCase;
 	private final CommentUseCase commentUseCase;
+	private final ApplicationDecisionUseCase applicationDecisionUseCase;
 
 	@PostMapping("/{recruitmentId}")
 	@Operation(summary = "지원서를 작성합니다.")
@@ -92,7 +95,7 @@ public class ApplicationController {
 	}
 
 	@GetMapping("/{applicationId}/comments")
-	@Operation(summary = "지원서 서류 평가 코멘트 목록을 조회합니다. (임원 전용)")
+	@Operation(summary = "지원서 서류 평가 코멘트 목록을 조회합니다. (관리자 전용)")
 	public CommonResponse<List<CommentResponse>> getComments(@CurrentMemberId Long memberId,
 		@PathVariable Long applicationId) {
 		List<CommentResponse> responses = commentUseCase.getComments(memberId, applicationId);
@@ -101,11 +104,35 @@ public class ApplicationController {
 	}
 
 	@DeleteMapping("/{applicationId}/comments/{commentId}")
-	@Operation(summary = "지원서 서류 평가 코멘트를 삭제합니다. (임원 전용)")
+	@Operation(summary = "지원서 서류 평가 코멘트를 삭제합니다. (관리자 전용)")
 	public CommonResponse<Void> deleteComment(@CurrentMemberId Long memberId, @PathVariable Long applicationId,
 		@PathVariable Long commentId) {
 		commentUseCase.deleteComment(memberId, applicationId, commentId);
 
 		return CommonResponse.success(ApplicationResponseCode.DELETE_COMMENT);
+	}
+
+	@PatchMapping("/{applicationId}/document/decision")
+	@Operation(summary = "서류 평가를 결과 확정합니다. (관리자 전용)")
+	public CommonResponse<Void> decideOnDocument(
+		@CurrentMemberId Long memberId,
+		@PathVariable Long applicationId,
+		@Valid @RequestBody DecisionRequest decisionRequest
+	) {
+		applicationDecisionUseCase.decideOnDocument(memberId, applicationId, decisionRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.DOCUMENT_DECISION);
+	}
+
+	@PatchMapping("/{applicationId}/interview/evaluation")
+	@Operation(summary = "면접 평가 결과를 확정합니다. (관리자 전용)")
+	public CommonResponse<Void> decideOnInterview(
+		@CurrentMemberId Long memberId,
+		@PathVariable Long applicationId,
+		@Valid @RequestBody DecisionRequest decisionRequest
+	) {
+		applicationDecisionUseCase.decideOnInterview(memberId, applicationId, decisionRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.INTERVIEW_EVALUATION_DECISION);
 	}
 }

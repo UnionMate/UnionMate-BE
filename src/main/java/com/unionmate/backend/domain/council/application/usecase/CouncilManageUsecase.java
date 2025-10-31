@@ -1,8 +1,14 @@
 package com.unionmate.backend.domain.council.application.usecase;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantResponse;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
@@ -29,10 +35,12 @@ import lombok.RequiredArgsConstructor;
 public class CouncilManageUsecase {
 	private final MemberGetService memberGetService;
 	private final SchoolGetService schoolGetService;
-	private final CouncilSaveService councilSaveService;
-	private final CouncilManagerSaveService councilManagerSaveService;
+	private final ApplicationGetService applicationGetService;
 	private final CouncilManagerGetService councilManagerGetService;
 	private final CouncilGetService councilGetService;
+
+	private final CouncilSaveService councilSaveService;
+	private final CouncilManagerSaveService councilManagerSaveService;
 
 	@Transactional
 	public CreateCouncilResponse createCouncil(long memberId, CreateCouncilRequest dto) {
@@ -93,5 +101,39 @@ public class CouncilManageUsecase {
 		if (councilManagerGetService.existsByMember(member)) {
 			throw new CouncilManagerAlreadyExistsException();
 		}
+	}
+
+	public List<CouncilApplicantResponse> getDocumentScreeningApplicants(
+		long memberId, long councilId, EvaluationStatus evaluationFilterOrNull
+	) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.validateBelongsToCouncil(councilManager, council);
+
+		List<CouncilApplicantQueryRow> rows =
+			applicationGetService.getDocumentScreeningApplicantsForCouncil(council, evaluationFilterOrNull);
+
+		return rows.stream()
+			.map(row -> CouncilApplicantResponse.of(
+				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus()
+			))
+			.toList();
+	}
+
+	public List<CouncilApplicantResponse> getInterviewApplicants(
+		long memberId, long councilId, EvaluationStatus evaluationFilterOrNull
+	) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.validateBelongsToCouncil(councilManager, council);
+
+		List<CouncilApplicantQueryRow> rows =
+			applicationGetService.getInterviewApplicantsForCouncil(council, evaluationFilterOrNull);
+
+		return rows.stream()
+			.map(row -> CouncilApplicantResponse.of(
+				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus()
+			))
+			.toList();
 	}
 }

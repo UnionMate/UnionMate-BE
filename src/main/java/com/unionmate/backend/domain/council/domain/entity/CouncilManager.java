@@ -1,5 +1,8 @@
 package com.unionmate.backend.domain.council.domain.entity;
 
+import java.util.Objects;
+
+import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationForbiddenException;
 import com.unionmate.backend.domain.council.domain.entity.enums.CouncilRole;
 import com.unionmate.backend.domain.council.exception.DifferentCouncilException;
 import com.unionmate.backend.domain.council.exception.NotCouncilViceException;
@@ -90,6 +93,15 @@ public class CouncilManager extends BaseEntity {
 	public void validateSameCouncil(CouncilManager other) {
 		if (!this.council.getId().equals(other.getCouncil().getId())) {
 			throw new DifferentCouncilException();
+		}
+	}
+
+	public void validateBelongsToCouncil(CouncilManager councilManager, Council council) {
+		Long currentCouncilId = councilManager.getCouncil().getId();
+		Long targetCouncilId = council.getId();
+
+		if (!Objects.equals(currentCouncilId, targetCouncilId)) {
+			throw new ApplicationEvaluationForbiddenException();
 		}
 	}
 
