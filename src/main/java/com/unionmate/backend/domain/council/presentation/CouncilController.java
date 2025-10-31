@@ -102,8 +102,11 @@ public class CouncilController {
 
 	@Operation(
 		summary = "학생회 서류 심사 리스트 조회",
-		description = "RecruitmentStatus=DOCUMENT_SCREENING 대상. result(PASSED/FAILED)로 필터 가능. " +
-			"필터 미적용 시 기본 정렬은 FAILED가 먼저 오도록 함."
+		description = """
+			기본 : DOCUMENT_SCREENING(전체) + INTERVIEW(SUBMITTED)
+			- result=PASSED  : INTERVIEW(SUBMITTED 상태)
+			- result=FAILED  : DOCUMENT_SCREENING + FAILED
+			"""
 	)
 	@GetMapping("/{councilId}/applications/document-screening")
 	public CommonResponse<List<CouncilApplicantResponse>> getDocumentScreeningApplicants(
@@ -119,8 +122,11 @@ public class CouncilController {
 
 	@Operation(
 		summary = "학생회 면접 심사 리스트 조회",
-		description = "RecruitmentStatus=INTERVIEW 대상. result(PASSED/FAILED)로 필터 가능. "
-			+ "필터 미적용 시 기본 정렬은 FAILED가 먼저 오도록 함."
+		description = """
+			기본 : INTERVIEW(전체) + FINAL(전체)
+			- result=PASSED  : FINAL + PASSED
+			- result=FAILED  : FINAL + FAILED
+			"""
 	)
 	@GetMapping("/{councilId}/applications/interview")
 	public CommonResponse<List<CouncilApplicantResponse>> getInterviewApplicants(

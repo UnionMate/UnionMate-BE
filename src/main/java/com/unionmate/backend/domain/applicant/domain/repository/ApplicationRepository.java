@@ -24,13 +24,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.DOCUMENT_SCREENING,
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.INTERVIEW
 		  )
-		order by
-		    case
-		      when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.FAILED then 0
-		      when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.PASSED then 1
-		      else 2
-		    end asc,
-		    a.id desc
+		order by a.id desc
 		""")
 	List<CouncilApplicantQueryRow> findDocumentListNoFilter(@Param("council") Council council);
 
@@ -70,13 +64,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.INTERVIEW,
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.FINAL
 		  )
-		order by
-		    case
-		      when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.FAILED then 0
-		      when a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.PASSED then 1
-		      else 2
-		    end asc,
-		    a.id desc
+		order by a.id desc
 		""")
 	List<CouncilApplicantQueryRow> findInterviewListNoFilter(@Param("council") Council council);
 
@@ -92,7 +80,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		order by a.id desc
 		""")
 	List<CouncilApplicantQueryRow> findInterviewListPassed(@Param("council") Council council);
-
+	
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
