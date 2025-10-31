@@ -41,7 +41,6 @@ public class ApplicationDecisionUseCase {
 		} else {
 			application.updateStage(Stage.documentDecisionFailed());
 		}
-
 		applicationSaveService.save(application);
 	}
 
@@ -58,7 +57,6 @@ public class ApplicationDecisionUseCase {
 		} else {
 			application.updateStage(Stage.finalizeFailed());
 		}
-
 		applicationSaveService.save(application);
 	}
 

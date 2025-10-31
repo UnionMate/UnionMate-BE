@@ -10,13 +10,13 @@ import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStat
 import com.unionmate.backend.domain.applicant.domain.repository.ApplicationRepository;
 import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.domain.entity.Council;
-import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ApplicationGetService {
+
 	private final ApplicationRepository applicationRepository;
 
 	public List<Application> getMyApplications(String name, String email) {
@@ -31,50 +31,26 @@ public class ApplicationGetService {
 	public List<CouncilApplicantQueryRow> getDocumentScreeningApplicantsForCouncil(
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
-		List<RecruitmentStatus> statuses = List.of(
-			RecruitmentStatus.DOCUMENT_SCREENING,
-			RecruitmentStatus.INTERVIEW
-		);
-
 		if (evaluationFilterOrNull == null) {
-
-			return applicationRepository.findApplicantsForCouncilByStatusesNoFilter(
-				council,
-				statuses,
-				EvaluationStatus.FAILED,
-				EvaluationStatus.PASSED
-			);
+			return applicationRepository.findDocumentListNoFilter(council);
 		}
-
-		return applicationRepository.findApplicantsForCouncilByStatusesWithFilter(
-			council,
-			statuses,
-			evaluationFilterOrNull
-		);
+		return switch (evaluationFilterOrNull) {
+			case PASSED -> applicationRepository.findDocumentListPassed(council);
+			case FAILED -> applicationRepository.findDocumentListFailed(council);
+			default -> applicationRepository.findDocumentListNoFilter(council);
+		};
 	}
 
 	public List<CouncilApplicantQueryRow> getInterviewApplicantsForCouncil(
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
-		List<RecruitmentStatus> statuses = List.of(
-			RecruitmentStatus.INTERVIEW,
-			RecruitmentStatus.FINAL
-		);
-
 		if (evaluationFilterOrNull == null) {
-
-			return applicationRepository.findApplicantsForCouncilByStatusesNoFilter(
-				council,
-				statuses,
-				EvaluationStatus.FAILED,
-				EvaluationStatus.PASSED
-			);
+			return applicationRepository.findInterviewListNoFilter(council);
 		}
-
-		return applicationRepository.findApplicantsForCouncilByStatusesWithFilter(
-			council,
-			statuses,
-			evaluationFilterOrNull
-		);
+		return switch (evaluationFilterOrNull) {
+			case PASSED -> applicationRepository.findInterviewListPassed(council);
+			case FAILED -> applicationRepository.findInterviewListFailed(council);
+			default -> applicationRepository.findInterviewListNoFilter(council);
+		};
 	}
 }

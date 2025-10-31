@@ -18,20 +18,24 @@ public record Stage(
 	@Column(nullable = false)
 	EvaluationStatus evaluationStatus
 ) {
+	// 서류 합격 → 인터뷰 단계 대기
 	public static Stage documentDecisionPassed() {
-		return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.PASSED);
+		return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.SUBMITTED);
 	}
 
+	// 서류 탈락 → 서류 단계에서 종료
 	public static Stage documentDecisionFailed() {
-		return new Stage(RecruitmentStatus.INTERVIEW, EvaluationStatus.FAILED);
+		return new Stage(RecruitmentStatus.DOCUMENT_SCREENING, EvaluationStatus.FAILED);
 	}
 
-	public static Stage finalizeFailed() {
-		return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.FAILED);
-	}
-
+	// 면접 합격 → 최종 단계 확정
 	public static Stage finalizePassed() {
 		return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.PASSED);
+	}
+
+	// 면접 탈락 → 최종 단계 확정
+	public static Stage finalizeFailed() {
+		return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.FAILED);
 	}
 
 	public static Stage init() {
