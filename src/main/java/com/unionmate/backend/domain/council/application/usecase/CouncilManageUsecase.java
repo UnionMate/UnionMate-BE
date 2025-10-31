@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationForbiddenException;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.application.dto.CouncilApplicantResponse;
-import com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilRequest;
 import com.unionmate.backend.domain.council.application.dto.CreateCouncilResponse;
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameRequest;
@@ -112,7 +112,7 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		validateSameCouncil(councilManager, council);
 
-		List<CouncilApplicantRow> rows = applicationGetService.getDocumentScreeningApplicantsForCouncil(council,
+		List<CouncilApplicantQueryRow> rows = applicationGetService.getDocumentScreeningApplicantsForCouncil(council,
 			evaluationFilterOrNull);
 
 		return rows.stream()
@@ -129,7 +129,7 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		validateSameCouncil(councilManager, council);
 
-		List<CouncilApplicantRow> rows = applicationGetService.getInterviewApplicantsForCouncil(council,
+		List<CouncilApplicantQueryRow> rows = applicationGetService.getInterviewApplicantsForCouncil(council,
 			evaluationFilterOrNull);
 
 		return rows.stream()

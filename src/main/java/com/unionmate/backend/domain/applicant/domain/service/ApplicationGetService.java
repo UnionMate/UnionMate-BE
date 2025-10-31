@@ -8,7 +8,7 @@ import com.unionmate.backend.domain.applicant.application.exception.ApplicationN
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.applicant.domain.repository.ApplicationRepository;
-import com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
@@ -28,7 +28,7 @@ public class ApplicationGetService {
 			.orElseThrow(ApplicationNotFoundException::new);
 	}
 
-	public List<CouncilApplicantRow> getDocumentScreeningApplicantsForCouncil(
+	public List<CouncilApplicantQueryRow> getDocumentScreeningApplicantsForCouncil(
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
 		List<RecruitmentStatus> statuses = List.of(
@@ -37,7 +37,7 @@ public class ApplicationGetService {
 		);
 
 		if (evaluationFilterOrNull == null) {
-			
+
 			return applicationRepository.findApplicantsForCouncilByStatusesNoFilter(
 				council,
 				statuses,
@@ -53,7 +53,7 @@ public class ApplicationGetService {
 		);
 	}
 
-	public List<CouncilApplicantRow> getInterviewApplicantsForCouncil(
+	public List<CouncilApplicantQueryRow> getInterviewApplicantsForCouncil(
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
 		List<RecruitmentStatus> statuses = List.of(

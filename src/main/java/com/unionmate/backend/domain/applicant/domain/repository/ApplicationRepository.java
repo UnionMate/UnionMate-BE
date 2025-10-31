@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
-import com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow;
+import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
@@ -16,7 +16,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	List<Application> findAllByNameAndEmailOrderByIdDesc(String name, String email);
 
 	@Query("""
-		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow(
+		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
 		)
 		from Application a
@@ -31,7 +31,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		  end,
 		  a.id desc
 		""")
-	List<CouncilApplicantRow> findApplicantsForCouncilByStatusesNoFilter(
+	List<CouncilApplicantQueryRow> findApplicantsForCouncilByStatusesNoFilter(
 		@Param("council") Council council,
 		@Param("statuses") List<RecruitmentStatus> statuses,
 		@Param("failed") EvaluationStatus failed,
@@ -39,7 +39,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	);
 
 	@Query("""
-		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantRow(
+		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
 		)
 		from Application a
@@ -49,7 +49,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		  and a.stage.evaluationStatus = :evaluationStatus
 		order by a.id desc
 		""")
-	List<CouncilApplicantRow> findApplicantsForCouncilByStatusesWithFilter(
+	List<CouncilApplicantQueryRow> findApplicantsForCouncilByStatusesWithFilter(
 		@Param("council") Council council,
 		@Param("statuses") List<RecruitmentStatus> statuses,
 		@Param("evaluationStatus") EvaluationStatus evaluationStatus
