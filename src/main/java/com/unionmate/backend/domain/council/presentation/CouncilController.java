@@ -104,8 +104,9 @@ public class CouncilController {
 		summary = "학생회 서류 심사 리스트 조회",
 		description = """
 			기본 : DOCUMENT_SCREENING(전체) + INTERVIEW(SUBMITTED)
-			- result=PASSED  : INTERVIEW(SUBMITTED 상태)
-			- result=FAILED  : DOCUMENT_SCREENING + FAILED
+			- result=SUBMITTED : DOCUMENT_SCREENING + SUBMITTED
+			- result=PASSED    : INTERVIEW(SUBMITTED 상태)
+			- result=FAILED    : DOCUMENT_SCREENING + FAILED
 			"""
 	)
 	@GetMapping("/{councilId}/applications/document-screening")
@@ -124,8 +125,9 @@ public class CouncilController {
 		summary = "학생회 면접 심사 리스트 조회",
 		description = """
 			기본 : INTERVIEW(전체) + FINAL(전체)
-			- result=PASSED  : FINAL + PASSED
-			- result=FAILED  : FINAL + FAILED
+			- result=SUBMITTED : INTERVIEW + SUBMITTED
+			- result=PASSED    : FINAL + PASSED
+			- result=FAILED    : FINAL + FAILED
 			"""
 	)
 	@GetMapping("/{councilId}/applications/interview")

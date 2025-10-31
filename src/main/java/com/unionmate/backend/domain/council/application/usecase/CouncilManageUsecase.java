@@ -110,8 +110,8 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		councilManager.validateBelongsToCouncil(councilManager, council);
 
-		List<CouncilApplicantQueryRow> rows = applicationGetService.getDocumentScreeningApplicantsForCouncil(council,
-			evaluationFilterOrNull);
+		List<CouncilApplicantQueryRow> rows =
+			applicationGetService.getDocumentScreeningApplicantsForCouncil(council, evaluationFilterOrNull);
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(
@@ -127,8 +127,8 @@ public class CouncilManageUsecase {
 		Council council = councilGetService.getCouncilById(councilId);
 		councilManager.validateBelongsToCouncil(councilManager, council);
 
-		List<CouncilApplicantQueryRow> rows = applicationGetService.getInterviewApplicantsForCouncil(council,
-			evaluationFilterOrNull);
+		List<CouncilApplicantQueryRow> rows =
+			applicationGetService.getInterviewApplicantsForCouncil(council, evaluationFilterOrNull);
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(

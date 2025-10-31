@@ -32,9 +32,11 @@ public class ApplicationGetService {
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
 		if (evaluationFilterOrNull == null) {
+
 			return applicationRepository.findDocumentListNoFilter(council);
 		}
 		return switch (evaluationFilterOrNull) {
+			case SUBMITTED -> applicationRepository.findDocumentListSubmitted(council);
 			case PASSED -> applicationRepository.findDocumentListPassed(council);
 			case FAILED -> applicationRepository.findDocumentListFailed(council);
 			default -> applicationRepository.findDocumentListNoFilter(council);
@@ -45,9 +47,11 @@ public class ApplicationGetService {
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {
 		if (evaluationFilterOrNull == null) {
+
 			return applicationRepository.findInterviewListNoFilter(council);
 		}
 		return switch (evaluationFilterOrNull) {
+			case SUBMITTED -> applicationRepository.findInterviewListSubmitted(council);
 			case PASSED -> applicationRepository.findInterviewListPassed(council);
 			case FAILED -> applicationRepository.findInterviewListFailed(council);
 			default -> applicationRepository.findInterviewListNoFilter(council);
