@@ -55,7 +55,7 @@ public abstract class Item extends BaseEntity {
 	private Application application;
 
 	public void updateRequired(Boolean required) {
-		if (this.required != null) {
+		if (required != null) {
 			this.required = required;
 		}
 	}
