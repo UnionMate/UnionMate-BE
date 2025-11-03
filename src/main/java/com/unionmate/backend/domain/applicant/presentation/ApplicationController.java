@@ -16,6 +16,7 @@ import com.unionmate.backend.domain.applicant.application.dto.request.CreateAppl
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.DecisionRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.SetInterviewScheduleRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.CommentResponse;
@@ -24,6 +25,7 @@ import com.unionmate.backend.domain.applicant.application.dto.response.GetMyAppl
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationDecisionUseCase;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationUseCase;
 import com.unionmate.backend.domain.applicant.application.usecase.CommentUseCase;
+import com.unionmate.backend.domain.applicant.application.usecase.InterviewScheduleUseCase;
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
 
@@ -38,6 +40,7 @@ public class ApplicationController {
 	private final ApplicationUseCase applicationUseCase;
 	private final CommentUseCase commentUseCase;
 	private final ApplicationDecisionUseCase applicationDecisionUseCase;
+	private final InterviewScheduleUseCase interviewScheduleUseCase;
 
 	@PostMapping("/{recruitmentId}")
 	@Operation(summary = "지원서를 작성합니다.")
@@ -134,5 +137,17 @@ public class ApplicationController {
 		applicationDecisionUseCase.decideOnInterview(memberId, applicationId, decisionRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.INTERVIEW_EVALUATION_DECISION);
+	}
+
+	@PatchMapping("/{applicationId}/interview/schedule")
+	@Operation(summary = "면접 일정을 설정합니다. (관리자 전용)")
+	public CommonResponse<Void> setInterviewSchedule(
+		@CurrentMemberId Long memberId,
+		@PathVariable Long applicationId,
+		@Valid @RequestBody SetInterviewScheduleRequest setInterviewScheduleRequest
+	) {
+		interviewScheduleUseCase.setInterviewSchedule(memberId, applicationId, setInterviewScheduleRequest);
+
+		return CommonResponse.success(ApplicationResponseCode.SET_INTERVIEW_SCHEDULE);
 	}
 }
