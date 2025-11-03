@@ -12,6 +12,8 @@ public record UpdateRecruitmentRequest(
 	LocalDateTime endAt,
 	Boolean isActive,
 	RecruitmentStatus recruitmentStatus,
-	List<@Valid CreateItemRequest> items
+	List<@Valid CreateItemRequest> addItems,
+	List<@Valid UpdateItemRequest> updateItems,
+	List<Long> removeItems
 ) {
 }
