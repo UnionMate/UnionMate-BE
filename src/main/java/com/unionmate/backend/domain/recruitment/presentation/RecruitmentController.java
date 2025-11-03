@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.recruitment.presentation;
 
+import java.time.LocalDateTime;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.request.ToggleRecruitmentActivationRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
 import com.unionmate.backend.domain.recruitment.application.usecase.RecruitmentUseCase;
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
@@ -39,5 +43,28 @@ public class RecruitmentController {
 		RecruitmentResponse recruitmentResponse = recruitmentUseCase.getRecruitmentForm(recruitmentId);
 
 		return CommonResponse.success(RecruitmentResponseCode.GET_RECRUITMENT, recruitmentResponse);
+	}
+
+	@PostMapping("/{recruitmentId}/activation")
+	@Operation(
+		summary = "학생회 모집을 게시합니다. (OFF→ON) (관리자 전용)",
+		description = """
+			- 한번 게시하면 비활성화(ON→OFF)는 불가함
+			- 요청 본문의 active는 true만 허용됨(필수)
+			- active=true는 endAt 기간 이후에는 허용되지 않음
+			- 응답의 open은 isActive && 기간충족을 의미함
+			"""
+	)
+	public CommonResponse<ToggleRecruitmentActivationResponse> toggleRecruitmentActivation(
+		@CurrentMemberId Long memberId,
+		@PathVariable Long recruitmentId,
+		@Valid @RequestBody ToggleRecruitmentActivationRequest toggleRecruitmentActivationRequest
+	) {
+		LocalDateTime now = LocalDateTime.now();
+		ToggleRecruitmentActivationResponse response = recruitmentUseCase.toggleRecruitmentActivation(
+			memberId, recruitmentId, toggleRecruitmentActivationRequest, now
+		);
+
+		return CommonResponse.success(RecruitmentResponseCode.RECRUITMENT_TOGGLE_ACTIVATION, response);
 	}
 }
