@@ -29,6 +29,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSe
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTextRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.exception.ActiveRecruitmentCannotDeleteException;
 import com.unionmate.backend.domain.recruitment.application.exception.NotRecruitmentCouncilMemberException;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.AnnouncementItem;
@@ -37,6 +38,7 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentDeleteService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentSaveService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentUpdateService;
@@ -50,6 +52,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
 	private final RecruitmentUpdateService recruitmentUpdateService;
+	private final RecruitmentDeleteService recruitmentDeleteService;
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
@@ -102,6 +105,22 @@ public class RecruitmentUseCase {
 		removeItem(recruitment, items, updateRecruitmentRequest);
 
 		recruitmentSaveService.save(recruitment);
+	}
+
+	@Transactional
+	public void deleteRecruitment(Long memberId, Long recruitmentId) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+
+		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
+			throw new NotRecruitmentCouncilMemberException();
+		}
+
+		if (Boolean.TRUE.equals(recruitment.getIsActive())) {
+			throw new ActiveRecruitmentCannotDeleteException();
+		}
+
+		recruitmentDeleteService.deleteRecruitment(recruitmentId);
 	}
 
 	public RecruitmentResponse getRecruitmentForm(Long id) {
@@ -181,7 +200,8 @@ public class RecruitmentUseCase {
 						}
 
 						// 생성, 수정
-						if (updateSelectRequest.updateOptions() != null && !updateSelectRequest.updateOptions().isEmpty()) {
+						if (updateSelectRequest.updateOptions() != null && !updateSelectRequest.updateOptions()
+							.isEmpty()) {
 							Map<Long, SelectItemOption> selectOptions = selectItem.getSelectItemOptions().stream()
 								.filter(options -> options.getId() != null)
 								.collect(Collectors.toMap(SelectItemOption::getId, options -> options));

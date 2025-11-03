@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.recruitment.presentation;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,14 @@ public class RecruitmentController {
 		recruitmentUseCase.updateRecruitment(memberId, recruitmentId, request);
 
 		return CommonResponse.success(RecruitmentResponseCode.UPDATE_RECRUITMENT);
+	}
+
+	@DeleteMapping("/{recruitmentId}")
+	@Operation(summary = "지원서 양식을 삭제합니다.")
+	public CommonResponse<Void> deleteRecruitment(@CurrentMemberId Long memberId, @PathVariable Long recruitmentId) {
+		recruitmentUseCase.deleteRecruitment(memberId, recruitmentId);
+
+		return CommonResponse.success(RecruitmentResponseCode.DELETE_RECRUITMENT);
 	}
 
 	@GetMapping("/{recruitmentId}")
