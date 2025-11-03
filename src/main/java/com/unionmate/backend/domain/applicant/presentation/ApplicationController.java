@@ -20,6 +20,7 @@ import com.unionmate.backend.domain.applicant.application.dto.request.SetIntervi
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.response.CommentResponse;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationAdminResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
 import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
 import com.unionmate.backend.domain.applicant.application.usecase.ApplicationDecisionUseCase;
@@ -69,6 +70,25 @@ public class ApplicationController {
 		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationsRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
+	}
+
+	@GetMapping("/{applicationId}/mine/admin")
+	@Operation(
+		summary = "특정 지원서를 상세 조회합니다. (관리자 전용)",
+		description = """
+			관리자 전용 단건 조회 API 입니다.
+			- 같은 학생회 소속 검증을 수행합니다.
+			- 답변 목록은 문항 order 오름차순으로 정렬됩니다.
+			- 응답에는 모집 공고/지원자/면접/스테이지/답변 정보가 모두 포함됩니다.
+			"""
+	)
+	public CommonResponse<GetApplicationAdminResponse> getApplicationForAdmin(
+		@CurrentMemberId long memberId,
+		@PathVariable long applicationId
+	) {
+		GetApplicationAdminResponse response = applicationUseCase.getApplicationForAdmin(memberId, applicationId);
+
+		return CommonResponse.success(ApplicationResponseCode.GET_APPLICATION_DETAIL_FOR_ADMIN, response);
 	}
 
 	@GetMapping("/{applicationId}")
