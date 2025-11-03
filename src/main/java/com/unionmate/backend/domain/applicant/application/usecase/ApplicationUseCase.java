@@ -1,15 +1,5 @@
 package com.unionmate.backend.domain.applicant.application.usecase;
 
-import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
-import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
-import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
-import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
-import com.unionmate.backend.domain.applicant.application.exception.ApplicationUpdateInvalidException;
-import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
-import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
-import com.unionmate.backend.domain.applicant.application.util.SelectAnswerValidator;
-import com.unionmate.backend.domain.applicant.application.util.TextAnswerValidator;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,17 +16,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.applicant.application.dto.request.AnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CalendarAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationAdminResponse;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetApplicationResponse;
+import com.unionmate.backend.domain.applicant.application.dto.response.GetMyApplicationsResponse;
+import com.unionmate.backend.domain.applicant.application.exception.ApplicationEvaluationForbiddenException;
+import com.unionmate.backend.domain.applicant.application.exception.ApplicationUpdateInvalidException;
+import com.unionmate.backend.domain.applicant.application.exception.DuplicateItemAnswerException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
 import com.unionmate.backend.domain.applicant.application.exception.RecruitmentInvalidException;
 import com.unionmate.backend.domain.applicant.application.exception.RequiredAnswerMissingException;
+import com.unionmate.backend.domain.applicant.application.util.CalendarAnswerValidator;
+import com.unionmate.backend.domain.applicant.application.util.SelectAnswerValidator;
+import com.unionmate.backend.domain.applicant.application.util.TextAnswerValidator;
 import com.unionmate.backend.domain.applicant.application.util.UpdateAnswerValidator;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.column.Answer;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationSaveService;
+import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
+import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
@@ -51,9 +54,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ApplicationUseCase {
-	private final ApplicationSaveService applicationSaveService;
+
 	private final RecruitmentGetService recruitmentGetService;
 	private final ApplicationGetService applicationGetService;
+	private final CouncilManagerGetService councilManagerGetService;
+
+	private final ApplicationSaveService applicationSaveService;
+	
 	private final TextAnswerValidator textAnswerValidator;
 	private final SelectAnswerValidator selectAnswerValidator;
 	private final CalendarAnswerValidator calendarAnswerValidator;
@@ -283,6 +290,15 @@ public class ApplicationUseCase {
 		return GetApplicationResponse.from(application);
 	}
 
+	public GetApplicationAdminResponse getApplicationForAdmin(Long memberId, Long applicationId) {
+		Application application = applicationGetService.getApplicationWithDetails(applicationId);
+
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		validateSameCouncil(councilManager, application);
+
+		return GetApplicationAdminResponse.from(application);
+	}
+
 	private Map<Long, Item> existingAnswers(Application application, Recruitment recruitment) {
 		Map<Long, Item> map = new HashMap<>();
 		List<Item> answers = application.getAnswers();
@@ -295,5 +311,13 @@ public class ApplicationUseCase {
 				.findFirst().ifPresent(matched -> map.put(item.getId(), matched));
 		}
 		return map;
+	}
+
+	private void validateSameCouncil(CouncilManager councilManager, Application application) {
+		Long managerCouncilId = councilManager.getCouncil().getId();
+		Long applicationCouncilId = application.getRecruitment().getCouncil().getId();
+		if (!Objects.equals(managerCouncilId, applicationCouncilId)) {
+			throw new ApplicationEvaluationForbiddenException();
+		}
 	}
 }
