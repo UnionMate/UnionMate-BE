@@ -60,12 +60,6 @@ public class Recruitment extends BaseEntity {
 	@Builder.Default
 	private List<Item> items = new ArrayList<>();
 
-	public boolean isOpen(LocalDateTime now) {
-		return Boolean.TRUE.equals(isActive)
-			&& !now.isBefore(startAt)
-			&& !now.isAfter(endAt);
-	}
-
 	public static Recruitment createRecruitment(Council council, String name, LocalDateTime startAt,
 		LocalDateTime endAt, Boolean isActive, RecruitmentStatus recruitmentStatus) {
 		return Recruitment.builder()
@@ -76,5 +70,19 @@ public class Recruitment extends BaseEntity {
 			.isActive(isActive)
 			.recruitmentStatus(recruitmentStatus)
 			.build();
+	}
+
+	public void updateActivation(boolean active) {
+		this.isActive = active;
+	}
+
+	public boolean isOpen(LocalDateTime now) {
+		return Boolean.TRUE.equals(isActive)
+			&& !now.isBefore(startAt)
+			&& !now.isAfter(endAt);
+	}
+
+	public boolean isOpenForActivation(LocalDateTime now) {
+		return !now.isBefore(startAt);
 	}
 }
