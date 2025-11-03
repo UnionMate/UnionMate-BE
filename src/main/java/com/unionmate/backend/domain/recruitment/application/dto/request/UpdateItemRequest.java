@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import jakarta.validation.constraints.NotNull;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = UpdateTextRequest.class),
-	@JsonSubTypes.Type(value = UpdateSelectRequest.class),
-	@JsonSubTypes.Type(value = UpdateCalendarRequest.class),
-	@JsonSubTypes.Type(value = UpdateAnnouncementRequest.class)
+	@JsonSubTypes.Type(value = UpdateTextRequest.class, name = "TEXT"),
+	@JsonSubTypes.Type(value = UpdateSelectRequest.class, name = "SELECT"),
+	@JsonSubTypes.Type(value = UpdateCalendarRequest.class, name = "CALENDAR"),
+	@JsonSubTypes.Type(value = UpdateAnnouncementRequest.class, name = "ANNOUNCEMENT")
 })
 public sealed interface UpdateItemRequest permits UpdateTextRequest, UpdateSelectRequest, UpdateCalendarRequest, UpdateAnnouncementRequest {
 	@NotNull
