@@ -66,6 +66,22 @@ public class Recruitment extends BaseEntity {
 			&& !now.isAfter(endAt);
 	}
 
+	public void updateName(String name) {
+		this.name = name;
+	}
+
+	public void updateEndAt(LocalDateTime endAt) {
+		this.endAt = endAt;
+	}
+
+	public void updateIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public void updateStatus(RecruitmentStatus recruitmentStatus) {
+		this.recruitmentStatus = recruitmentStatus;
+	}
+
 	public static Recruitment createRecruitment(Council council, String name, LocalDateTime startAt,
 		LocalDateTime endAt, Boolean isActive, RecruitmentStatus recruitmentStatus) {
 		return Recruitment.builder()
