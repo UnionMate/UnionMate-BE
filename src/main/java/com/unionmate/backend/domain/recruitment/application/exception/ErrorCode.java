@@ -10,7 +10,10 @@ import lombok.Getter;
 public enum ErrorCode implements ErrorInfo {
 	RECRUITMENT_FORM_NOT_FOUND("해당 지원서 양식을 찾을 수 없습니다.", 2100),
 	ITEM_TYPE_NOT_EXIST("해당 종류의 항목은 존재하지 않습니다.", 2101),
-	NOT_RECRUITMENT_COUNCIL_MEMBER("해당 지원서 양식과 관련된 학생회 멤버가 아닙니다.", 2102);
+	NOT_RECRUITMENT_COUNCIL_MEMBER("해당 지원서 양식과 관련된 학생회 멤버가 아닙니다.", 2102),
+	RECRUITMENT_ACTIVATION_INVALID_PERIOD("모집 게시를 활성화할 수 없는 기간입니다.", 2103),
+	RECRUITMENT_DEACTIVATION_NOT_ALLOWED("모집 게시 비활성화는 허용되지 않습니다.", 2104),
+	RECRUITMENT_ACTIVATION_EXPIRED("모집 게시 활성화 기간이 만료되었습니다.", 2105);
 
 	private final String message;
 	private final Integer code;
