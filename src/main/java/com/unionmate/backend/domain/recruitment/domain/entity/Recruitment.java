@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentActivationExpiredException;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.global.entity.BaseEntity;
@@ -84,5 +85,20 @@ public class Recruitment extends BaseEntity {
 
 	public boolean isOpenForActivation(LocalDateTime now) {
 		return !now.isBefore(startAt);
+	}
+
+	public void activateIfAllowed(LocalDateTime now, boolean requestedActive) {
+		if (!requestedActive)
+			return;
+
+		if (now.isAfter(endAt))
+			throw new RecruitmentActivationExpiredException();
+
+		if (!isOpenForActivation(now))
+			return;
+
+		if (!Boolean.TRUE.equals(this.isActive)) {
+			updateActivation(true);
+		}
 	}
 }

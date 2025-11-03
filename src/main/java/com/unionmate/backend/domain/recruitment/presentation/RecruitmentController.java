@@ -52,7 +52,7 @@ public class RecruitmentController {
 			- 한번 게시하면 비활성화(ON→OFF)는 불가함
 			- 요청 본문의 active는 true만 허용됨(필수)
 			- active=true는 endAt 기간 이후에는 허용되지 않음
-			- 응답의 open은 isActive && 기간충족을 의미함
+			- 응답의 open은 isActive && 기간충족을 의미함 (함께 반환해주는 이유는 startAt 이전에도 미리 게시를 활성화할 수 있기 때문)
 			"""
 	)
 	public CommonResponse<ToggleRecruitmentActivationResponse> toggleRecruitmentActivation(

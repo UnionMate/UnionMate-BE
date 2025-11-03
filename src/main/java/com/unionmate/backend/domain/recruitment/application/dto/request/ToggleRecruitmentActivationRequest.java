@@ -8,7 +8,4 @@ public record ToggleRecruitmentActivationRequest(
 	@Schema(description = "활성화 여부. true만 허용됩니다.", example = "true")
 	boolean active
 ) {
-	public static ToggleRecruitmentActivationRequest of(boolean active) {
-		return new ToggleRecruitmentActivationRequest(active);
-	}
 }
