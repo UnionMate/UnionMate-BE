@@ -79,4 +79,8 @@ public class Application extends BaseEntity {
 	public void updateStage(Stage newStage) {
 		this.stage = newStage;
 	}
+
+	public void updateInterview(Interview newInterview) {
+		this.interview = newInterview;
+	}
 }
