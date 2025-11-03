@@ -4,6 +4,7 @@ import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.global.entity.BaseEntity;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -31,25 +32,49 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class Item extends BaseEntity {
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "item_type", insertable = false, updatable = false)
-  private ItemType itemType;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "item_type", insertable = false, updatable = false)
+	private ItemType itemType;
 
-  @Column(name = "required", nullable = false)
-  private Boolean required;
+	@Column(name = "required", nullable = false)
+	private Boolean required;
 
-  @Column(name = "title", nullable = false)
-  private String title;
+	@Column(name = "title", nullable = false)
+	private String title;
 
-  @Column(name = "orders", nullable = false)
-  private Integer order;
+	@Column(name = "orders", nullable = false)
+	private Integer order;
 
-  @Column(name = "description")
-  private String description;
+	@Column(name = "description")
+	private String description;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Recruitment recruitment;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Recruitment recruitment;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Application application;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Application application;
+
+	public void updateRequired(Boolean required) {
+		if (this.required != null) {
+			this.required = required;
+		}
+	}
+
+	public void updateTitle(String title) {
+		if (title != null) {
+			this.title = title;
+		}
+	}
+
+	public void updateOrder(Integer order) {
+		if (order != null) {
+			this.order = order;
+		}
+	}
+
+	public void updateDescription(String description) {
+		if (description != null) {
+			this.description = description;
+		}
+	}
 }

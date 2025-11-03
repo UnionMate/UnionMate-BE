@@ -37,6 +37,12 @@ public class CalendarItem extends Item {
 	@Lob
 	private Answer<LocalDate> answer;
 
+	public void updateDate(LocalDate date) {
+		if (date != null) {
+			this.date = date;
+		}
+	}
+
 	public void updateAnswer(Answer<LocalDate> answer) {
 		this.answer = answer;
 	}
