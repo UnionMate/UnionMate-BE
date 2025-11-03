@@ -54,7 +54,11 @@ public class SelectItem extends Item {
 	}
 
 	public void replaceOptions(List<SelectItemOption> selectItemOptions) {
-		this.selectItemOptions = selectItemOptions;
+		this.selectItemOptions.clear();
+		for(SelectItemOption selectItemOption : selectItemOptions) {
+			selectItemOption.setSelectItem(this);
+			this.selectItemOptions.add(selectItemOption);
+		}
 	}
 
 	public void updateAnswer(Answer<List<Long>> answer) {

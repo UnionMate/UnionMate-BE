@@ -1,8 +1,11 @@
 package com.unionmate.backend.domain.recruitment.application.usecase;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateAn
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateCalendarRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSelectOptionRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSelectRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTextRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
@@ -157,14 +161,50 @@ public class RecruitmentUseCase {
 					case
 						SelectItem selectItem when updateItemRequest instanceof UpdateSelectRequest updateSelectRequest -> {
 						selectItem.updateMultiple(updateSelectRequest.multiple());
-						if (updateSelectRequest.options() != null) {
-							List<SelectItemOption> selectItemOptions = updateSelectRequest.options().stream()
-								.map(options -> SelectItemOption.createRecruitmentSelectOption(
-									options.title(), options.order(), Boolean.TRUE.equals(options.isEtc()),
-									options.etcTitle(), selectItem)
-								)
-								.toList();
-							selectItem.replaceOptions(selectItemOptions);
+
+						// 삭제
+						if (updateSelectRequest.removeOptions() != null
+							&& !updateSelectRequest.removeOptions().isEmpty()) {
+							Set<Long> toRemove = new HashSet<>(updateSelectRequest.removeOptions());
+
+							//현재 존재하는 옵션의 id
+							Set<Long> existOptions = selectItem.getSelectItemOptions().stream()
+								.map(SelectItemOption::getId)
+								.collect(Collectors.toSet());
+
+							if (!existOptions.containsAll(toRemove)) {
+								throw new ItemNotFoundException();
+							}
+
+							selectItem.getSelectItemOptions()
+								.removeIf(selectItemOption -> toRemove.contains(selectItemOption.getId()));
+						}
+
+						// 생성, 수정
+						if (updateSelectRequest.updateOptions() != null && !updateSelectRequest.updateOptions().isEmpty()) {
+							Map<Long, SelectItemOption> selectOptions = selectItem.getSelectItemOptions().stream()
+								.filter(options -> options.getId() != null)
+								.collect(Collectors.toMap(SelectItemOption::getId, options -> options));
+
+							for (UpdateSelectOptionRequest updateSelectOptionRequest : updateSelectRequest.updateOptions()) {
+								// 생성
+								if (updateSelectOptionRequest.id() == null) {
+									SelectItemOption newOptions = SelectItemOption.createRecruitmentSelectOption(
+										updateSelectOptionRequest.title(), updateSelectOptionRequest.order(),
+										Boolean.TRUE.equals(updateSelectOptionRequest.isEtc()),
+										updateSelectOptionRequest.etcTitle(), selectItem
+									);
+
+									selectItem.getSelectItemOptions().add(newOptions);
+								} else { // 수정
+									SelectItemOption updateOptions = selectOptions.get(updateSelectOptionRequest.id());
+									if (updateOptions == null) {
+										throw new ItemNotFoundException();
+									}
+									recruitmentUpdateService.updateSelectOptions(updateOptions,
+										updateSelectOptionRequest);
+								}
+							}
 						}
 					}
 					case
