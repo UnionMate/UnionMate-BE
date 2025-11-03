@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +26,7 @@ import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCode
 import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeResponse;
 import com.unionmate.backend.domain.council.application.usecase.CouncilManageUsecase;
 import com.unionmate.backend.domain.council.application.usecase.CouncilMemberManageUsecase;
+import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +43,7 @@ public class CouncilController {
 
 	@Operation(summary = "학생회 생성", description = "새로운 학생회를 생성합니다.")
 	@PostMapping()
-	public CommonResponse<CreateCouncilResponse> createCouncil(@RequestHeader long memberId,
+	public CommonResponse<CreateCouncilResponse> createCouncil(@CurrentMemberId long memberId,
 		@RequestBody CreateCouncilRequest request) {
 		CreateCouncilResponse response = councilManageUsecase.createCouncil(memberId, request);
 
@@ -52,7 +52,7 @@ public class CouncilController {
 
 	@Operation(summary = "학생회 가입", description = "초대 코드를 통해 학생회에 가입합니다.")
 	@PostMapping("/invitation/{invitationCode}")
-	public CommonResponse<CreateCouncilResponse> signUpCouncilManager(@RequestHeader long memberId,
+	public CommonResponse<CreateCouncilResponse> signUpCouncilManager(@CurrentMemberId long memberId,
 		@PathVariable String invitationCode) {
 		CreateCouncilResponse response = councilManageUsecase.signUpCouncilManager(memberId, invitationCode);
 
@@ -61,7 +61,7 @@ public class CouncilController {
 
 	@Operation(summary = "회장 위임", description = "회장이 권한을 위임합니다.")
 	@PatchMapping("/vice")
-	public CommonResponse<Void> delegateVice(@RequestHeader long memberId, @RequestBody DelegateViceRequest request) {
+	public CommonResponse<Void> delegateVice(@CurrentMemberId long memberId, @RequestBody DelegateViceRequest request) {
 		councilMemberManageUsecase.delegateVice(memberId, request.newPresidentId());
 
 		return CommonResponse.success(DELEGATE_VICE);
@@ -77,7 +77,7 @@ public class CouncilController {
 
 	@Operation(summary = "학생회 이름 수정", description = "학생회 이름을 수정합니다.")
 	@PatchMapping("/{councilId}/names")
-	public CommonResponse<UpdateCouncilNameResponse> updateCouncilName(@RequestHeader long memberId,
+	public CommonResponse<UpdateCouncilNameResponse> updateCouncilName(@CurrentMemberId long memberId,
 		@PathVariable long councilId, @RequestBody UpdateCouncilNameRequest request) {
 		UpdateCouncilNameResponse response = councilManageUsecase.updateCouncilName(memberId, councilId, request);
 
@@ -86,7 +86,7 @@ public class CouncilController {
 
 	@Operation(summary = "초대 코드 수정", description = "학생회 초대 코드를 수정합니다.")
 	@PatchMapping("/{councilId}/invitation-codes")
-	public CommonResponse<UpdateInvitationCodeResponse> updateInvitationCode(@RequestHeader long memberId,
+	public CommonResponse<UpdateInvitationCodeResponse> updateInvitationCode(@CurrentMemberId long memberId,
 		@PathVariable long councilId, @RequestBody UpdateInvitationCodeRequest request) {
 		UpdateInvitationCodeResponse response = councilManageUsecase.updateInvitationCode(memberId, councilId, request);
 		return CommonResponse.success(UPDATE_INVITATION_CODE, response);
@@ -94,7 +94,8 @@ public class CouncilController {
 
 	@Operation(summary = "학생회 멤버 삭제", description = "학생회에서 특정 멤버를 삭제합니다.")
 	@DeleteMapping("/members/{councilManagerId}")
-	public CommonResponse<Void> removeCouncilMember(@RequestHeader long memberId, @PathVariable long councilManagerId) {
+	public CommonResponse<Void> removeCouncilMember(@CurrentMemberId long memberId,
+		@PathVariable long councilManagerId) {
 		councilMemberManageUsecase.removeCouncilMember(memberId, councilManagerId);
 
 		return CommonResponse.success(REMOVE_COUNCIL_MEMBER);
@@ -111,7 +112,7 @@ public class CouncilController {
 	)
 	@GetMapping("/{councilId}/applications/document-screening")
 	public CommonResponse<List<CouncilApplicantResponse>> getDocumentScreeningApplicants(
-		@RequestHeader long memberId,
+		@CurrentMemberId long memberId,
 		@PathVariable long councilId,
 		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
 	) {
@@ -132,7 +133,7 @@ public class CouncilController {
 	)
 	@GetMapping("/{councilId}/applications/interview")
 	public CommonResponse<List<CouncilApplicantResponse>> getInterviewApplicants(
-		@RequestHeader long memberId,
+		@CurrentMemberId long memberId,
 		@PathVariable long councilId,
 		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
 	) {
