@@ -1,7 +1,7 @@
 package com.unionmate.backend.global.log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,8 @@ import java.util.Map;
 /**
  * 비즈니스 로그를 구조화된 JSON 형태로 기록하는 유틸리티
  */
+@Slf4j
 @Component
-@RequiredArgsConstructor
 public class BusinessLogger {
 
     private static final Logger USER_ACTIVITY = LoggerFactory.getLogger("BUSINESS.USER_ACTIVITY");
@@ -31,6 +31,13 @@ public class BusinessLogger {
     private final ObjectMapper objectMapper;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    public BusinessLogger(ObjectMapper objectMapper) {
+        // UTF-8 한글 처리를 위한 ObjectMapper 설정
+        this.objectMapper = objectMapper.copy();
+        // ASCII가 아닌 문자를 escape하지 않도록 설정
+        this.objectMapper.getFactory().disable(com.fasterxml.jackson.core.JsonGenerator.Feature.ESCAPE_NON_ASCII);
+    }
 
     /**
      * 사용자 활동 로그

@@ -156,9 +156,8 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
         int length = Math.min(content.length, MAX_PAYLOAD_LENGTH);
         try {
-            String body = new String(content, 0, length, request.getCharacterEncoding() != null
-                    ? java.nio.charset.Charset.forName(request.getCharacterEncoding())
-                    : java.nio.charset.StandardCharsets.UTF_8);
+            // 명시적으로 UTF-8로 디코딩
+            String body = new String(content, 0, length, java.nio.charset.StandardCharsets.UTF_8);
 
             if (content.length > MAX_PAYLOAD_LENGTH) {
                 body += "\n... (truncated)";
@@ -177,15 +176,18 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
         }
 
         int length = Math.min(content.length, MAX_PAYLOAD_LENGTH);
-        String body = new String(content, 0, length, response.getCharacterEncoding() != null
-                ? java.nio.charset.Charset.forName(response.getCharacterEncoding())
-                : java.nio.charset.StandardCharsets.UTF_8);
+        try {
+            // 명시적으로 UTF-8로 디코딩
+            String body = new String(content, 0, length, java.nio.charset.StandardCharsets.UTF_8);
 
-        if (content.length > MAX_PAYLOAD_LENGTH) {
-            body += "\n... (truncated)";
+            if (content.length > MAX_PAYLOAD_LENGTH) {
+                body += "\n... (truncated)";
+            }
+
+            return body;
+        } catch (Exception e) {
+            return "[Error reading response body]";
         }
-
-        return body;
     }
 
     @Override
