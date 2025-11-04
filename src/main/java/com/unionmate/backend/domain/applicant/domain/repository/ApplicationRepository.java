@@ -13,6 +13,8 @@ import com.unionmate.backend.domain.council.domain.entity.Council;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 	List<Application> findAllByNameAndEmailOrderByIdDesc(String name, String email);
 
+	boolean existsByRecruitmentId(Long recruitmentId);
+
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus

@@ -27,8 +27,9 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSe
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTextRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
-import com.unionmate.backend.domain.recruitment.application.exception.ActiveRecruitmentCannotDeleteException;
+import com.unionmate.backend.domain.recruitment.application.exception.ActiveRecruitmentCannotChangeException;
 import com.unionmate.backend.domain.recruitment.application.exception.NotRecruitmentCouncilMemberException;
+import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentHasApplicationCannotChangeException;
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.AnnouncementItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
@@ -78,6 +79,8 @@ public class RecruitmentUseCase {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
 		validateUserCouncil(recruitment, councilManager);
+		validateRecruitmentActive(recruitment);
+		validateRecruitmentHasApplication(recruitmentId);
 
 		recruitmentFormUpdateService.updateRecruitment(recruitment, updateRecruitmentRequest);
 
@@ -111,7 +114,7 @@ public class RecruitmentUseCase {
 		validateUserCouncil(recruitment, councilManager);
 
 		if (Boolean.TRUE.equals(recruitment.getIsActive())) {
-			throw new ActiveRecruitmentCannotDeleteException();
+			throw new ActiveRecruitmentCannotChangeException();
 		}
 
 		recruitmentDeleteService.deleteRecruitment(recruitmentId);
@@ -254,6 +257,18 @@ public class RecruitmentUseCase {
 	private void validateUserCouncil(Recruitment recruitment, CouncilManager councilManager) {
 		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
 			throw new NotRecruitmentCouncilMemberException();
+		}
+	}
+
+	private void validateRecruitmentActive(Recruitment recruitment) {
+		if (Boolean.TRUE.equals(recruitment.getIsActive())) {
+			throw new ActiveRecruitmentCannotChangeException();
+		}
+	}
+
+	private void validateRecruitmentHasApplication(Long recruitmentId) {
+		if (recruitmentGetService.existsByRecruitmentId(recruitmentId)) {
+			throw new RecruitmentHasApplicationCannotChangeException();
 		}
 	}
 }
