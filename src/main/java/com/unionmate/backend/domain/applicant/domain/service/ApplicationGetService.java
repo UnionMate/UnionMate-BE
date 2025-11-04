@@ -59,6 +59,6 @@ public class ApplicationGetService {
 	}
 
 	public boolean existsByRecruitmentId(Long recruitmentId) {
-		return applicationRepository.existsById(recruitmentId);
+		return applicationRepository.existsByRecruitmentId(recruitmentId);
 	}
 }
