@@ -1,6 +1,5 @@
 package com.unionmate.backend.domain.recruitment.domain.service;
 
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 

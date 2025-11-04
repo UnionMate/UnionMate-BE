@@ -2,7 +2,6 @@ package com.unionmate.backend.domain.recruitment.application.usecase;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +15,6 @@ import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMism
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
-import com.unionmate.backend.domain.council.exception.CouncilManagerNotFoundException;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
@@ -41,7 +39,7 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentDeleteService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentSaveService;
-import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentUpdateService;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUpdateService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,7 +49,7 @@ public class RecruitmentUseCase {
 	private final CouncilManagerGetService councilManagerGetService;
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
-	private final RecruitmentUpdateService recruitmentUpdateService;
+	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
 
 	@Transactional
@@ -83,7 +81,7 @@ public class RecruitmentUseCase {
 			throw new NotRecruitmentCouncilMemberException();
 		}
 
-		recruitmentUpdateService.updateRecruitment(recruitment, updateRecruitmentRequest);
+		recruitmentFormUpdateService.updateRecruitment(recruitment, updateRecruitmentRequest);
 
 		// 현재 항목
 		Map<Long, Item> items = recruitment.getItems().stream()
@@ -172,7 +170,7 @@ public class RecruitmentUseCase {
 					throw new ItemNotFoundException();
 				}
 
-				recruitmentUpdateService.updateCommonItem(existItem, updateItemRequest);
+				recruitmentFormUpdateService.updateCommonItem(existItem, updateItemRequest);
 
 				switch (existItem) {
 					case TextItem textItem when updateItemRequest instanceof UpdateTextRequest updateTextRequest ->
@@ -221,7 +219,7 @@ public class RecruitmentUseCase {
 									if (updateOptions == null) {
 										throw new ItemNotFoundException();
 									}
-									recruitmentUpdateService.updateSelectOptions(updateOptions,
+									recruitmentFormUpdateService.updateSelectOptions(updateOptions,
 										updateSelectOptionRequest);
 								}
 							}

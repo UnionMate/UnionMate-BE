@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class RecruitmentUpdateService {
+public class RecruitmentFormUpdateService {
 	public void updateRecruitment(Recruitment recruitment, UpdateRecruitmentRequest updateRecruitmentRequest) {
 		recruitment.updateName(updateRecruitmentRequest.name());
 		recruitment.updateEndAt(updateRecruitmentRequest.endAt());
