@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
+import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
@@ -52,6 +53,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
+	private final ApplicationGetService  applicationGetService;
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
@@ -267,7 +269,7 @@ public class RecruitmentUseCase {
 	}
 
 	private void validateRecruitmentHasApplication(Long recruitmentId) {
-		if (recruitmentGetService.existsByRecruitmentId(recruitmentId)) {
+		if (applicationGetService.existsByRecruitmentId(recruitmentId)) {
 			throw new RecruitmentHasApplicationCannotChangeException();
 		}
 	}
