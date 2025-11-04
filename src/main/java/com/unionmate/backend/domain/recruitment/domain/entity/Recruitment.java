@@ -3,8 +3,10 @@ package com.unionmate.backend.domain.recruitment.domain.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentActivationExpiredException;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
 import com.unionmate.backend.global.entity.BaseEntity;
@@ -60,12 +62,6 @@ public class Recruitment extends BaseEntity {
 	@Builder.Default
 	private List<Item> items = new ArrayList<>();
 
-	public boolean isOpen(LocalDateTime now) {
-		return Boolean.TRUE.equals(isActive)
-			&& !now.isBefore(startAt)
-			&& !now.isAfter(endAt);
-	}
-
 	public void updateName(String name) {
 		if (name != null) {
 			this.name = name;
@@ -87,6 +83,25 @@ public class Recruitment extends BaseEntity {
 	public void updateStatus(RecruitmentStatus recruitmentStatus) {
 		if (recruitmentStatus != null) {
 			this.recruitmentStatus = recruitmentStatus;
+		}
+	}
+
+	public void updateActivation(boolean active) {
+		this.isActive = active;
+	}
+
+	public boolean isOpen(LocalDateTime now) {
+		return Boolean.TRUE.equals(isActive)
+			&& !now.isBefore(startAt)
+			&& !now.isAfter(endAt);
+	}
+
+	public void changeActivation(LocalDateTime now, boolean requestedActive) {
+		if (requestedActive && now.isAfter(endAt)) {
+			throw new RecruitmentActivationExpiredException();
+		}
+		if (!Objects.equals(this.isActive, requestedActive)) {
+			updateActivation(requestedActive);
 		}
 	}
 

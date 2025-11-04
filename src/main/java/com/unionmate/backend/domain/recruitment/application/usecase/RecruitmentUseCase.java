@@ -16,9 +16,11 @@ import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetServi
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
+import com.unionmate.backend.domain.council.exception.DifferentCouncilException;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.request.ToggleRecruitmentActivationRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateAnnouncementRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateCalendarRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateItemRequest;
@@ -28,6 +30,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSe
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTextRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
 import com.unionmate.backend.domain.recruitment.application.exception.ActiveRecruitmentCannotChangeException;
 import com.unionmate.backend.domain.recruitment.application.exception.NotRecruitmentCouncilMemberException;
 import com.unionmate.backend.domain.recruitment.application.exception.RecruitmentHasApplicationCannotChangeException;
@@ -41,6 +44,7 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentDeleteService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentSaveService;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentUpdateService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUpdateService;
 
 import lombok.RequiredArgsConstructor;
@@ -48,12 +52,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RecruitmentUseCase {
+
 	private final CouncilManagerGetService councilManagerGetService;
-	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentGetService recruitmentGetService;
 	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
 	private final ApplicationGetService  applicationGetService;
+
+	private final RecruitmentSaveService recruitmentSaveService;
+	private final RecruitmentUpdateService recruitmentUpdateService;
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
@@ -72,6 +79,30 @@ public class RecruitmentUseCase {
 			}
 		}
 		recruitmentSaveService.save(recruitment);
+	}
+
+	@Transactional
+	public ToggleRecruitmentActivationResponse toggleRecruitmentActivation(
+		Long memberId,
+		Long recruitmentId,
+		ToggleRecruitmentActivationRequest toggleRecruitmentActivationRequest,
+		LocalDateTime now
+	) {
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+
+		validateSameCouncil(councilManager, recruitment);
+
+		recruitmentUpdateService.changeActivation(recruitment, toggleRecruitmentActivationRequest.active(), now);
+
+		boolean open = recruitment.isOpen(now);
+		return ToggleRecruitmentActivationResponse.of(
+			recruitment.getId(),
+			Boolean.TRUE.equals(recruitment.getIsActive()),
+			open,
+			recruitment.getStartAt(),
+			recruitment.getEndAt()
+		);
 	}
 
 	@Transactional
@@ -268,6 +299,15 @@ public class RecruitmentUseCase {
 	private void validateRecruitmentHasApplication(Long recruitmentId) {
 		if (applicationGetService.existsByRecruitmentId(recruitmentId)) {
 			throw new RecruitmentHasApplicationCannotChangeException();
+		}
+	}
+
+	private void validateSameCouncil(CouncilManager councilManager, Recruitment recruitment) {
+		Long managerCouncilId = councilManager.getCouncil().getId();
+		Long recruitmentCouncilId = recruitment.getCouncil().getId();
+		if (!managerCouncilId.equals(recruitmentCouncilId)) {
+
+			throw new DifferentCouncilException();
 		}
 	}
 }
