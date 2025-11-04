@@ -72,7 +72,7 @@ public class ApplicationController {
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
 	}
 
-	@GetMapping("/{applicationId}/mine/admin")
+	@GetMapping("/{applicationId}/detail/admin")
 	@Operation(
 		summary = "특정 지원서를 상세 조회합니다. (관리자 전용)",
 		description = """
