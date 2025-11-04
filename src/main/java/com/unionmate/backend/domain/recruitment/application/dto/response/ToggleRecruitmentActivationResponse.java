@@ -13,7 +13,7 @@ public record ToggleRecruitmentActivationResponse(
 	@Schema(description = "현재 활성화 여부", example = "true")
 	boolean active,
 
-	@Schema(description = "현재 시각 기준 모집 가능 여부(isActive && 기간 내)", example = "true")
+	@Schema(description = "모집 시간 내부에 공개 했는지 여부 (startAt ~ endAt)", example = "true")
 	boolean open,
 
 	@Schema(description = "모집 시작 시각")

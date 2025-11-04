@@ -16,11 +16,11 @@ public class RecruitmentUpdateService {
 	private final RecruitmentSaveService recruitmentSaveService;
 
 	@Transactional
-	public void activateIfAllowed(Recruitment recruitment, boolean requestedActive, LocalDateTime now) {
+	public void changeActivation(Recruitment recruitment, boolean requestedActive, LocalDateTime now) {
 		boolean before = Boolean.TRUE.equals(recruitment.getIsActive());
-		recruitment.activateIfAllowed(now, requestedActive);
-		boolean after = Boolean.TRUE.equals(recruitment.getIsActive());
+		recruitment.changeActivation(now, requestedActive);
 
+		boolean after = Boolean.TRUE.equals(recruitment.getIsActive());
 		if (after != before) {
 			recruitmentSaveService.save(recruitment);
 		}

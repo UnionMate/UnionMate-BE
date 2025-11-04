@@ -60,7 +60,9 @@ public class RecruitmentUseCase {
 	}
 
 	@Transactional
-	public ToggleRecruitmentActivationResponse toggleRecruitmentActivation(Long memberId, Long recruitmentId,
+	public ToggleRecruitmentActivationResponse toggleRecruitmentActivation(
+		Long memberId,
+		Long recruitmentId,
 		ToggleRecruitmentActivationRequest toggleRecruitmentActivationRequest,
 		LocalDateTime now
 	) {
@@ -69,9 +71,9 @@ public class RecruitmentUseCase {
 
 		validateSameCouncil(councilManager, recruitment);
 
-		recruitmentUpdateService.activateIfAllowed(recruitment, toggleRecruitmentActivationRequest.active(), now);
-		boolean open = recruitment.isOpen(now);
+		recruitmentUpdateService.changeActivation(recruitment, toggleRecruitmentActivationRequest.active(), now);
 
+		boolean open = recruitment.isOpen(now);
 		return ToggleRecruitmentActivationResponse.of(
 			recruitment.getId(),
 			Boolean.TRUE.equals(recruitment.getIsActive()),
