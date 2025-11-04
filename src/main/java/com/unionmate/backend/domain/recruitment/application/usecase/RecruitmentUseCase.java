@@ -122,11 +122,8 @@ public class RecruitmentUseCase {
 		recruitmentDeleteService.deleteRecruitment(recruitmentId);
 	}
 
-	public RecruitmentResponse getRecruitmentForm(Long memberId, Long recruitmentId) {
-		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+	public RecruitmentResponse getRecruitmentForm(Long recruitmentId) {
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
-
-		validateUserCouncil(recruitment, councilManager);
 
 		List<ItemResponse> items = recruitment.getItems().stream()
 			.map(ItemResponse::from)
