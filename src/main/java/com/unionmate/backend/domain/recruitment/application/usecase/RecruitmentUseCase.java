@@ -77,9 +77,7 @@ public class RecruitmentUseCase {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
-		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
-			throw new NotRecruitmentCouncilMemberException();
-		}
+		validateUserCouncil(recruitment, councilManager);
 
 		recruitmentFormUpdateService.updateRecruitment(recruitment, updateRecruitmentRequest);
 
@@ -110,9 +108,7 @@ public class RecruitmentUseCase {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
-		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
-			throw new NotRecruitmentCouncilMemberException();
-		}
+		validateUserCouncil(recruitment, councilManager);
 
 		if (Boolean.TRUE.equals(recruitment.getIsActive())) {
 			throw new ActiveRecruitmentCannotDeleteException();
@@ -125,9 +121,7 @@ public class RecruitmentUseCase {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
 
-		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
-			throw new NotRecruitmentCouncilMemberException();
-		}
+		validateUserCouncil(recruitment, councilManager);
 
 		List<ItemResponse> items = recruitment.getItems().stream()
 			.map(ItemResponse::from)
@@ -254,6 +248,12 @@ public class RecruitmentUseCase {
 				recruitment.getItems().remove(item);
 				items.remove(removeItemId);
 			}
+		}
+	}
+
+	private void validateUserCouncil(Recruitment recruitment, CouncilManager councilManager) {
+		if (!councilManager.getCouncil().getId().equals(recruitment.getCouncil().getId())) {
+			throw new NotRecruitmentCouncilMemberException();
 		}
 	}
 }
