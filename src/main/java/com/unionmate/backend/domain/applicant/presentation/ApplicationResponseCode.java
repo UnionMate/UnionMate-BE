@@ -13,6 +13,7 @@ public enum ApplicationResponseCode implements ResponseCodeInterface {
 	SUBMIT_APPLICATION(200, HttpStatus.OK, "지원서가 성공적으로 제출되었습니다."),
 	GET_MY_APPLICATIONS(200, HttpStatus.OK, "본인이 작성한 지원서 목록 조회에 성공했습니다."),
 	GET_MY_APPLICATION(200, HttpStatus.OK, "본인이 작성한 지원서 조회에 성공했습니다."),
+	GET_APPLICATION_DETAIL_FOR_ADMIN(200, HttpStatus.OK, "관리자용 지원서 상세 조회에 성공했습니다."),
 	UPDATE_APPLICATION(200, HttpStatus.OK, "지원서가 성공적으로 수정되었습니다."),
 	CREATE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 생성되었습니다."),
 	UPDATE_COMMENT(200, HttpStatus.OK, "지원서 코멘트가 성공적으로 수정되었습니다."),
