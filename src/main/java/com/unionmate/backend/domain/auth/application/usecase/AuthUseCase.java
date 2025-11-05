@@ -67,7 +67,7 @@ public class AuthUseCase {
 		Long councilId = null;
 		if (councilManagerGetService.existsByMember(member)) {
 			CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(member.getId());
-			councilId = councilManager.getId();
+			councilId = councilManager.getCouncil().getId();
 		}
 
 		return ManagerLoginResponse.of(accessToken, refreshToken, councilId);
