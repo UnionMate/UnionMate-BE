@@ -43,6 +43,30 @@ public class SelectItemOption extends BaseEntity {
 	@Setter
 	private SelectItem selectItem;
 
+	public void updateTitle(String title) {
+		if(title != null) {
+			this.title = title;
+		}
+	}
+
+	public void updateIsEtc(Boolean isEtc) {
+		if(isEtc != null) {
+			this.isEtc = isEtc;
+		}
+	}
+
+	public void updateEtcTitle(String etcTitle) {
+		if(etcTitle != null) {
+			this.etcTitle = etcTitle;
+		}
+	}
+
+	public void updateOrder(Integer order) {
+		if(order != null) {
+			this.order = order;
+		}
+	}
+
 	@AssertTrue
 	public boolean validateEtc() {
 		if (Boolean.TRUE.equals(isEtc)) {

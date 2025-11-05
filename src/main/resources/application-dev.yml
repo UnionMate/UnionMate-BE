@@ -4,9 +4,9 @@ spring:
   application:
     name: backend-service
   datasource:
-    url: ENC(oRO52DvZxINLWMbcjagDrioNN7qY4StaIIdkGcb9Ijle0YjTBT233KnhoFpD0vAefjSagLxkVcFEszXiIhgqAO9CDBIs7DEnvQzEFLVSLfYE3oZ9Q0c9Z4+qt9NMijau)
-    username: ENC(TSk7cZHU52AV+++x9lsqKw==)
-    password: ENC(iLEfoMz6wqCHbf8DAo+7XaUC3sfvxp9i)
+    url: ENC(nkJQUYug1EZDWnWow+ZEmkN07sJBd4d8NIBBcD+S5v8kDmHogwZxCGfbWAeClncrbLuQEJqeu6I=)
+    username: ENC(e6DBEFY1ATNacRJnJ8Ce9Q==)
+    password: ENC(mNJN6hGFLtvHjGAiUkjoow==)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

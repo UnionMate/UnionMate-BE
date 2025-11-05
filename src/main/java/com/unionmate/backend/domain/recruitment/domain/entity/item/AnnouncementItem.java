@@ -25,6 +25,12 @@ public class AnnouncementItem extends Item {
 	@Column(name = "announcement", length = 500)
 	private String announcement;
 
+	public void updateAnnouncement(String announcement) {
+		if (announcement != null) {
+			this.announcement = announcement;
+		}
+	}
+
 	public static AnnouncementItem createRecruitmentAnnouncement(Recruitment recruitment, Boolean required,
 		String title, Integer order, String description, String announcement) {
 		return AnnouncementItem.builder()

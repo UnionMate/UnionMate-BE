@@ -62,4 +62,8 @@ public class ApplicationGetService {
 			default -> applicationRepository.findInterviewListNoFilter(council);
 		};
 	}
+
+	public boolean existsByRecruitmentId(Long recruitmentId) {
+		return applicationRepository.existsByRecruitmentId(recruitmentId);
+	}
 }
