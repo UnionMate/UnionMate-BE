@@ -63,7 +63,7 @@ public class RecruitmentController {
 	}
 
 	@GetMapping
-	@Operation(summary = "학생회가 작성한 지원서 양식 전체를 조회합니다.")
+	@Operation(summary = "학생회가 작성한 지원서 양식 목록을 조회합니다.")
 	public CommonResponse<List<GetRecruitmentsResponse>> getRecruitments(@CurrentMemberId Long memberId) {
 		List<GetRecruitmentsResponse> getRecruitmentsResponses = recruitmentUseCase.getRecruitments(memberId);
 

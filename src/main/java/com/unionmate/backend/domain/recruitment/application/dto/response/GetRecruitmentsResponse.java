@@ -1,7 +1,5 @@
 package com.unionmate.backend.domain.recruitment.application.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
