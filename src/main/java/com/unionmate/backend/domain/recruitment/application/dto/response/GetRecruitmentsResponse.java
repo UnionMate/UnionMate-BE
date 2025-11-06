@@ -9,16 +9,14 @@ public record GetRecruitmentsResponse(
 	Long id,
 	String name,
 	Boolean isActive,
-	RecruitmentStatus recruitmentStatus,
-	boolean isOpen
+	RecruitmentStatus recruitmentStatus
 ) {
-	public static GetRecruitmentsResponse from(Recruitment recruitment, LocalDateTime now) {
+	public static GetRecruitmentsResponse from(Recruitment recruitment) {
 		return new GetRecruitmentsResponse(
 			recruitment.getId(),
 			recruitment.getName(),
 			recruitment.getIsActive(),
-			recruitment.getRecruitmentStatus(),
-			recruitment.isOpen(now)
+			recruitment.getRecruitmentStatus()
 		);
 	}
 }
