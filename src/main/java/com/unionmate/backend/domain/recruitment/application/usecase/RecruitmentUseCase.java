@@ -28,6 +28,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateRe
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSelectOptionRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateSelectRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTextRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.response.GetRecruitmentsResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
@@ -57,7 +58,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentGetService recruitmentGetService;
 	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
-	private final ApplicationGetService  applicationGetService;
+	private final ApplicationGetService applicationGetService;
 
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentUpdateService recruitmentUpdateService;
@@ -151,6 +152,13 @@ public class RecruitmentUseCase {
 		}
 
 		recruitmentDeleteService.deleteRecruitment(recruitmentId);
+	}
+
+	public List<GetRecruitmentsResponse> getRecruitments(Long memberId) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilManager.getCouncil();
+
+		return recruitmentGetService.getRecruitments(council.getId());
 	}
 
 	public RecruitmentResponse getRecruitmentForm(Long recruitmentId) {

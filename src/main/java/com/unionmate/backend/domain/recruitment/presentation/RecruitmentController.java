@@ -1,7 +1,9 @@
 package com.unionmate.backend.domain.recruitment.presentation;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.ToggleRecruitmentActivationRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.response.GetRecruitmentsResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
 import com.unionmate.backend.domain.recruitment.application.usecase.RecruitmentUseCase;
@@ -57,6 +60,14 @@ public class RecruitmentController {
 		recruitmentUseCase.deleteRecruitment(memberId, recruitmentId);
 
 		return CommonResponse.success(RecruitmentResponseCode.DELETE_RECRUITMENT);
+	}
+
+	@GetMapping
+	@Operation(summary = "학생회가 작성한 지원서 양식 목록을 조회합니다.")
+	public CommonResponse<List<GetRecruitmentsResponse>> getRecruitments(@CurrentMemberId Long memberId) {
+		List<GetRecruitmentsResponse> getRecruitmentsResponses = recruitmentUseCase.getRecruitments(memberId);
+
+		return CommonResponse.success(RecruitmentResponseCode.GET_RECRUITMENTS, getRecruitmentsResponses);
 	}
 
 	@GetMapping("/{recruitmentId}")
