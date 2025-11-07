@@ -32,6 +32,12 @@ public class TextItem extends Item {
 	@Lob
 	private Answer<String> answer;
 
+	public void updateMaxLength(Integer maxLength) {
+		if (maxLength != null) {
+			this.maxLength = maxLength;
+		}
+	}
+
 	public void updateAnswer(Answer<String> answer) {
 		this.answer = answer;
 	}

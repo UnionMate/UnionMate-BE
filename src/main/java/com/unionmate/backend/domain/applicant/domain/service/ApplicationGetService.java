@@ -23,6 +23,11 @@ public class ApplicationGetService {
 		return applicationRepository.findAllByNameAndEmailOrderByIdDesc(name, email);
 	}
 
+	public Application getApplicationWithDetails(Long applicationId) {
+		return applicationRepository.findByIdWithRecruitmentAndAnswers(applicationId)
+			.orElseThrow(ApplicationNotFoundException::new);
+	}
+
 	public Application getApplicationById(Long applicationId) {
 		return applicationRepository.findById(applicationId)
 			.orElseThrow(ApplicationNotFoundException::new);
@@ -56,5 +61,9 @@ public class ApplicationGetService {
 			case FAILED -> applicationRepository.findInterviewListFailed(council);
 			default -> applicationRepository.findInterviewListNoFilter(council);
 		};
+	}
+
+	public boolean existsByRecruitmentId(Long recruitmentId) {
+		return applicationRepository.existsByRecruitmentId(recruitmentId);
 	}
 }

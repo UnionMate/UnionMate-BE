@@ -47,6 +47,20 @@ public class SelectItem extends Item {
 	// 선택된 SelectItemOption의 PK 리스트
 	private Answer<List<Long>> answer;
 
+	public void updateMultiple(Boolean multiple) {
+		if (multiple != null) {
+			this.multiple = multiple;
+		}
+	}
+
+	public void replaceOptions(List<SelectItemOption> selectItemOptions) {
+		this.selectItemOptions.clear();
+		for(SelectItemOption selectItemOption : selectItemOptions) {
+			selectItemOption.setSelectItem(this);
+			this.selectItemOptions.add(selectItemOption);
+		}
+	}
+
 	public void updateAnswer(Answer<List<Long>> answer) {
 		this.answer = answer;
 	}

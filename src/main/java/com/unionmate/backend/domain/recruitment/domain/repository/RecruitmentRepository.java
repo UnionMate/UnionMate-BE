@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.recruitment.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface RecruitmentRepository extends JpaRepository<Recruitment, Long> 
 		where r.id = :id
 		""")
 	Optional<Recruitment> findFormById(@Param("id") Long id);
+
+	List<Recruitment> findAllByCouncilIdOrderByCreatedAtDesc(Long councilId);
 }

@@ -1,7 +1,9 @@
 package com.unionmate.backend.domain.applicant.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,8 @@ import com.unionmate.backend.domain.council.domain.entity.Council;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 	List<Application> findAllByNameAndEmailOrderByIdDesc(String name, String email);
+
+	boolean existsByRecruitmentId(Long recruitmentId);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -123,4 +127,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		order by a.id desc
 		""")
 	List<CouncilApplicantQueryRow> findInterviewListFailed(@Param("council") Council council);
+
+	@EntityGraph(attributePaths = {"recruitment", "recruitment.council", "answers"})
+	@Query("select a from Application a where a.id = :id")
+	Optional<Application> findByIdWithRecruitmentAndAnswers(@Param("id") Long id);
 }
