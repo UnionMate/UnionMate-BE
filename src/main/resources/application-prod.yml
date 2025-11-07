@@ -22,11 +22,11 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://discovery-service-prod:8761/eureka
+      defaultZone: http://129.154.54.225:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-server-uri: ENC(ADvQZvUiEY6KHiaoUlImBAxMCbavYyrtNecYgfkx1ZxVOp4PhWAKrA==)
+server-uri: ENC(6lfUGZZVKl08qafTAVBbmxCKLzYIrzLoYrE1JAfccv1nZ/eeE9XztA==)
 
 jwt:
   access:
