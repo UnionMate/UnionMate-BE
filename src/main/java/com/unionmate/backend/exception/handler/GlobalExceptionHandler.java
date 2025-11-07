@@ -25,12 +25,13 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(ApplicationException.class)
-  public ApiData<Map<?, ?>> handleApplicationException(ApplicationException e) {
+  public ApiData<Map<?, ?>> handleApplicationException(ApplicationException e, HttpServletRequest request) {
     HttpStatus status = e.getHttpStatus();
 
     // 상태 코드별 로그 레벨 분기
     if (status.is5xxServerError()) {
-      // 500번대: ERROR
+      // 500번대: ERROR - error.log에 스택 트레이스 포함하여 기록
+      // monitoring.log는 HttpLoggingFilter에서 자동으로 기록됨
       log.error("[Server Error {}] \"{}\" - ErrorInfo: {}",
           status.value(), e.getMessage(), e.getErrorInfo(), e);
     } else if (status.is4xxClientError()) {
@@ -48,8 +49,10 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Exception.class)
   public ApiData<Map<?, ?>> handleAnyUnexpectedException(Exception e, HttpServletRequest req) {
-
+    // 500번대: ERROR - error.log에 스택 트레이스 포함하여 기록
+    // monitoring.log는 HttpLoggingFilter에서 자동으로 기록됨
     log.error("[Unexpected Error] \"{}\" Occurred", e.getMessage(), e);
+
     return ApiData.error(CommonErrorInfo.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 

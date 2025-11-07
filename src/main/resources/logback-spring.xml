@@ -4,24 +4,7 @@
     <property name="LOG_DIR" value="logs"/>
     <property name="LOG_FILE_NAME" value="application"/>
     <property name="ERROR_LOG_FILE_NAME" value="error"/>
-    <property name="WARN_LOG_FILE_NAME" value="warn"/>
-
-    <!-- 비즈니스 로그 파일 -->
-    <property name="BUSINESS_DIR" value="logs/business"/>
-    <property name="USER_ACTIVITY_LOG" value="user-activity"/>
-    <property name="RECRUITMENT_LOG" value="recruitment"/>
-    <property name="APPLICATION_FLOW_LOG" value="application-flow"/>
-    <property name="INTERVIEW_LOG" value="interview"/>
-
-    <!-- 성능 로그 파일 -->
-    <property name="PERFORMANCE_DIR" value="logs/performance"/>
-    <property name="API_PERFORMANCE_LOG" value="api-performance"/>
-    <property name="SLOW_QUERY_LOG" value="slow-query"/>
-
-    <!-- 보안 로그 파일 -->
-    <property name="SECURITY_DIR" value="logs/security"/>
-    <property name="AUTH_LOG" value="auth"/>
-    <property name="SUSPICIOUS_LOG" value="suspicious"/>
+    <property name="MONITORING_LOG" value="monitoring"/>
 
     <!-- 로그 패턴 설정 -->
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
@@ -56,29 +39,6 @@
         </filter>
     </appender>
 
-    <!-- WARN 전용 로그 파일 Appender -->
-    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/${WARN_LOG_FILE_NAME}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/archived/${WARN_LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>500MB</totalSizeCap>
-        </rollingPolicy>
-
-        <!-- WARN 레벨만 기록 -->
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>WARN</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
-
     <!-- ERROR 전용 로그 파일 Appender -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/${ERROR_LOG_FILE_NAME}.log</file>
@@ -109,183 +69,38 @@
         <discardingThreshold>0</discardingThreshold>
     </appender>
 
-    <appender name="ASYNC_WARN_FILE" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="WARN_FILE"/>
-        <queueSize>512</queueSize>
-        <discardingThreshold>0</discardingThreshold>
-    </appender>
-
     <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="ERROR_FILE"/>
         <queueSize>512</queueSize>
         <discardingThreshold>0</discardingThreshold>
     </appender>
 
-    <!-- ========== 비즈니스 로그 Appenders ========== -->
+    <!-- ========== 모니터링 로그 (API 로그) ========== -->
 
-    <!-- 사용자 활동 로그 -->
-    <appender name="USER_ACTIVITY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${BUSINESS_DIR}/${USER_ACTIVITY_LOG}.log</file>
+    <!-- MONITORING 로그 (API 호출 로그 - JSON 형식) -->
+    <appender name="MONITORING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${MONITORING_LOG}.log</file>
         <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
+            <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${BUSINESS_DIR}/archived/${USER_ACTIVITY_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- 모집 관련 로그 -->
-    <appender name="RECRUITMENT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${BUSINESS_DIR}/${RECRUITMENT_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${BUSINESS_DIR}/archived/${RECRUITMENT_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- 지원서 흐름 로그 -->
-    <appender name="APPLICATION_FLOW_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${BUSINESS_DIR}/${APPLICATION_FLOW_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${BUSINESS_DIR}/archived/${APPLICATION_FLOW_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- 면접 평가 로그 -->
-    <appender name="INTERVIEW_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${BUSINESS_DIR}/${INTERVIEW_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${BUSINESS_DIR}/archived/${INTERVIEW_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>90</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- ========== 성능 로그 Appenders ========== -->
-
-    <!-- API 성능 로그 -->
-    <appender name="API_PERFORMANCE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${PERFORMANCE_DIR}/${API_PERFORMANCE_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${PERFORMANCE_DIR}/archived/${API_PERFORMANCE_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <fileNamePattern>${LOG_DIR}/archived/${MONITORING_LOG}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
-    <!-- 느린 쿼리 로그 -->
-    <appender name="SLOW_QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${PERFORMANCE_DIR}/${SLOW_QUERY_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${PERFORMANCE_DIR}/archived/${SLOW_QUERY_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- ========== 보안 로그 Appenders ========== -->
-
-    <!-- 인증/인가 로그 -->
-    <appender name="AUTH_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${SECURITY_DIR}/${AUTH_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${SECURITY_DIR}/archived/${AUTH_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>180</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- 의심스러운 활동 로그 -->
-    <appender name="SUSPICIOUS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${SECURITY_DIR}/${SUSPICIOUS_LOG}.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${SECURITY_DIR}/archived/${SUSPICIOUS_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>20MB</maxFileSize>
-            <maxHistory>180</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
-    </appender>
-
-    <!-- ========== 비즈니스 로거 정의 ========== -->
-
-    <logger name="BUSINESS.USER_ACTIVITY" level="INFO" additivity="false">
-        <appender-ref ref="USER_ACTIVITY_FILE"/>
-    </logger>
-
-    <logger name="BUSINESS.RECRUITMENT" level="INFO" additivity="false">
-        <appender-ref ref="RECRUITMENT_FILE"/>
-    </logger>
-
-    <logger name="BUSINESS.APPLICATION_FLOW" level="INFO" additivity="false">
-        <appender-ref ref="APPLICATION_FLOW_FILE"/>
-    </logger>
-
-    <logger name="BUSINESS.INTERVIEW" level="INFO" additivity="false">
-        <appender-ref ref="INTERVIEW_FILE"/>
-    </logger>
-
-    <logger name="PERFORMANCE.API" level="INFO" additivity="false">
-        <appender-ref ref="API_PERFORMANCE_FILE"/>
-    </logger>
-
-    <logger name="PERFORMANCE.SLOW_QUERY" level="INFO" additivity="false">
-        <appender-ref ref="SLOW_QUERY_FILE"/>
-    </logger>
-
-    <logger name="SECURITY.AUTH" level="INFO" additivity="false">
-        <appender-ref ref="AUTH_FILE"/>
-    </logger>
-
-    <logger name="SECURITY.SUSPICIOUS" level="INFO" additivity="false">
-        <appender-ref ref="SUSPICIOUS_FILE"/>
+    <!-- MONITORING Logger -->
+    <logger name="MONITORING" level="INFO" additivity="false">
+        <appender-ref ref="MONITORING_FILE"/>
     </logger>
 
     <!-- 패키지별 로그 레벨 설정 -->
     <logger name="com.unionmate.backend" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
-        <appender-ref ref="ASYNC_WARN_FILE"/>
         <appender-ref ref="ASYNC_ERROR_FILE"/>
     </logger>
 
@@ -305,7 +120,6 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
-        <appender-ref ref="ASYNC_WARN_FILE"/>
         <appender-ref ref="ASYNC_ERROR_FILE"/>
     </root>
 </configuration>
