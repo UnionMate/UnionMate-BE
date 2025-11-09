@@ -24,6 +24,7 @@ import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameReq
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
 import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeRequest;
 import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeResponse;
+import com.unionmate.backend.domain.council.application.dto.GetInvitationCodeResponse;
 import com.unionmate.backend.domain.council.application.usecase.CouncilManageUsecase;
 import com.unionmate.backend.domain.council.application.usecase.CouncilMemberManageUsecase;
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
@@ -90,6 +91,14 @@ public class CouncilController {
 		@PathVariable long councilId, @RequestBody UpdateInvitationCodeRequest request) {
 		UpdateInvitationCodeResponse response = councilManageUsecase.updateInvitationCode(memberId, councilId, request);
 		return CommonResponse.success(UPDATE_INVITATION_CODE, response);
+	}
+
+	@Operation(summary = "초대 코드 조회", description = "학생회 초대 코드를 조회합니다.")
+	@GetMapping("/{councilId}/invitation-codes")
+	public CommonResponse<GetInvitationCodeResponse> getInvitationCode(@CurrentMemberId long memberId,
+		@PathVariable long councilId) {
+		GetInvitationCodeResponse response = councilManageUsecase.getInvitationCode(memberId, councilId);
+		return CommonResponse.success(GET_INVITATION_CODE, response);
 	}
 
 	@Operation(summary = "학생회 멤버 삭제", description = "학생회에서 특정 멤버를 삭제합니다.")
