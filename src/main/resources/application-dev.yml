@@ -36,3 +36,23 @@ jwt:
   refresh:
     secret: ENC(IFvNM2Z7dhbxX4VNwwgSA4E9k+hjaTFnQpyHHzolXKMiIdFRwnmMMPLHufWTar9ptGoHeDzhsdgizSKkXlkEtkNhamoOrr4yX3/+KVxgIUn56hfdpVgWPlkA3BwfuCSx)
     validity: ${JWT_REFRESH_VALIDITY:604800000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      profile: prod
+  prometheus:
+    metrics:
+      export:
+        enabled: true
