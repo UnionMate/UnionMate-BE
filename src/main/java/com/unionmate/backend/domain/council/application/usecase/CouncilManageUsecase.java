@@ -15,6 +15,7 @@ import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameReq
 import com.unionmate.backend.domain.council.application.dto.UpdateCouncilNameResponse;
 import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeRequest;
 import com.unionmate.backend.domain.council.application.dto.UpdateInvitationCodeResponse;
+import com.unionmate.backend.domain.council.application.dto.GetInvitationCodeResponse;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilGetService;
@@ -95,6 +96,14 @@ public class CouncilManageUsecase {
 		council.updateInvitationCode(request.invitationCode());
 
 		return UpdateInvitationCodeResponse.from(council);
+	}
+
+	public GetInvitationCodeResponse getInvitationCode(long memberId, long councilId) {
+		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
+		Council council = councilGetService.getCouncilById(councilId);
+		councilManager.validateBelongsToCouncil(councilManager, council);
+
+		return GetInvitationCodeResponse.from(council);
 	}
 
 	private void validateCouncilManagerExists(Member member) {
