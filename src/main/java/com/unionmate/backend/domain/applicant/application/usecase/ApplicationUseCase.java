@@ -144,7 +144,7 @@ public class ApplicationUseCase {
 
 						CalendarItem calendarAnswer = CalendarItem.createApplicationCalendar(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
-							calendarItem.getDescription(), calendarItem.getDate()
+							calendarItem.getDescription()
 						);
 
 						calendarAnswer.updateAnswer(new Answer<>(calendarAnswerRequest.date()));
@@ -259,7 +259,7 @@ public class ApplicationUseCase {
 						} else {
 							CalendarItem newCalendarItem = CalendarItem.createApplicationCalendar(
 								application, calendarItem.getRequired(), calendarItem.getTitle(),
-								calendarItem.getOrder(), calendarItem.getDescription(), calendarItem.getDate()
+								calendarItem.getOrder(), calendarItem.getDescription()
 							);
 
 							newCalendarItem.updateAnswer(new Answer<>(calendarAnswerRequest.date()));

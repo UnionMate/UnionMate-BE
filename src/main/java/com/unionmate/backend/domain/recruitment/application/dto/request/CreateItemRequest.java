@@ -1,6 +1,5 @@
 package com.unionmate.backend.domain.recruitment.application.dto.request;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
@@ -39,10 +38,6 @@ public record CreateItemRequest(
 	//text용
 	@Schema(description = "답변 최대 글자 수", example = "700")
 	Integer maxLength,
-
-	//calendar용
-	@Schema(description = "날짜 지정", example = "2001-06-15")
-	LocalDate date,
 
 	//announcement용
 	@Schema(description = "공지 내용 안내", example = "면접 장소는 AI 공학관 402호입니다.")

@@ -193,7 +193,7 @@ public class RecruitmentUseCase {
 			}
 
 			case CALENDAR -> CalendarItem.createRecruitmentCalendar(recruitment, required, createItemRequest.title(),
-				createItemRequest.order(), createItemRequest.description(), createItemRequest.date());
+				createItemRequest.order(), createItemRequest.description());
 
 			case ANNOUNCEMENT ->
 				AnnouncementItem.createRecruitmentAnnouncement(recruitment, required, createItemRequest.title(),
@@ -262,9 +262,8 @@ public class RecruitmentUseCase {
 							}
 						}
 					}
-					case
-						CalendarItem calendarItem when updateItemRequest instanceof UpdateCalendarRequest updateCalendarRequest ->
-						calendarItem.updateDate(updateCalendarRequest.date());
+					case CalendarItem calendarItem when updateItemRequest instanceof UpdateCalendarRequest -> {
+					}
 					case
 						AnnouncementItem announcementItem when updateItemRequest instanceof UpdateAnnouncementRequest updateAnnouncementRequest ->
 						announcementItem.updateAnnouncement(updateAnnouncementRequest.announcement());

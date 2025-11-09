@@ -28,46 +28,33 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue(DiscriminationValue.CALENDAR)
 public class CalendarItem extends Item {
 
-	//Single table 전략인데 하위 타입 전용 컬럼인 date를 nullable = false로 해서는 안됩니다.
-	//items 테이블에 모든 하위 컬럼이 있고, SELECT 타입을 insert할 때 값이 없는데도 not null을 요구한다면 오류가 생깁니다.
-	@Column(name = "date")
-	private LocalDate date;
-
 	@Convert(converter = LocalDateAnswerConverter.class)
 	@Lob
 	private Answer<LocalDate> answer;
-
-	public void updateDate(LocalDate date) {
-		if (date != null) {
-			this.date = date;
-		}
-	}
 
 	public void updateAnswer(Answer<LocalDate> answer) {
 		this.answer = answer;
 	}
 
 	public static CalendarItem createApplicationCalendar(Application application, Boolean required, String title,
-		Integer order, String description, LocalDate date) {
+		Integer order, String description) {
 		return CalendarItem.builder()
 			.application(application)
 			.required(required)
 			.title(title)
 			.order(order)
 			.description(description)
-			.date(date)
 			.build();
 	}
 
 	public static CalendarItem createRecruitmentCalendar(Recruitment recruitment, Boolean required, String title,
-		Integer order, String description, LocalDate date) {
+		Integer order, String description) {
 		return CalendarItem.builder()
 			.recruitment(recruitment)
 			.required(required)
 			.title(title)
 			.order(order)
 			.description(description)
-			.date(date)
 			.build();
 	}
 }
