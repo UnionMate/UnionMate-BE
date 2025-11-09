@@ -186,8 +186,7 @@ public class RecruitmentUseCase {
 					for (SelectOptionRequest selectOptionRequest : createItemRequest.options()) {
 						selectItem.getSelectItemOptions().add(
 							SelectItemOption.createRecruitmentSelectOption(selectOptionRequest.title(),
-								selectOptionRequest.order(), Boolean.TRUE.equals(selectOptionRequest.isEtc()),
-								selectOptionRequest.etcTitle(), selectItem));
+								selectOptionRequest.order(), selectItem));
 					}
 				}
 				yield selectItem;
@@ -248,9 +247,7 @@ public class RecruitmentUseCase {
 								// 생성
 								if (updateSelectOptionRequest.id() == null) {
 									SelectItemOption newOptions = SelectItemOption.createRecruitmentSelectOption(
-										updateSelectOptionRequest.title(), updateSelectOptionRequest.order(),
-										Boolean.TRUE.equals(updateSelectOptionRequest.isEtc()),
-										updateSelectOptionRequest.etcTitle(), selectItem
+										updateSelectOptionRequest.title(), updateSelectOptionRequest.order(), selectItem
 									);
 
 									selectItem.getSelectItemOptions().add(newOptions);

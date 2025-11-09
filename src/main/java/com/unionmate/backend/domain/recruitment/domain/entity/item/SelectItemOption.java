@@ -28,13 +28,6 @@ public class SelectItemOption extends BaseEntity {
 	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "is_etc", nullable = false)
-	@Builder.Default
-	private Boolean isEtc = false;
-
-	@Column(name = "etc_title")
-	private String etcTitle;
-
 	@Column(name = "orders", nullable = false)
 	private Integer order;
 
@@ -44,44 +37,21 @@ public class SelectItemOption extends BaseEntity {
 	private SelectItem selectItem;
 
 	public void updateTitle(String title) {
-		if(title != null) {
+		if (title != null) {
 			this.title = title;
 		}
 	}
 
-	public void updateIsEtc(Boolean isEtc) {
-		if(isEtc != null) {
-			this.isEtc = isEtc;
-		}
-	}
-
-	public void updateEtcTitle(String etcTitle) {
-		if(etcTitle != null) {
-			this.etcTitle = etcTitle;
-		}
-	}
-
 	public void updateOrder(Integer order) {
-		if(order != null) {
+		if (order != null) {
 			this.order = order;
 		}
 	}
 
-	@AssertTrue
-	public boolean validateEtc() {
-		if (Boolean.TRUE.equals(isEtc)) {
-			return this.etcTitle != null && !this.etcTitle.isEmpty();
-		}
-		return true;
-	}
-
-	public static SelectItemOption createRecruitmentSelectOption(String title, Integer order, Boolean isEtc,
-		String etcTitle, SelectItem selectItem) {
+	public static SelectItemOption createRecruitmentSelectOption(String title, Integer order, SelectItem selectItem) {
 		return SelectItemOption.builder()
 			.title(title)
 			.order(order)
-			.isEtc(isEtc)
-			.etcTitle(etcTitle)
 			.selectItem(selectItem)
 			.build();
 	}
