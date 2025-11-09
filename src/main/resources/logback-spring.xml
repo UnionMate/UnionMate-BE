@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 로그 파일 경로 설정 -->
-    <property name="LOG_DIR" value="logs"/>
+    <property name="LOG_DIR" value="${LOG_PATH:-logs}"/>
     <property name="LOG_FILE_NAME" value="application"/>
     <property name="ERROR_LOG_FILE_NAME" value="error"/>
     <property name="MONITORING_LOG" value="monitoring"/>
