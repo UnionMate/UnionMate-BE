@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.applicant.application.dto.request.AnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CalendarAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
-import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
@@ -168,10 +168,10 @@ public class ApplicationUseCase {
 
 	@Transactional
 	public void updateApplication(Long applicationId, UpdateApplicationRequest updateApplicationRequest,
-		GetMyApplicationsRequest getMyApplicationsRequest
+		GetMyApplicationRequest getMyApplicationRequest
 	) {
 		Application application = applicationGetService.getMyOneApplication(applicationId,
-			getMyApplicationsRequest.name(), getMyApplicationsRequest.email());
+			getMyApplicationRequest.name(), getMyApplicationRequest.email());
 		Recruitment recruitment = application.getRecruitment();
 
 		if (!recruitment.isOpen(LocalDateTime.now())) {
@@ -279,19 +279,19 @@ public class ApplicationUseCase {
 		applicationSaveService.save(application);
 	}
 
-	public List<GetMyApplicationsResponse> getMyApplications(GetMyApplicationsRequest getMyApplicationsRequest) {
+	public List<GetMyApplicationsResponse> getMyApplications(GetMyApplicationRequest getMyApplicationRequest) {
 		return applicationGetService.getMyApplications(
-				getMyApplicationsRequest.name(), getMyApplicationsRequest.email())
+				getMyApplicationRequest.name(), getMyApplicationRequest.email())
 			.stream()
 			.map(GetMyApplicationsResponse::from)
 			.toList();
 	}
 
 	public GetApplicationResponse getMyOneApplication(Long applicationId,
-		GetMyApplicationsRequest getMyApplicationsRequest
+		GetMyApplicationRequest getMyApplicationRequest
 	) {
 		Application application = applicationGetService.getMyOneApplication(applicationId,
-			getMyApplicationsRequest.name(), getMyApplicationsRequest.email()
+			getMyApplicationRequest.name(), getMyApplicationRequest.email()
 		);
 
 		return GetApplicationResponse.from(application);
