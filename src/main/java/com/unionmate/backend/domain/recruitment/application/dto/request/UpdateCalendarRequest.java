@@ -1,6 +1,5 @@
 package com.unionmate.backend.domain.recruitment.application.dto.request;
 
-import java.time.LocalDate;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
