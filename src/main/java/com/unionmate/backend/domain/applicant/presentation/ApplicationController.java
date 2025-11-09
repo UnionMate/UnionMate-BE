@@ -93,8 +93,9 @@ public class ApplicationController {
 
 	@GetMapping("/{applicationId}")
 	@Operation(summary = "특정 지원서를 조회합니다.")
-	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId) {
-		GetApplicationResponse application = applicationUseCase.getApplication(applicationId);
+	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId,
+		@Valid GetMyApplicationsRequest getMyApplicationsRequest) {
+		GetApplicationResponse application = applicationUseCase.getMyOneApplication(applicationId, getMyApplicationsRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATION, application);
 	}

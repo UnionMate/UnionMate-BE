@@ -60,7 +60,7 @@ public class ApplicationUseCase {
 	private final CouncilManagerGetService councilManagerGetService;
 
 	private final ApplicationSaveService applicationSaveService;
-	
+
 	private final TextAnswerValidator textAnswerValidator;
 	private final SelectAnswerValidator selectAnswerValidator;
 	private final CalendarAnswerValidator calendarAnswerValidator;
@@ -284,8 +284,12 @@ public class ApplicationUseCase {
 			.toList();
 	}
 
-	public GetApplicationResponse getApplication(Long applicationId) {
-		Application application = applicationGetService.getApplicationById(applicationId);
+	public GetApplicationResponse getMyOneApplication(Long applicationId,
+		GetMyApplicationsRequest getMyApplicationsRequest
+	) {
+		Application application = applicationGetService.getMyOneApplication(applicationId,
+			getMyApplicationsRequest.name(), getMyApplicationsRequest.email()
+		);
 
 		return GetApplicationResponse.from(application);
 	}
