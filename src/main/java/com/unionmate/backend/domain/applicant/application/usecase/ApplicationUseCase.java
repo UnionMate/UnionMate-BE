@@ -167,8 +167,11 @@ public class ApplicationUseCase {
 	}
 
 	@Transactional
-	public void updateApplication(Long applicationId, UpdateApplicationRequest updateApplicationRequest) {
-		Application application = applicationGetService.getApplicationById(applicationId);
+	public void updateApplication(Long applicationId, UpdateApplicationRequest updateApplicationRequest,
+		GetMyApplicationsRequest getMyApplicationsRequest
+	) {
+		Application application = applicationGetService.getMyOneApplication(applicationId,
+			getMyApplicationsRequest.name(), getMyApplicationsRequest.email());
 		Recruitment recruitment = application.getRecruitment();
 
 		if (!recruitment.isOpen(LocalDateTime.now())) {

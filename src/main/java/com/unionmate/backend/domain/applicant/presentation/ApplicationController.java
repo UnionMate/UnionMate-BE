@@ -56,9 +56,10 @@ public class ApplicationController {
 	@PatchMapping("/{applicationId}")
 	@Operation(summary = "지원서를 수정합니다.")
 	public CommonResponse<Void> updateApplication(
-		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest
+		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest,
+		@Valid GetMyApplicationsRequest getMyApplicationsRequest
 	) {
-		applicationUseCase.updateApplication(applicationId, updateApplicationRequest);
+		applicationUseCase.updateApplication(applicationId, updateApplicationRequest, getMyApplicationsRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_APPLICATION);
 	}
