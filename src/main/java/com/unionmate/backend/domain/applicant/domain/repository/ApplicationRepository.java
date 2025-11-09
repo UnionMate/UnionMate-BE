@@ -17,6 +17,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	boolean existsByRecruitmentId(Long recruitmentId);
 
+	Optional<Application> findByIdAndNameAndEmail(Long id, String name, String email);
+
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
 		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus

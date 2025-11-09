@@ -32,7 +32,5 @@ public class RecruitmentFormUpdateService {
 		UpdateSelectOptionRequest updateSelectOptionRequest) {
 		selectItemOption.updateTitle(updateSelectOptionRequest.title());
 		selectItemOption.updateOrder(updateSelectOptionRequest.order());
-		selectItemOption.updateIsEtc(updateSelectOptionRequest.isEtc());
-		selectItemOption.updateEtcTitle(updateSelectOptionRequest.etcTitle());
 	}
 }

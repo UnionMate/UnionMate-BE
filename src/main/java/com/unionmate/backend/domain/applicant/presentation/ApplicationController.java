@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateCommentRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.DecisionRequest;
-import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.SetInterviewScheduleRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateCommentRequest;
@@ -56,9 +56,10 @@ public class ApplicationController {
 	@PatchMapping("/{applicationId}")
 	@Operation(summary = "지원서를 수정합니다.")
 	public CommonResponse<Void> updateApplication(
-		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest
+		@PathVariable Long applicationId, @Valid @RequestBody UpdateApplicationRequest updateApplicationRequest,
+		@Valid GetMyApplicationRequest getMyApplicationRequest
 	) {
-		applicationUseCase.updateApplication(applicationId, updateApplicationRequest);
+		applicationUseCase.updateApplication(applicationId, updateApplicationRequest, getMyApplicationRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.UPDATE_APPLICATION);
 	}
@@ -66,8 +67,8 @@ public class ApplicationController {
 	@GetMapping("/mine")
 	@Operation(summary = "자신이 작성한 지원서 목록을 조회합니다.")
 	public CommonResponse<List<GetMyApplicationsResponse>> getMyApplications(
-		@Valid GetMyApplicationsRequest getMyApplicationsRequest) {
-		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationsRequest);
+		@Valid GetMyApplicationRequest getMyApplicationRequest) {
+		List<GetMyApplicationsResponse> myApplications = applicationUseCase.getMyApplications(getMyApplicationRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATIONS, myApplications);
 	}
@@ -93,8 +94,10 @@ public class ApplicationController {
 
 	@GetMapping("/{applicationId}")
 	@Operation(summary = "특정 지원서를 조회합니다.")
-	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId) {
-		GetApplicationResponse application = applicationUseCase.getApplication(applicationId);
+	public CommonResponse<GetApplicationResponse> getApplication(@PathVariable Long applicationId,
+		@Valid GetMyApplicationRequest getMyApplicationRequest) {
+		GetApplicationResponse application = applicationUseCase.getMyOneApplication(applicationId,
+			getMyApplicationRequest);
 
 		return CommonResponse.success(ApplicationResponseCode.GET_MY_APPLICATION, application);
 	}

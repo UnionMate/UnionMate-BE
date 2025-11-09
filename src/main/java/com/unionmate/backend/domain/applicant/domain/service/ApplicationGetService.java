@@ -33,6 +33,11 @@ public class ApplicationGetService {
 			.orElseThrow(ApplicationNotFoundException::new);
 	}
 
+	public Application getMyOneApplication(Long applicationId, String name, String email) {
+		return applicationRepository.findByIdAndNameAndEmail(applicationId, name, email)
+			.orElseThrow(ApplicationNotFoundException::new);
+	}
+
 	public List<CouncilApplicantQueryRow> getDocumentScreeningApplicantsForCouncil(
 		Council council, EvaluationStatus evaluationFilterOrNull
 	) {

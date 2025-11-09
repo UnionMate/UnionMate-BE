@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unionmate.backend.domain.applicant.application.dto.request.AnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CalendarAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.CreateApplicantRequest;
-import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationsRequest;
+import com.unionmate.backend.domain.applicant.application.dto.request.GetMyApplicationRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.SelectAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.TextAnswerRequest;
 import com.unionmate.backend.domain.applicant.application.dto.request.UpdateApplicationRequest;
@@ -60,7 +60,7 @@ public class ApplicationUseCase {
 	private final CouncilManagerGetService councilManagerGetService;
 
 	private final ApplicationSaveService applicationSaveService;
-	
+
 	private final TextAnswerValidator textAnswerValidator;
 	private final SelectAnswerValidator selectAnswerValidator;
 	private final CalendarAnswerValidator calendarAnswerValidator;
@@ -144,7 +144,7 @@ public class ApplicationUseCase {
 
 						CalendarItem calendarAnswer = CalendarItem.createApplicationCalendar(
 							application, calendarItem.getRequired(), calendarItem.getTitle(), calendarItem.getOrder(),
-							calendarItem.getDescription(), calendarItem.getDate()
+							calendarItem.getDescription()
 						);
 
 						calendarAnswer.updateAnswer(new Answer<>(calendarAnswerRequest.date()));
@@ -167,8 +167,11 @@ public class ApplicationUseCase {
 	}
 
 	@Transactional
-	public void updateApplication(Long applicationId, UpdateApplicationRequest updateApplicationRequest) {
-		Application application = applicationGetService.getApplicationById(applicationId);
+	public void updateApplication(Long applicationId, UpdateApplicationRequest updateApplicationRequest,
+		GetMyApplicationRequest getMyApplicationRequest
+	) {
+		Application application = applicationGetService.getMyOneApplication(applicationId,
+			getMyApplicationRequest.name(), getMyApplicationRequest.email());
 		Recruitment recruitment = application.getRecruitment();
 
 		if (!recruitment.isOpen(LocalDateTime.now())) {
@@ -259,7 +262,7 @@ public class ApplicationUseCase {
 						} else {
 							CalendarItem newCalendarItem = CalendarItem.createApplicationCalendar(
 								application, calendarItem.getRequired(), calendarItem.getTitle(),
-								calendarItem.getOrder(), calendarItem.getDescription(), calendarItem.getDate()
+								calendarItem.getOrder(), calendarItem.getDescription()
 							);
 
 							newCalendarItem.updateAnswer(new Answer<>(calendarAnswerRequest.date()));
@@ -276,16 +279,20 @@ public class ApplicationUseCase {
 		applicationSaveService.save(application);
 	}
 
-	public List<GetMyApplicationsResponse> getMyApplications(GetMyApplicationsRequest getMyApplicationsRequest) {
+	public List<GetMyApplicationsResponse> getMyApplications(GetMyApplicationRequest getMyApplicationRequest) {
 		return applicationGetService.getMyApplications(
-				getMyApplicationsRequest.name(), getMyApplicationsRequest.email())
+				getMyApplicationRequest.name(), getMyApplicationRequest.email())
 			.stream()
 			.map(GetMyApplicationsResponse::from)
 			.toList();
 	}
 
-	public GetApplicationResponse getApplication(Long applicationId) {
-		Application application = applicationGetService.getApplicationById(applicationId);
+	public GetApplicationResponse getMyOneApplication(Long applicationId,
+		GetMyApplicationRequest getMyApplicationRequest
+	) {
+		Application application = applicationGetService.getMyOneApplication(applicationId,
+			getMyApplicationRequest.name(), getMyApplicationRequest.email()
+		);
 
 		return GetApplicationResponse.from(application);
 	}

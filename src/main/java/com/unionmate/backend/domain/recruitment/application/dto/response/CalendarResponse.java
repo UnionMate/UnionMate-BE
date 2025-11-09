@@ -24,10 +24,7 @@ public record CalendarResponse(
 	Integer order,
 
 	@Schema(description = "항목 설명 안내", example = "해당 날짜 전까지 희망하는 날짜를 작성해주세요")
-	String description,
-
-	@Schema(description = "날짜 지정", example = "2025-12-31")
-	LocalDate date
+	String description
 ) implements ItemResponse {
 
 	public static CalendarResponse from(CalendarItem calendarItem, ItemType itemType) {
@@ -37,8 +34,7 @@ public record CalendarResponse(
 			calendarItem.getRequired(),
 			calendarItem.getTitle(),
 			calendarItem.getOrder(),
-			calendarItem.getDescription(),
-			calendarItem.getDate()
+			calendarItem.getDescription()
 		);
 	}
 }

@@ -186,15 +186,14 @@ public class RecruitmentUseCase {
 					for (SelectOptionRequest selectOptionRequest : createItemRequest.options()) {
 						selectItem.getSelectItemOptions().add(
 							SelectItemOption.createRecruitmentSelectOption(selectOptionRequest.title(),
-								selectOptionRequest.order(), Boolean.TRUE.equals(selectOptionRequest.isEtc()),
-								selectOptionRequest.etcTitle(), selectItem));
+								selectOptionRequest.order(), selectItem));
 					}
 				}
 				yield selectItem;
 			}
 
 			case CALENDAR -> CalendarItem.createRecruitmentCalendar(recruitment, required, createItemRequest.title(),
-				createItemRequest.order(), createItemRequest.description(), createItemRequest.date());
+				createItemRequest.order(), createItemRequest.description());
 
 			case ANNOUNCEMENT ->
 				AnnouncementItem.createRecruitmentAnnouncement(recruitment, required, createItemRequest.title(),
@@ -248,9 +247,7 @@ public class RecruitmentUseCase {
 								// 생성
 								if (updateSelectOptionRequest.id() == null) {
 									SelectItemOption newOptions = SelectItemOption.createRecruitmentSelectOption(
-										updateSelectOptionRequest.title(), updateSelectOptionRequest.order(),
-										Boolean.TRUE.equals(updateSelectOptionRequest.isEtc()),
-										updateSelectOptionRequest.etcTitle(), selectItem
+										updateSelectOptionRequest.title(), updateSelectOptionRequest.order(), selectItem
 									);
 
 									selectItem.getSelectItemOptions().add(newOptions);
@@ -265,9 +262,8 @@ public class RecruitmentUseCase {
 							}
 						}
 					}
-					case
-						CalendarItem calendarItem when updateItemRequest instanceof UpdateCalendarRequest updateCalendarRequest ->
-						calendarItem.updateDate(updateCalendarRequest.date());
+					case CalendarItem calendarItem when updateItemRequest instanceof UpdateCalendarRequest -> {
+					}
 					case
 						AnnouncementItem announcementItem when updateItemRequest instanceof UpdateAnnouncementRequest updateAnnouncementRequest ->
 						announcementItem.updateAnnouncement(updateAnnouncementRequest.announcement());

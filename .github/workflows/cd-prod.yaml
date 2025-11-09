@@ -31,4 +31,5 @@ jobs:
             docker rm -f unionmate-prod || true
             docker compose pull unionmate-prod
             docker compose up -d --no-deps --force-recreate --pull always unionmate-prod
+            docker compose exec nginx nginx -t && docker compose exec nginx nginx -s reload
             docker image prune -f
