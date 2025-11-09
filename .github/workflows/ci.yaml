@@ -49,5 +49,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/arm64
           tags: ${{ secrets.DOCKER_USERNAME }}/unionmate-be:latest
           push: true
