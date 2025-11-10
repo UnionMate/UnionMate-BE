@@ -1,10 +1,9 @@
 package com.unionmate.backend.domain.recruitment.presentation;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.request.RecruitmentResultCheckRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.ToggleRecruitmentActivationRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateRecruitmentRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.response.GetRecruitmentsResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResultResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
 import com.unionmate.backend.domain.recruitment.application.usecase.RecruitmentUseCase;
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
@@ -101,13 +102,31 @@ public class RecruitmentController {
 
 	@PostMapping("/{recruitmentId}/send/mail")
 	@Operation(
-			summary = "해당 모집에 대한 결과 메일을 전송합니다."
+		summary = "해당 모집에 대한 결과 메일을 전송합니다."
 	)
 	public CommonResponse<Void> sendMail(
-			@CurrentMemberId Long memberId,
-			@PathVariable Long recruitmentId
+		@CurrentMemberId Long memberId,
+		@PathVariable Long recruitmentId
 	) {
 		this.recruitmentUseCase.sendResultMail(memberId, recruitmentId);
 		return CommonResponse.success(RecruitmentResponseCode.SEND_RESULT_MAIL);
+	}
+
+	@PostMapping("/{recruitmentId}/results")
+	@Operation(
+		summary = "해당 모집 결과 단건 조회 (지원자)",
+		description = """
+			이름과 이메일을 받아 해당 모집(recruitmentId)의 본인 지원 결과를 조회합니다.
+			지원 결과에는 면접 일정, 학생회 관리자 연락처, 현재 모집 단계 등이 포함
+			"""
+	)
+	public CommonResponse<RecruitmentResultResponse> getRecruitmentResult(
+		@PathVariable Long recruitmentId,
+		@Valid @RequestBody RecruitmentResultCheckRequest recruitmentResultCheckRequest
+	) {
+		RecruitmentResultResponse response = recruitmentUseCase.getRecruitmentResult(
+			recruitmentId, recruitmentResultCheckRequest
+		);
+		return CommonResponse.success(RecruitmentResponseCode.GET_RECRUITMENT_RESULT, response);
 	}
 }
