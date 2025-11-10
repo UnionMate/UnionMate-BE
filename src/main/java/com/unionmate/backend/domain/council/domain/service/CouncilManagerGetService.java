@@ -41,10 +41,9 @@ public class CouncilManagerGetService {
 	}
 
 	public String getPrimaryManagerEmailByCouncilId(Long councilId) {
-		CouncilManager councilManager = councilManagerRepository
+		return councilManagerRepository
 			.findTopByCouncilIdOrderByIdAsc(councilId)
+			.map(councilManager -> councilManager.getMember().getEmail())
 			.orElse(null);
-		
-		return councilManager.getMember().getEmail();
 	}
 }

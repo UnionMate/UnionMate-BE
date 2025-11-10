@@ -49,7 +49,7 @@ public record RecruitmentResultResponse(
 	}
 
 	private static RecruitmentResultResponse.InterviewResponse from(Interview interview) {
-		if (interview == null) {
+		if (interview == null || interview.time() == null || interview.place() == null) {
 			return null;
 		}
 		return new RecruitmentResultResponse.InterviewResponse(interview.time(), interview.place());
