@@ -20,3 +20,19 @@ jwt:
   refresh:
     secret: YmJhZHNmZHNhZ2dmYWRiYXNkZmFiYmFkc2Zkc2FnZ2ZhZGJhc2RmYWJiYWRzZmRzYWdnZmFkYmFzZGZh
     validity: ${JWT_REFRESH_VALIDITY:604800000}
+
+kafka:
+  bootstrap-servers: 134.185.114.241:29092
+  topics:
+    jwt-verify-request: cert.jwt.id
+    jwt-verify-reply: cert.jwt.id.replies
+    jwt-generate-request: cert.jwt.generate
+    jwt-generate-reply: cert.jwt.replies
+    mail-request-result: mail.request.result
+  timeout-ms: 5000
+  consumer:
+    group-id: backend-auth-consumer-local
+  producer:
+    acks: all
+    retries: 3
+

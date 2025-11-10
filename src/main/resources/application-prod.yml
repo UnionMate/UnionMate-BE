@@ -57,3 +57,18 @@ management:
     metrics:
       export:
         enabled: true
+
+kafka:
+  bootstrap-servers: ENC(lIYWFNGXMzTeW5I9mKazemx95Utdjq4O7uDYxIrADGI=)
+  topics:
+    jwt-verify-request: ENC(7SyF/txufkHbun6qFQl0cPlS8RVkKF5x)
+    jwt-verify-reply: ENC(yXD1kihP7uOdFddMi3Cfb80s8Gzh4K6kFVVcVPw1PwE=)
+    jwt-generate-request: ENC(8dUycB+Qm7pUIAD/NS6c23VbDb5CKM3ndKVACZZ0ztQ=)
+    jwt-generate-reply: ENC(/CMfpXrYEv6ai1a8fAg59WgU/wqrmPXnhnRQkMFp0Qk=)
+    mail-request-result: ENC(8ozKeDjUvFEZVQ9cU6JFNEtrcn/TVsEd7+yZZOfl6SQ=)
+  timeout-ms: 5000
+  consumer:
+    group-id: ENC(WQRgxBvKTCYW+3T1hL68cPVfZ4QD81YAKpVz9gSNujHby2yJRpO7fQ==)
+  producer:
+    acks: all
+    retries: 3
