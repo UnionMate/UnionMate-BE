@@ -1,13 +1,19 @@
 package com.unionmate.backend.global.auth.resolver;
 
 import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
+import com.unionmate.backend.global.kafka.event.JwtUserIdEvent;
+import com.unionmate.backend.global.kafka.event.JwtVerifyEvent;
 import com.unionmate.backend.exception.common.InvalidJwtException;
-import com.unionmate.backend.global.util.jwt.JwtAuthenticator;
-import com.unionmate.backend.global.util.jwt.JwtExtractor;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.Duration;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
+import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -15,6 +21,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
@@ -22,8 +29,13 @@ public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentRes
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_PREFIX = "Bearer ";
 
-  private final JwtAuthenticator jwtAuthenticator;
-  private final JwtExtractor jwtExtractor;
+  private final ReplyingKafkaTemplate<String, JwtVerifyEvent, JwtUserIdEvent> jwtVerifyReplyingKafkaTemplate;
+
+  @Value("${kafka.topics.jwt-verify-request}")
+  private String jwtVerifyRequestTopic;
+
+  @Value("${kafka.timeout-ms}")
+  private long timeoutMs;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -65,19 +77,34 @@ public class CurrentMemberIdArgumentResolver implements HandlerMethodArgumentRes
   }
 
   private Long extractMemberId(String token, MethodParameter parameter) {
-    this.jwtAuthenticator.verifyAccessToken(token);
-
-    Claims claims = this.jwtExtractor.parseAccessTokenPayloads(token);
-
-    String subject = claims.getSubject();
-    if (!StringUtils.hasText(subject)) {
-      return handleInvalidToken(parameter);
-    }
-
     try {
-      return Long.parseLong(subject);
-    } catch (NumberFormatException e) {
-      throw new InvalidJwtException();
+      String eventId = UUID.randomUUID().toString();
+
+      JwtVerifyEvent verifyEvent = JwtVerifyEvent.builder()
+          .eventId(eventId)
+          .accessToken(token)
+          .build();
+
+      ProducerRecord<String, JwtVerifyEvent> record =
+          new ProducerRecord<>(jwtVerifyRequestTopic, eventId, verifyEvent);
+
+      RequestReplyFuture<String, JwtVerifyEvent, JwtUserIdEvent> replyFuture =
+          jwtVerifyReplyingKafkaTemplate.sendAndReceive(record, Duration.ofMillis(timeoutMs));
+
+      JwtUserIdEvent userIdEvent = replyFuture.get().value();
+
+      if (userIdEvent == null) {
+        return handleInvalidToken(parameter);
+      }
+
+      if (userIdEvent.getValid() == null || !userIdEvent.getValid()) {
+        return handleInvalidToken(parameter);
+      }
+
+      return userIdEvent.getUserId();
+
+    } catch (Exception e) {
+      return handleInvalidToken(parameter);
     }
   }
 

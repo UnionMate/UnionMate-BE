@@ -8,18 +8,26 @@ import com.unionmate.backend.domain.auth.application.dto.response.ReissueRespons
 import com.unionmate.backend.domain.auth.domain.service.AuthService;
 import com.unionmate.backend.domain.auth.exception.EmailDuplicateException;
 import com.unionmate.backend.domain.auth.exception.PasswordNotMatchException;
+import com.unionmate.backend.domain.auth.exception.TokenIssuanceException;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.domain.member.domain.service.MemberSaveService;
-import com.unionmate.backend.global.util.jwt.JwtProvider;
-
+import com.unionmate.backend.global.kafka.event.JwtGenerateEvent;
+import com.unionmate.backend.global.kafka.event.JwtTokenEvent;
+import java.time.Duration;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthUseCase {
@@ -28,7 +36,13 @@ public class AuthUseCase {
 	private final MemberGetService memberGetService;
 	private final MemberSaveService memberSaveService;
 	private final CouncilManagerGetService councilManagerGetService;
-	private final JwtProvider jwtProvider;
+	private final ReplyingKafkaTemplate<String, JwtGenerateEvent, JwtTokenEvent> jwtGenerateReplyingKafkaTemplate;
+
+	@Value("${kafka.topics.jwt-generate-request}")
+	private String jwtGenerateRequestTopic;
+
+	@Value("${kafka.timeout-ms}")
+	private long timeoutMs;
 
 	@Transactional
 	public ManagerRegisterResponse managerRegister(ManagerRegisterRequest managerRegisterRequest) {
@@ -48,10 +62,9 @@ public class AuthUseCase {
 
 		Member persisted = this.memberSaveService.save(member);
 
-		String accessToken = this.jwtProvider.generateAccessToken(persisted);
-		String refreshToken = this.jwtProvider.generateRefreshToken(persisted.getId());
+		JwtTokenEvent tokenEvent = issueTokens(persisted);
 
-		return ManagerRegisterResponse.of(accessToken, refreshToken);
+		return ManagerRegisterResponse.of(tokenEvent.getAccessToken(), tokenEvent.getRefreshToken());
 	}
 
 	public ManagerLoginResponse managerLogin(ManagerLoginRequest managerLoginRequest) {
@@ -61,8 +74,7 @@ public class AuthUseCase {
 			throw new PasswordNotMatchException();
 		}
 
-		String accessToken = this.jwtProvider.generateAccessToken(member);
-		String refreshToken = this.jwtProvider.generateRefreshToken(member.getId());
+		JwtTokenEvent tokenEvent = issueTokens(member);
 
 		Long councilId = null;
 		if (councilManagerGetService.existsByMember(member)) {
@@ -70,15 +82,50 @@ public class AuthUseCase {
 			councilId = councilManager.getCouncil().getId();
 		}
 
-		return ManagerLoginResponse.of(accessToken, refreshToken, councilId);
+		return ManagerLoginResponse.of(tokenEvent.getAccessToken(), tokenEvent.getRefreshToken(), councilId);
 	}
 
 	public ReissueResponse reissue(Long memberId) {
 		Member member = this.memberGetService.getMemberById(memberId);
 
-		String accessToken = this.jwtProvider.generateAccessToken(member);
-		String refreshToken = this.jwtProvider.generateRefreshToken(member.getId());
+		JwtTokenEvent tokenEvent = issueTokens(member);
 
-		return ReissueResponse.of(accessToken, refreshToken);
+		return ReissueResponse.of(tokenEvent.getAccessToken(), tokenEvent.getRefreshToken());
+	}
+
+	private JwtTokenEvent issueTokens(Member member) {
+		try {
+			String eventId = UUID.randomUUID().toString();
+
+			JwtGenerateEvent generateEvent = JwtGenerateEvent.builder()
+					.eventId(eventId)
+					.userId(member.getId())
+					.email(member.getEmail())
+					.name(member.getName())
+					.build();
+
+			ProducerRecord<String, JwtGenerateEvent> record =
+					new ProducerRecord<>(jwtGenerateRequestTopic, eventId, generateEvent);
+
+			RequestReplyFuture<String, JwtGenerateEvent, JwtTokenEvent> replyFuture =
+					jwtGenerateReplyingKafkaTemplate.sendAndReceive(record, Duration.ofMillis(timeoutMs));
+
+			JwtTokenEvent tokenEvent = replyFuture.get().value();
+
+			if (tokenEvent == null) {
+				throw new TokenIssuanceException();
+			}
+
+			if (tokenEvent.getAccessToken() == null || tokenEvent.getRefreshToken() == null) {
+				throw new TokenIssuanceException();
+			}
+
+			return tokenEvent;
+
+		} catch (TokenIssuanceException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new TokenIssuanceException();
+		}
 	}
 }

@@ -1,12 +1,22 @@
 package com.unionmate.backend.domain.recruitment.application.usecase;
 
+import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.embed.Stage;
+import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.member.domain.entity.Member;
+import com.unionmate.backend.domain.member.domain.service.MemberGetService;
+import com.unionmate.backend.global.kafka.event.MailSendEvent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +60,7 @@ import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUp
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecruitmentUseCase {
@@ -59,9 +70,14 @@ public class RecruitmentUseCase {
 	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
 	private final ApplicationGetService applicationGetService;
+	private final MemberGetService memberGetService;
 
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentUpdateService recruitmentUpdateService;
+	private final KafkaTemplate<String, MailSendEvent> mailSendKafkaTemplate;
+
+	@Value("${kafka.topics.mail-request-result}")
+	private String mailRequestResultTopic;
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
@@ -168,6 +184,42 @@ public class RecruitmentUseCase {
 			.map(ItemResponse::from)
 			.toList();
 		return RecruitmentResponse.from(recruitment, items);
+	}
+
+	@Transactional
+	public void sendResultMail(Long memberId, Long recruitmentId) {
+		Recruitment recruitment = this.recruitmentGetService.getRecruitmentById(recruitmentId);
+		Member member = this.memberGetService.getMemberById(memberId);
+
+		CouncilManager councilManager = this.councilManagerGetService.getCouncilManagerByMemberId(
+				member.getId());
+
+		if (!recruitment.getCouncil().getId().equals(councilManager.getCouncil().getId())) {
+			throw new NotRecruitmentCouncilMemberException();
+		}
+
+		List<Application> applications = this.applicationGetService.getApplicationsByRecruitment(
+				recruitment);
+
+		applications.forEach(application -> {
+			try {
+				MailSendEvent mailSendEvent = MailSendEvent.builder()
+						.name(application.getName())
+						.email(application.getEmail())
+						.build();
+
+				this.mailSendKafkaTemplate.send(mailRequestResultTopic, application.getEmail(), mailSendEvent);
+
+				Stage nowStage = application.getStage();
+
+				if (nowStage.evaluationStatus() == EvaluationStatus.PASSED) {
+					application.updateStage(nowStage.toNextStage());
+				}
+			} catch (Exception e) {
+				log.error("메일 전송 topic 발행 실패: name={}, email={}",
+						application.getName(), application.getEmail(), e);
+			}
+		});
 	}
 
 	private Item createItem(Recruitment recruitment, CreateItemRequest createItemRequest) {

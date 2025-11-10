@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.domain.repository;
 
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,9 @@ import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQuer
 import com.unionmate.backend.domain.council.domain.entity.Council;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
+
+	List<Application> findByRecruitment(Recruitment recruitment);
+
 	List<Application> findAllByNameAndEmailOrderByIdDesc(String name, String email);
 
 	boolean existsByRecruitmentId(Long recruitmentId);
