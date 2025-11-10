@@ -34,7 +34,6 @@ public class ApplicationDecisionUseCase {
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
 
 		validateSameCouncil(councilManager, application);
-		validateDocumentSubmitted(application);
 
 		if (request.decision() == DecisionRequest.Decision.PASSED) {
 			application.updateStage(Stage.documentDecisionPassed());
