@@ -1,5 +1,6 @@
 package com.unionmate.backend.domain.applicant.domain.service;
 
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -70,5 +71,9 @@ public class ApplicationGetService {
 
 	public boolean existsByRecruitmentId(Long recruitmentId) {
 		return applicationRepository.existsByRecruitmentId(recruitmentId);
+	}
+
+	public List<Application> getApplicationsByRecruitment(Recruitment recruitment) {
+		return this.applicationRepository.findByRecruitment(recruitment);
 	}
 }
