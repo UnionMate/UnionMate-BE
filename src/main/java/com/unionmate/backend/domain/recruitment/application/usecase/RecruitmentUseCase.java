@@ -3,11 +3,14 @@ package com.unionmate.backend.domain.recruitment.application.usecase;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.embed.Stage;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.member.domain.entity.Member;
+import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.global.kafka.event.MailSendEvent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,6 +70,7 @@ public class RecruitmentUseCase {
 	private final RecruitmentFormUpdateService recruitmentFormUpdateService;
 	private final RecruitmentDeleteService recruitmentDeleteService;
 	private final ApplicationGetService applicationGetService;
+	private final MemberGetService memberGetService;
 
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentUpdateService recruitmentUpdateService;
@@ -183,8 +187,17 @@ public class RecruitmentUseCase {
 	}
 
 	@Transactional
-	public void sendResultMail(Long recruitmentId) {
+	public void sendResultMail(Long memberId, Long recruitmentId) {
 		Recruitment recruitment = this.recruitmentGetService.getRecruitmentById(recruitmentId);
+		Member member = this.memberGetService.getMemberById(memberId);
+
+		CouncilManager councilManager = this.councilManagerGetService.getCouncilManagerByMemberId(
+				member.getId());
+
+		if (!recruitment.getCouncil().getId().equals(councilManager.getCouncil().getId())) {
+			throw new NotRecruitmentCouncilMemberException();
+		}
+
 		List<Application> applications = this.applicationGetService.getApplicationsByRecruitment(
 				recruitment);
 

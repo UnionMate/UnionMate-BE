@@ -104,9 +104,10 @@ public class RecruitmentController {
 			summary = "해당 모집에 대한 결과 메일을 전송합니다."
 	)
 	public CommonResponse<Void> sendMail(
+			@CurrentMemberId Long memberId,
 			@PathVariable Long recruitmentId
 	) {
-		this.recruitmentUseCase.sendResultMail(recruitmentId);
+		this.recruitmentUseCase.sendResultMail(memberId, recruitmentId);
 		return CommonResponse.success(RecruitmentResponseCode.SEND_RESULT_MAIL);
 	}
 }
