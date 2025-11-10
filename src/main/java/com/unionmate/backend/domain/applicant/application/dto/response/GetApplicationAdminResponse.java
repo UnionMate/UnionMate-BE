@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.embed.Interview;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
@@ -41,6 +42,8 @@ public record GetApplicationAdminResponse(
 			.map(ApplicationAnswerResponse::from)
 			.toList();
 
+		InterviewResponse interviewResponse = from(application.getInterview());
+
 		return new GetApplicationAdminResponse(
 			application.getId(),
 			new RecruitmentBrief(
@@ -56,13 +59,17 @@ public record GetApplicationAdminResponse(
 				application.getStage().recruitmentStatus(),
 				application.getStage().evaluationStatus()
 			),
-			new InterviewResponse(
-				application.getInterview().time(),
-				application.getInterview().place()
-			),
+			interviewResponse,
 			sortedAnswers,
 			application.getCreatedAt()
 		);
+	}
+
+	private static InterviewResponse from(Interview interview) {
+		if (interview == null) {
+			return null;
+		}
+		return new InterviewResponse(interview.time(), interview.place());
 	}
 
 	@Schema(description = "모집 공고 요약")
