@@ -15,7 +15,9 @@ public enum ErrorCode implements ErrorInfo {
 	RECRUITMENT_DEACTIVATION_NOT_ALLOWED("모집 게시 비활성화는 허용되지 않습니다.", 2105),
 	RECRUITMENT_ACTIVATION_EXPIRED("모집 게시 활성화 기간이 만료되었습니다.", 2106),
 	ACTIVE_RECRUITMENT_CANNOT_CHANGE("현재 활성화된 양식은 삭제 또는 수정할 수 없습니다.", 2107),
-	RECRUITMENT_HAS_APPLICATION_CANNOT_CHANGE("지원자가 존재하는 지원서의 양식을 삭제 또는 수정할 수 없습니다.", 2108);
+	RECRUITMENT_HAS_APPLICATION_CANNOT_CHANGE("지원자가 존재하는 지원서의 양식을 삭제 또는 수정할 수 없습니다.", 2108),
+	ILLEGAL_RECRUITMENT_STATUS("잘못된 모집 상태입니다.", 2109),
+	;
 
 	private final String message;
 	private final Integer code;

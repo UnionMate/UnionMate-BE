@@ -1,6 +1,7 @@
 package com.unionmate.backend.domain.applicant.domain.entity.embed;
 
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.recruitment.application.exception.IllegalRecruitmentStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
 import jakarta.persistence.Column;
@@ -58,8 +59,10 @@ public record Stage(
 			case INTERVIEW -> {
 				return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.SUBMITTED);
 			}
+			case FINAL -> {
+				return new Stage(RecruitmentStatus.FINAL, EvaluationStatus.PASSED);
+			}
 		}
-		// TODO: 예외 처리 로직 확정되면 예외 처리
-		throw new IllegalStateException();
+		throw new IllegalRecruitmentStatus();
 	}
 }
