@@ -45,7 +45,7 @@ public class ApplicationGetService {
 		String email
 	) {
 		return applicationRepository
-			.findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCaseWithRecruitmentAndCouncil(
+			.findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCase(
 				recruitmentId, applicantName, email
 			)
 			.orElseThrow(ApplicationNotFoundException::new);

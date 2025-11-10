@@ -138,11 +138,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	@Query("select a from Application a where a.id = :id")
 	Optional<Application> findByIdWithRecruitmentAndAnswers(@Param("id") Long id);
 
-	@EntityGraph(attributePaths = {
-		"recruitment",
-		"recruitment.council"
-	})
-	Optional<Application> findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCaseWithRecruitmentAndCouncil(
+	@EntityGraph(attributePaths = {"recruitment", "recruitment.council"})
+	Optional<Application> findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCase(
 		Long recruitmentId,
 		String name,
 		String email

@@ -114,10 +114,11 @@ public class RecruitmentController {
 
 	@PostMapping("/{recruitmentId}/results")
 	@Operation(
-		summary = "해당 모집 결과 단건 조회 (지원자)",
+		summary = "해당 모집 결과 단건 조회",
 		description = """
-			이름과 이메일을 받아 해당 모집(recruitmentId)의 본인 지원 결과를 조회합니다.
-			지원 결과에는 면접 일정, 학생회 관리자 연락처, 현재 모집 단계 등이 포함
+			- 이름과 이메일을 받아 해당 모집(recruitmentId)의 본인 지원 결과를 조회합니다.
+			- 지원자가 서류 / 면접 결과에 대한 세부 내용 조회시, 필요한 필드들을 반환합니다.
+			- 지원 결과에는 면접 일정, 학생회 관리자 연락처, 현재 모집 단계 등이 포함
 			"""
 	)
 	public CommonResponse<RecruitmentResultResponse> getRecruitmentResult(
