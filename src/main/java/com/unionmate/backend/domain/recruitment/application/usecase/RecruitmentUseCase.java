@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.recruitment.application.usecase;
 
+import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.global.kafka.event.MailSendEvent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +55,7 @@ import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUp
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecruitmentUseCase {
@@ -62,6 +68,10 @@ public class RecruitmentUseCase {
 
 	private final RecruitmentSaveService recruitmentSaveService;
 	private final RecruitmentUpdateService recruitmentUpdateService;
+	private final KafkaTemplate<String, MailSendEvent> mailSendKafkaTemplate;
+
+	@Value("${kafka.topics.mail-request-result}")
+	private String mailRequestResultTopic;
 
 	@Transactional
 	public void createRecruitment(Long memberId, CreateRecruitmentRequest createRecruitmentRequest) {
@@ -168,6 +178,26 @@ public class RecruitmentUseCase {
 			.map(ItemResponse::from)
 			.toList();
 		return RecruitmentResponse.from(recruitment, items);
+	}
+
+	public void sendResultMail(Long recruitmentId) {
+		Recruitment recruitment = this.recruitmentGetService.getRecruitmentById(recruitmentId);
+		List<Application> applications = this.applicationGetService.getApplicationsByRecruitment(
+				recruitment);
+
+		applications.forEach(application -> {
+			try {
+				MailSendEvent mailSendEvent = MailSendEvent.builder()
+						.name(application.getName())
+						.email(application.getEmail())
+						.build();
+
+				this.mailSendKafkaTemplate.send(mailRequestResultTopic, application.getEmail(), mailSendEvent);
+			} catch (Exception e) {
+				log.error("메일 전송 topic 발행 실패: name={}, email={}",
+						application.getName(), application.getEmail(), e);
+			}
+		});
 	}
 
 	private Item createItem(Recruitment recruitment, CreateItemRequest createItemRequest) {

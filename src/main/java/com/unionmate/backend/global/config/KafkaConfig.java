@@ -4,6 +4,7 @@ import com.unionmate.backend.global.kafka.event.JwtGenerateEvent;
 import com.unionmate.backend.global.kafka.event.JwtTokenEvent;
 import com.unionmate.backend.global.kafka.event.JwtUserIdEvent;
 import com.unionmate.backend.global.kafka.event.JwtVerifyEvent;
+import com.unionmate.backend.global.kafka.event.MailSendEvent;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -17,6 +18,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
@@ -82,7 +84,6 @@ public class KafkaConfig {
     return new ReplyingKafkaTemplate<>(jwtVerifyProducerFactory, replyContainer);
   }
 
-  // JWT Generation Configuration
   @Bean
   public ProducerFactory<String, JwtGenerateEvent> jwtGenerateProducerFactory() {
     Map<String, Object> configProps = new HashMap<>();
@@ -125,5 +126,23 @@ public class KafkaConfig {
     replyContainer.getContainerProperties().setGroupId(consumerGroupId + "-jwt-generate-replies");
 
     return new ReplyingKafkaTemplate<>(jwtGenerateProducerFactory, replyContainer);
+  }
+
+  @Bean
+  public ProducerFactory<String, MailSendEvent> mailSendProducerFactory() {
+    Map<String, Object> configProps = new HashMap<>();
+    configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+    configProps.put(ProducerConfig.ACKS_CONFIG, "all");
+    configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
+    return new DefaultKafkaProducerFactory<>(configProps);
+  }
+
+  @Bean
+  public KafkaTemplate<String, MailSendEvent> mailSendKafkaTemplate(
+      ProducerFactory<String, MailSendEvent> mailSendProducerFactory
+  ) {
+    return new KafkaTemplate<>(mailSendProducerFactory);
   }
 }
