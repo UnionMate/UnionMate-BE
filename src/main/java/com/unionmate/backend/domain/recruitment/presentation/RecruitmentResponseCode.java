@@ -16,8 +16,8 @@ public enum RecruitmentResponseCode implements ResponseCodeInterface {
 	GET_RECRUITMENT(200, HttpStatus.OK, "지원서 양식 조회에 성공했습니다."),
 	DELETE_RECRUITMENT(200, HttpStatus.OK, "지원서 삭제에 성공했습니다."),
 	RECRUITMENT_TOGGLE_ACTIVATION(200, HttpStatus.OK, "학생회 모집 게시 상태 변경에 성공했습니다."),
-	SEND_RESULT_MAIL(204, HttpStatus.NO_CONTENT, "결과 메일 전송에 성공했습니다.")
-	;
+	SEND_RESULT_MAIL(204, HttpStatus.NO_CONTENT, "결과 메일 전송에 성공했습니다."),
+	GET_RECRUITMENT_RESULT(200, HttpStatus.OK, "모집 결과 조회에 성공했습니다.");
 
 	private final int code;
 	private final HttpStatus status;

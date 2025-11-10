@@ -1,6 +1,5 @@
 package com.unionmate.backend.domain.applicant.domain.service;
 
-import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStat
 import com.unionmate.backend.domain.applicant.domain.repository.ApplicationRepository;
 import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +36,18 @@ public class ApplicationGetService {
 
 	public Application getMyOneApplication(Long applicationId, String name, String email) {
 		return applicationRepository.findByIdAndNameAndEmail(applicationId, name, email)
+			.orElseThrow(ApplicationNotFoundException::new);
+	}
+
+	public Application getByRecruitmentIdAndNameAndEmailWithRecruitmentAndCouncil(
+		Long recruitmentId,
+		String applicantName,
+		String email
+	) {
+		return applicationRepository
+			.findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCase(
+				recruitmentId, applicantName, email
+			)
 			.orElseThrow(ApplicationNotFoundException::new);
 	}
 

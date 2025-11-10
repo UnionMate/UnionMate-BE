@@ -1,20 +1,12 @@
 package com.unionmate.backend.domain.recruitment.application.usecase;
 
-import com.unionmate.backend.domain.applicant.domain.entity.Application;
-import com.unionmate.backend.domain.applicant.domain.entity.embed.Stage;
-import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
-import com.unionmate.backend.domain.member.domain.entity.Member;
-import com.unionmate.backend.domain.member.domain.service.MemberGetService;
-import com.unionmate.backend.global.kafka.event.MailSendEvent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -22,13 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unionmate.backend.domain.applicant.application.exception.ItemNotFoundException;
 import com.unionmate.backend.domain.applicant.application.exception.ItemTypeMismatchException;
+import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.applicant.domain.entity.embed.Stage;
+import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
 import com.unionmate.backend.domain.applicant.domain.service.ApplicationGetService;
 import com.unionmate.backend.domain.council.domain.entity.Council;
 import com.unionmate.backend.domain.council.domain.entity.CouncilManager;
 import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetService;
 import com.unionmate.backend.domain.council.exception.DifferentCouncilException;
+import com.unionmate.backend.domain.member.domain.entity.Member;
+import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateItemRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.CreateRecruitmentRequest;
+import com.unionmate.backend.domain.recruitment.application.dto.request.RecruitmentResultCheckRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.SelectOptionRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.ToggleRecruitmentActivationRequest;
 import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateAnnouncementRequest;
@@ -41,6 +39,7 @@ import com.unionmate.backend.domain.recruitment.application.dto.request.UpdateTe
 import com.unionmate.backend.domain.recruitment.application.dto.response.GetRecruitmentsResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ItemResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResponse;
+import com.unionmate.backend.domain.recruitment.application.dto.response.RecruitmentResultResponse;
 import com.unionmate.backend.domain.recruitment.application.dto.response.ToggleRecruitmentActivationResponse;
 import com.unionmate.backend.domain.recruitment.application.exception.ActiveRecruitmentCannotChangeException;
 import com.unionmate.backend.domain.recruitment.application.exception.NotRecruitmentCouncilMemberException;
@@ -53,12 +52,14 @@ import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.TextItem;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentDeleteService;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUpdateService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentSaveService;
 import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentUpdateService;
-import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentFormUpdateService;
+import com.unionmate.backend.global.kafka.event.MailSendEvent;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -192,21 +193,21 @@ public class RecruitmentUseCase {
 		Member member = this.memberGetService.getMemberById(memberId);
 
 		CouncilManager councilManager = this.councilManagerGetService.getCouncilManagerByMemberId(
-				member.getId());
+			member.getId());
 
 		if (!recruitment.getCouncil().getId().equals(councilManager.getCouncil().getId())) {
 			throw new NotRecruitmentCouncilMemberException();
 		}
 
 		List<Application> applications = this.applicationGetService.getApplicationsByRecruitment(
-				recruitment);
+			recruitment);
 
 		applications.forEach(application -> {
 			try {
 				MailSendEvent mailSendEvent = MailSendEvent.builder()
-						.name(application.getName())
-						.email(application.getEmail())
-						.build();
+					.name(application.getName())
+					.email(application.getEmail())
+					.build();
 
 				this.mailSendKafkaTemplate.send(mailRequestResultTopic, application.getEmail(), mailSendEvent);
 
@@ -217,9 +218,28 @@ public class RecruitmentUseCase {
 				}
 			} catch (Exception e) {
 				log.error("메일 전송 topic 발행 실패: name={}, email={}",
-						application.getName(), application.getEmail(), e);
+					application.getName(), application.getEmail(), e);
 			}
 		});
+	}
+
+	@Transactional(readOnly = true)
+	public RecruitmentResultResponse getRecruitmentResult(Long recruitmentId,
+		RecruitmentResultCheckRequest recruitmentResultCheckRequest
+	) {
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+
+		Application application = applicationGetService
+			.getByRecruitmentIdAndNameAndEmailWithRecruitmentAndCouncil(
+				recruitmentId,
+				recruitmentResultCheckRequest.applicantName(),
+				recruitmentResultCheckRequest.email()
+			);
+
+		String councilManagerEmail = councilManagerGetService
+			.getPrimaryManagerEmailByCouncilId(recruitment.getCouncil().getId());
+
+		return RecruitmentResultResponse.from(application, councilManagerEmail);
 	}
 
 	private Item createItem(Recruitment recruitment, CreateItemRequest createItemRequest) {
