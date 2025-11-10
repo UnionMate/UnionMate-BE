@@ -1,7 +1,9 @@
 package com.unionmate.backend.global.config;
 
-import com.unionmate.backend.global.auth.dto.AuthRequest;
-import com.unionmate.backend.global.auth.dto.AuthResponse;
+import com.unionmate.backend.global.kafka.event.JwtGenerateEvent;
+import com.unionmate.backend.global.kafka.event.JwtTokenEvent;
+import com.unionmate.backend.global.kafka.event.JwtUserIdEvent;
+import com.unionmate.backend.global.kafka.event.JwtVerifyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -30,11 +32,14 @@ public class KafkaConfig {
   @Value("${kafka.consumer.group-id}")
   private String consumerGroupId;
 
-  @Value("${kafka.topics.auth-reply}")
-  private String replyTopic;
+  @Value("${kafka.topics.jwt-verify-reply}")
+  private String jwtVerifyReplyTopic;
+
+  @Value("${kafka.topics.jwt-generate-reply}")
+  private String jwtGenerateReplyTopic;
 
   @Bean
-  public ProducerFactory<String, AuthRequest> producerFactory() {
+  public ProducerFactory<String, JwtVerifyEvent> jwtVerifyProducerFactory() {
     Map<String, Object> configProps = new HashMap<>();
     configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -45,34 +50,80 @@ public class KafkaConfig {
   }
 
   @Bean
-  public ConsumerFactory<String, AuthResponse> consumerFactory() {
+  public ConsumerFactory<String, JwtUserIdEvent> jwtVerifyConsumerFactory() {
     Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-    props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.unionmate.backend.global.auth.dto");
-    props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, AuthResponse.class.getName());
+    props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.unionmate.backend.global.kafka.event");
+    props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+    props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, JwtUserIdEvent.class.getName());
     return new DefaultKafkaConsumerFactory<>(props);
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, AuthResponse> kafkaListenerContainerFactory() {
-    ConcurrentKafkaListenerContainerFactory<String, AuthResponse> factory =
+  public ConcurrentKafkaListenerContainerFactory<String, JwtUserIdEvent> jwtVerifyKafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, JwtUserIdEvent> factory =
         new ConcurrentKafkaListenerContainerFactory<>();
-    factory.setConsumerFactory(consumerFactory());
+    factory.setConsumerFactory(jwtVerifyConsumerFactory());
     return factory;
   }
 
   @Bean
-  public ReplyingKafkaTemplate<String, AuthRequest, AuthResponse> replyingKafkaTemplate(
-      ProducerFactory<String, AuthRequest> producerFactory,
-      ConcurrentKafkaListenerContainerFactory<String, AuthResponse> containerFactory
+  public ReplyingKafkaTemplate<String, JwtVerifyEvent, JwtUserIdEvent> jwtVerifyReplyingKafkaTemplate(
+      ProducerFactory<String, JwtVerifyEvent> jwtVerifyProducerFactory,
+      ConcurrentKafkaListenerContainerFactory<String, JwtUserIdEvent> jwtVerifyKafkaListenerContainerFactory
   ) {
-    ConcurrentMessageListenerContainer<String, AuthResponse> replyContainer =
-        containerFactory.createContainer(replyTopic);
-    replyContainer.getContainerProperties().setGroupId(consumerGroupId + "-replies");
+    ConcurrentMessageListenerContainer<String, JwtUserIdEvent> replyContainer =
+        jwtVerifyKafkaListenerContainerFactory.createContainer(jwtVerifyReplyTopic);
+    replyContainer.getContainerProperties().setGroupId(consumerGroupId + "-jwt-verify-replies");
 
-    return new ReplyingKafkaTemplate<>(producerFactory, replyContainer);
+    return new ReplyingKafkaTemplate<>(jwtVerifyProducerFactory, replyContainer);
+  }
+
+  // JWT Generation Configuration
+  @Bean
+  public ProducerFactory<String, JwtGenerateEvent> jwtGenerateProducerFactory() {
+    Map<String, Object> configProps = new HashMap<>();
+    configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+    configProps.put(ProducerConfig.ACKS_CONFIG, "all");
+    configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
+    return new DefaultKafkaProducerFactory<>(configProps);
+  }
+
+  @Bean
+  public ConsumerFactory<String, JwtTokenEvent> jwtGenerateConsumerFactory() {
+    Map<String, Object> props = new HashMap<>();
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+    props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.unionmate.backend.global.kafka.event");
+    props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+    props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, JwtTokenEvent.class.getName());
+    return new DefaultKafkaConsumerFactory<>(props);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, JwtTokenEvent> jwtGenerateKafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, JwtTokenEvent> factory =
+        new ConcurrentKafkaListenerContainerFactory<>();
+    factory.setConsumerFactory(jwtGenerateConsumerFactory());
+    return factory;
+  }
+
+  @Bean
+  public ReplyingKafkaTemplate<String, JwtGenerateEvent, JwtTokenEvent> jwtGenerateReplyingKafkaTemplate(
+      ProducerFactory<String, JwtGenerateEvent> jwtGenerateProducerFactory,
+      ConcurrentKafkaListenerContainerFactory<String, JwtTokenEvent> jwtGenerateKafkaListenerContainerFactory
+  ) {
+    ConcurrentMessageListenerContainer<String, JwtTokenEvent> replyContainer =
+        jwtGenerateKafkaListenerContainerFactory.createContainer(jwtGenerateReplyTopic);
+    replyContainer.getContainerProperties().setGroupId(consumerGroupId + "-jwt-generate-replies");
+
+    return new ReplyingKafkaTemplate<>(jwtGenerateProducerFactory, replyContainer);
   }
 }
