@@ -1,6 +1,5 @@
 package com.unionmate.backend.domain.applicant.domain.repository;
 
-import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow;
 import com.unionmate.backend.domain.council.domain.entity.Council;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
@@ -137,4 +137,14 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	@EntityGraph(attributePaths = {"recruitment", "recruitment.council", "answers"})
 	@Query("select a from Application a where a.id = :id")
 	Optional<Application> findByIdWithRecruitmentAndAnswers(@Param("id") Long id);
+
+	@EntityGraph(attributePaths = {
+		"recruitment",
+		"recruitment.council"
+	})
+	Optional<Application> findByRecruitmentIdAndNameIgnoreCaseAndEmailIgnoreCaseWithRecruitmentAndCouncil(
+		Long recruitmentId,
+		String name,
+		String email
+	);
 }

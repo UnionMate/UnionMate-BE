@@ -39,4 +39,12 @@ public class CouncilManagerGetService {
 	public List<CouncilManager> getAllCouncilMembers(Council council) {
 		return councilManagerRepository.findAllByCouncil(council);
 	}
+
+	public String getPrimaryManagerEmailByCouncilId(Long councilId) {
+		CouncilManager councilManager = councilManagerRepository
+			.findTopByCouncilIdOrderByIdAsc(councilId)
+			.orElse(null);
+		
+		return councilManager.getMember().getEmail();
+	}
 }
