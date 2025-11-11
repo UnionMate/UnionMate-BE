@@ -25,6 +25,7 @@ eureka:
     service-url:
       defaultZone: http://129.154.54.225:8761/eureka
   instance:
+    prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server-uri: ENC(6lfUGZZVKl08qafTAVBbmxCKLzYIrzLoYrE1JAfccv1nZ/eeE9XztA==)
