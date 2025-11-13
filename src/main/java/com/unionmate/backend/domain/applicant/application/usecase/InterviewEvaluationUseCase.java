@@ -83,7 +83,7 @@ public class InterviewEvaluationUseCase {
 	}
 
 	private void validateRecruitmentStatus(Application application) {
-		if (application.getRecruitment().getRecruitmentStatus() != RecruitmentStatus.INTERVIEW) {
+		if (application.getStage().recruitmentStatus() != RecruitmentStatus.INTERVIEW) {
 			throw new InvalidRecruitmentStatusException();
 		}
 	}
