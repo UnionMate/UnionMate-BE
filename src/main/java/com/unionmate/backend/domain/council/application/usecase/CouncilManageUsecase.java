@@ -124,7 +124,7 @@ public class CouncilManageUsecase {
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(
-				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus()
+				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus(), row.recruitmentStatus()
 			))
 			.toList();
 	}
@@ -141,7 +141,7 @@ public class CouncilManageUsecase {
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(
-				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus()
+				row.name(), row.email(), row.tel(), row.appliedAt(), row.evaluationStatus(), row.recruitmentStatus()
 			))
 			.toList();
 	}
