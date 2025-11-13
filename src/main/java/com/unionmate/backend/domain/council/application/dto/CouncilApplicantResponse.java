@@ -3,6 +3,7 @@ package com.unionmate.backend.domain.council.application.dto;
 import java.time.LocalDateTime;
 
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -21,11 +22,15 @@ public record CouncilApplicantResponse(
 	LocalDateTime appliedAt,
 
 	@Schema(description = "평가 상태", example = "FAILED", allowableValues = {"SUBMITTED", "FAILED", "PASSED"})
-	EvaluationStatus evaluationStatus
+	EvaluationStatus evaluationStatus,
+
+	@Schema(description = "지원서 상태", example = "INTERVIEW")
+	RecruitmentStatus recruitmentStatus
 ) {
 	public static CouncilApplicantResponse of(
-		String name, String email, String tel, LocalDateTime appliedAt, EvaluationStatus evaluationStatus
+		String name, String email, String tel, LocalDateTime appliedAt, EvaluationStatus evaluationStatus,
+		RecruitmentStatus recruitmentStatus
 	) {
-		return new CouncilApplicantResponse(name, email, tel, appliedAt, evaluationStatus);
+		return new CouncilApplicantResponse(name, email, tel, appliedAt, evaluationStatus, recruitmentStatus);
 	}
 }
