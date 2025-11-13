@@ -43,7 +43,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -56,7 +56,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -69,7 +69,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -82,7 +82,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -97,7 +97,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -110,7 +110,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
@@ -123,7 +123,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
-		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus
+		    a.name, a.email, a.tel, a.createdAt, a.stage.evaluationStatus, r.recruitmentStatus
 		)
 		from Application a
 		    join a.recruitment r
