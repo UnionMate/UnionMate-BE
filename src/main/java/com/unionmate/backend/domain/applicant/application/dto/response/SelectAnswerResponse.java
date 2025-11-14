@@ -1,6 +1,7 @@
 package com.unionmate.backend.domain.applicant.application.dto.response;
 
 import java.util.List;
+import java.util.Map;
 
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
@@ -23,18 +24,24 @@ public record SelectAnswerResponse(
 	@Schema(description = "중복 선택 가능 여부 ", example = "false")
 	boolean multiple,
 
-	@Schema(description = "답변한 선택지")
-	List<Long> selectedOptionIds
+	@Schema(description = "답변한 선택지 항목")
+	List<SelectOptionAnswerResponse> selectOptions
 ) implements ApplicationAnswerResponse {
 
-	public static SelectAnswerResponse from(SelectItem selectItem) {
+	public static SelectAnswerResponse from(SelectItem selectItem, Map<Long, String> selectOptionTitleById) {
+		List<Long> selectOptionIds = selectItem.getAnswer() == null ? List.of() : selectItem.getAnswer().answer();
+
+		List<SelectOptionAnswerResponse> selectOptions = selectOptionIds.stream()
+			.map(optionId -> new SelectOptionAnswerResponse(optionId, selectOptionTitleById.get(optionId)))
+			.toList();
+
 		return new SelectAnswerResponse(
 			ItemType.SELECT,
 			selectItem.getTitle(),
 			selectItem.getOrder(),
 			selectItem.getDescription(),
 			selectItem.isMultiple(),
-			selectItem.getAnswer() == null ? List.of() : selectItem.getAnswer().answer()
+			selectOptions
 		);
 	}
 }

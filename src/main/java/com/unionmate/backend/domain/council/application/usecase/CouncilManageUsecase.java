@@ -27,6 +27,8 @@ import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.entity.School;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.domain.member.domain.service.SchoolGetService;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
+import com.unionmate.backend.domain.recruitment.domain.service.RecruitmentGetService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +41,7 @@ public class CouncilManageUsecase {
 	private final ApplicationGetService applicationGetService;
 	private final CouncilManagerGetService councilManagerGetService;
 	private final CouncilGetService councilGetService;
+	private final RecruitmentGetService recruitmentGetService;
 
 	private final CouncilSaveService councilSaveService;
 	private final CouncilManagerSaveService councilManagerSaveService;
@@ -113,14 +116,16 @@ public class CouncilManageUsecase {
 	}
 
 	public List<CouncilApplicantResponse> getDocumentScreeningApplicants(
-		long memberId, long councilId, EvaluationStatus evaluationFilterOrNull
+		long memberId, long recruitmentId, EvaluationStatus evaluationFilterOrNull
 	) {
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
-		Council council = councilGetService.getCouncilById(councilId);
+		Council council = recruitment.getCouncil();
 		councilManager.validateBelongsToCouncil(councilManager, council);
 
 		List<CouncilApplicantQueryRow> rows =
-			applicationGetService.getDocumentScreeningApplicantsForCouncil(council, evaluationFilterOrNull);
+			applicationGetService.getDocumentScreeningApplicantsForRecruitment(recruitment, evaluationFilterOrNull);
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(
@@ -130,14 +135,16 @@ public class CouncilManageUsecase {
 	}
 
 	public List<CouncilApplicantResponse> getInterviewApplicants(
-		long memberId, long councilId, EvaluationStatus evaluationFilterOrNull
+		long memberId, long recruitmentId, EvaluationStatus evaluationFilterOrNull
 	) {
+		Recruitment recruitment = recruitmentGetService.getRecruitmentById(recruitmentId);
+
 		CouncilManager councilManager = councilManagerGetService.getCouncilManagerByMemberId(memberId);
-		Council council = councilGetService.getCouncilById(councilId);
+		Council council = recruitment.getCouncil();
 		councilManager.validateBelongsToCouncil(councilManager, council);
 
 		List<CouncilApplicantQueryRow> rows =
-			applicationGetService.getInterviewApplicantsForCouncil(council, evaluationFilterOrNull);
+			applicationGetService.getInterviewApplicantsForRecruitment(recruitment, evaluationFilterOrNull);
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(

@@ -3,12 +3,17 @@ package com.unionmate.backend.domain.applicant.application.dto.response;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
 import com.unionmate.backend.domain.applicant.domain.entity.embed.Interview;
 import com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -37,9 +42,11 @@ public record GetApplicationAdminResponse(
 	LocalDateTime submittedAt
 ) {
 	public static GetApplicationAdminResponse from(Application application) {
+		Map<Long, String> selectOptions = buildSelectOptionMap(application.getRecruitment());
+
 		List<ApplicationAnswerResponse> sortedAnswers = application.getAnswers().stream()
 			.sorted(Comparator.comparing(Item::getOrder))
-			.map(ApplicationAnswerResponse::from)
+			.map(item -> ApplicationAnswerResponse.from(item, selectOptions))
 			.toList();
 
 		InterviewResponse interviewResponse = from(application.getInterview());
@@ -117,5 +124,16 @@ public record GetApplicationAdminResponse(
 		@Schema(description = "면접 장소", example = "판교 플레이그라운드 5층 B-회의실")
 		String place
 	) {
+	}
+
+	private static Map<Long, String> buildSelectOptionMap(Recruitment recruitment) {
+		return recruitment.getItems().stream()
+			.filter(item -> item instanceof SelectItem)
+			.map(item -> (SelectItem)item)
+			.flatMap(selectItem -> selectItem.getSelectItemOptions().stream())
+			.collect(Collectors.toMap(
+				SelectItemOption::getId,
+				SelectItemOption::getTitle
+			));
 	}
 }

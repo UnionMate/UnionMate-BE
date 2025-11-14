@@ -51,33 +51,33 @@ public class ApplicationGetService {
 			.orElseThrow(ApplicationNotFoundException::new);
 	}
 
-	public List<CouncilApplicantQueryRow> getDocumentScreeningApplicantsForCouncil(
-		Council council, EvaluationStatus evaluationFilterOrNull
+	public List<CouncilApplicantQueryRow> getDocumentScreeningApplicantsForRecruitment(
+		Recruitment recruitment, EvaluationStatus evaluationFilterOrNull
 	) {
 		if (evaluationFilterOrNull == null) {
 
-			return applicationRepository.findDocumentListNoFilter(council);
+			return applicationRepository.findDocumentListNoFilter(recruitment);
 		}
 		return switch (evaluationFilterOrNull) {
-			case SUBMITTED -> applicationRepository.findDocumentListSubmitted(council);
-			case PASSED -> applicationRepository.findDocumentListPassed(council);
-			case FAILED -> applicationRepository.findDocumentListFailed(council);
-			default -> applicationRepository.findDocumentListNoFilter(council);
+			case SUBMITTED -> applicationRepository.findDocumentListSubmitted(recruitment);
+			case PASSED -> applicationRepository.findDocumentListPassed(recruitment);
+			case FAILED -> applicationRepository.findDocumentListFailed(recruitment);
+			default -> applicationRepository.findDocumentListNoFilter(recruitment);
 		};
 	}
 
-	public List<CouncilApplicantQueryRow> getInterviewApplicantsForCouncil(
-		Council council, EvaluationStatus evaluationFilterOrNull
+	public List<CouncilApplicantQueryRow> getInterviewApplicantsForRecruitment(
+		Recruitment recruitment, EvaluationStatus evaluationFilterOrNull
 	) {
 		if (evaluationFilterOrNull == null) {
 
-			return applicationRepository.findInterviewListNoFilter(council);
+			return applicationRepository.findInterviewListNoFilter(recruitment);
 		}
 		return switch (evaluationFilterOrNull) {
-			case SUBMITTED -> applicationRepository.findInterviewListSubmitted(council);
-			case PASSED -> applicationRepository.findInterviewListPassed(council);
-			case FAILED -> applicationRepository.findInterviewListFailed(council);
-			default -> applicationRepository.findInterviewListNoFilter(council);
+			case SUBMITTED -> applicationRepository.findInterviewListSubmitted(recruitment);
+			case PASSED -> applicationRepository.findInterviewListPassed(recruitment);
+			case FAILED -> applicationRepository.findInterviewListFailed(recruitment);
+			default -> applicationRepository.findInterviewListNoFilter(recruitment);
 		};
 	}
 
