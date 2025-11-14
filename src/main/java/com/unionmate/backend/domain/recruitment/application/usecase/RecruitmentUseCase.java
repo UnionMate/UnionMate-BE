@@ -207,6 +207,7 @@ public class RecruitmentUseCase {
 				MailSendEvent mailSendEvent = MailSendEvent.builder()
 					.name(application.getName())
 					.email(application.getEmail())
+					.recruitmentId(recruitmentId)
 					.build();
 
 				this.mailSendKafkaTemplate.send(mailRequestResultTopic, application.getEmail(), mailSendEvent);
