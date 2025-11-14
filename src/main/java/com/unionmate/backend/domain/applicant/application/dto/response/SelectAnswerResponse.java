@@ -24,10 +24,7 @@ public record SelectAnswerResponse(
 	@Schema(description = "중복 선택 가능 여부 ", example = "false")
 	boolean multiple,
 
-	@Schema(description = "답변한 선택지 id")
-	List<Long> selectedOptionIds,
-
-	@Schema(description = "답변한 선택지 이름")
+	@Schema(description = "답변한 선택지 항목")
 	List<SelectOptionAnswerResponse> selectOptions
 ) implements ApplicationAnswerResponse {
 
@@ -44,7 +41,6 @@ public record SelectAnswerResponse(
 			selectItem.getOrder(),
 			selectItem.getDescription(),
 			selectItem.isMultiple(),
-			selectOptionIds,
 			selectOptionTitles
 		);
 	}
