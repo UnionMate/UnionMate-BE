@@ -119,14 +119,14 @@ public class CouncilController {
 			- result=FAILED    : DOCUMENT_SCREENING + FAILED
 			"""
 	)
-	@GetMapping("/{councilId}/applications/document-screening")
+	@GetMapping("/{recruitmentId}/applications/document-screening")
 	public CommonResponse<List<CouncilApplicantResponse>> getDocumentScreeningApplicants(
 		@CurrentMemberId long memberId,
-		@PathVariable long councilId,
+		@PathVariable long recruitmentId,
 		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
 	) {
 		List<CouncilApplicantResponse> response = councilManageUsecase.getDocumentScreeningApplicants(memberId,
-			councilId, evaluationStatus);
+			recruitmentId, evaluationStatus);
 
 		return CommonResponse.success(COUNCIL_DOCUMENT_LIST, response);
 	}
@@ -140,13 +140,13 @@ public class CouncilController {
 			- result=FAILED    : FINAL + FAILED
 			"""
 	)
-	@GetMapping("/{councilId}/applications/interview")
+	@GetMapping("/{recruitmentId}/applications/interview")
 	public CommonResponse<List<CouncilApplicantResponse>> getInterviewApplicants(
 		@CurrentMemberId long memberId,
-		@PathVariable long councilId,
+		@PathVariable long recruitmentId,
 		@RequestParam(name = "result", required = false) EvaluationStatus evaluationStatus
 	) {
-		List<CouncilApplicantResponse> response = councilManageUsecase.getInterviewApplicants(memberId, councilId,
+		List<CouncilApplicantResponse> response = councilManageUsecase.getInterviewApplicants(memberId, recruitmentId,
 			evaluationStatus);
 
 		return CommonResponse.success(COUNCIL_INTERVIEW_LIST, response);

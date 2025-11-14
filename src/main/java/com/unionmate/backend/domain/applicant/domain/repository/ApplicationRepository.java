@@ -29,7 +29,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and (
 		        a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.DOCUMENT_SCREENING
 		        or (
@@ -39,7 +39,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		      )
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findDocumentListNoFilter(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findDocumentListNoFilter(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -47,12 +47,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.DOCUMENT_SCREENING
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.SUBMITTED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findDocumentListSubmitted(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findDocumentListSubmitted(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -60,12 +60,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.INTERVIEW
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.SUBMITTED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findDocumentListPassed(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findDocumentListPassed(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -73,12 +73,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.DOCUMENT_SCREENING
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.FAILED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findDocumentListFailed(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findDocumentListFailed(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -86,14 +86,14 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus in (
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.INTERVIEW,
 		      com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.FINAL
 		  )
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findInterviewListNoFilter(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findInterviewListNoFilter(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -101,12 +101,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.INTERVIEW
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.SUBMITTED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findInterviewListSubmitted(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findInterviewListSubmitted(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -114,12 +114,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.FINAL
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.PASSED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findInterviewListPassed(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findInterviewListPassed(@Param("recruitment") Recruitment recruitment);
 
 	@Query("""
 		select new com.unionmate.backend.domain.council.application.dto.CouncilApplicantQueryRow(
@@ -127,12 +127,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 		)
 		from Application a
 		    join a.recruitment r
-		where r.council = :council
+		where r = :recruitment
 		  and a.stage.recruitmentStatus = com.unionmate.backend.domain.recruitment.domain.entity.enums.RecruitmentStatus.FINAL
 		  and a.stage.evaluationStatus = com.unionmate.backend.domain.applicant.domain.entity.enums.EvaluationStatus.FAILED
 		order by a.id desc
 		""")
-	List<CouncilApplicantQueryRow> findInterviewListFailed(@Param("council") Council council);
+	List<CouncilApplicantQueryRow> findInterviewListFailed(@Param("recruitment") Recruitment recruitment);
 
 	@EntityGraph(attributePaths = {"recruitment", "recruitment.council", "answers"})
 	@Query("select a from Application a where a.id = :id")
