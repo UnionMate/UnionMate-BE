@@ -144,7 +144,7 @@ public class CouncilManageUsecase {
 		councilManager.validateBelongsToCouncil(councilManager, council);
 
 		List<CouncilApplicantQueryRow> rows =
-			applicationGetService.getInterviewApplicantsForRecruitment(dd recruitment, evaluationFilterOrNull);
+			applicationGetService.getInterviewApplicantsForRecruitment(recruitment, evaluationFilterOrNull);
 
 		return rows.stream()
 			.map(row -> CouncilApplicantResponse.of(
