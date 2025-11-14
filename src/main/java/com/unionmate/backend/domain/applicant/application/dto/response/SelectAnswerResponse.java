@@ -31,7 +31,7 @@ public record SelectAnswerResponse(
 	public static SelectAnswerResponse from(SelectItem selectItem, Map<Long, String> selectOptionTitleById) {
 		List<Long> selectOptionIds = selectItem.getAnswer() == null ? List.of() : selectItem.getAnswer().answer();
 
-		List<SelectOptionAnswerResponse> selectOptionTitles = selectOptionIds.stream()
+		List<SelectOptionAnswerResponse> selectOptions = selectOptionIds.stream()
 			.map(optionId -> new SelectOptionAnswerResponse(optionId, selectOptionTitleById.get(optionId)))
 			.toList();
 
@@ -41,7 +41,7 @@ public record SelectAnswerResponse(
 			selectItem.getOrder(),
 			selectItem.getDescription(),
 			selectItem.isMultiple(),
-			selectOptionTitles
+			selectOptions
 		);
 	}
 }

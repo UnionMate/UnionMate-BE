@@ -34,11 +34,11 @@ public record GetApplicationResponse(
 	List<ApplicationAnswerResponse> answers
 ) {
 	public static GetApplicationResponse from(Application application) {
-		Map<Long, String> selectOptionTitleById = buildSelectOptionTitleMap(application.getRecruitment());
+		Map<Long, String> selectOptions = buildSelectOptionMap(application.getRecruitment());
 
 		List<ApplicationAnswerResponse> answer = application.getAnswers().stream()
 			.sorted(Comparator.comparing(Item::getOrder))
-			.map(item -> ApplicationAnswerResponse.from(item, selectOptionTitleById))
+			.map(item -> ApplicationAnswerResponse.from(item, selectOptions))
 			.toList();
 
 		return new GetApplicationResponse(
@@ -52,7 +52,7 @@ public record GetApplicationResponse(
 		);
 	}
 
-	private static Map<Long, String> buildSelectOptionTitleMap(Recruitment recruitment) {
+	private static Map<Long, String> buildSelectOptionMap(Recruitment recruitment) {
 		return recruitment.getItems().stream()
 			.filter(item -> item instanceof SelectItem)
 			.map(item -> (SelectItem)item)
