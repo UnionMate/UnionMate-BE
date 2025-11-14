@@ -2,9 +2,14 @@ package com.unionmate.backend.domain.applicant.application.dto.response;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.unionmate.backend.domain.applicant.domain.entity.Application;
+import com.unionmate.backend.domain.recruitment.domain.entity.Recruitment;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.Item;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItem;
+import com.unionmate.backend.domain.recruitment.domain.entity.item.SelectItemOption;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -29,9 +34,11 @@ public record GetApplicationResponse(
 	List<ApplicationAnswerResponse> answers
 ) {
 	public static GetApplicationResponse from(Application application) {
+		Map<Long, String> selectOptionTitleById = buildSelectOptionTitleMap(application.getRecruitment());
+
 		List<ApplicationAnswerResponse> answer = application.getAnswers().stream()
 			.sorted(Comparator.comparing(Item::getOrder))
-			.map(ApplicationAnswerResponse::from)
+			.map(item -> ApplicationAnswerResponse.from(item, selectOptionTitleById))
 			.toList();
 
 		return new GetApplicationResponse(
@@ -43,5 +50,16 @@ public record GetApplicationResponse(
 			application.getTel(),
 			answer
 		);
+	}
+
+	private static Map<Long, String> buildSelectOptionTitleMap(Recruitment recruitment) {
+		return recruitment.getItems().stream()
+			.filter(item -> item instanceof SelectItem)
+			.map(item -> (SelectItem)item)
+			.flatMap(selectItem -> selectItem.getSelectItemOptions().stream())
+			.collect(Collectors.toMap(
+				SelectItemOption::getId,
+				SelectItemOption::getTitle
+			));
 	}
 }

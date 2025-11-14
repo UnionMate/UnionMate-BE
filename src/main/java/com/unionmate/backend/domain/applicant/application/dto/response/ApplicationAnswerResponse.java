@@ -1,5 +1,7 @@
 package com.unionmate.backend.domain.applicant.application.dto.response;
 
+import java.util.Map;
+
 import com.unionmate.backend.domain.recruitment.application.exception.ItemTypeNotExistException;
 import com.unionmate.backend.domain.recruitment.domain.entity.enums.ItemType;
 import com.unionmate.backend.domain.recruitment.domain.entity.item.CalendarItem;
@@ -17,10 +19,10 @@ public sealed interface ApplicationAnswerResponse
 
 	String description();
 
-	static ApplicationAnswerResponse from(Item item) {
+	static ApplicationAnswerResponse from(Item item, Map<Long, String> selectOptionTitleById) {
 		return switch (item) {
 			case TextItem textItem -> TextAnswerResponse.from(textItem);
-			case SelectItem selectItem -> SelectAnswerResponse.from(selectItem);
+			case SelectItem selectItem -> SelectAnswerResponse.from(selectItem, selectOptionTitleById);
 			case CalendarItem calendarItem -> CalendarAnswerResponse.from(calendarItem);
 			default -> throw new ItemTypeNotExistException();
 		};
