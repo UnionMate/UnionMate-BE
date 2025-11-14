@@ -2,6 +2,7 @@ package com.unionmate.backend.global.kafka.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,8 @@ public class MailSendEvent {
   @JsonProperty("email")
   @NotEmpty
   private String email;
+
+  @JsonProperty("recruitmentId")
+  @NotNull
+  private Long recruitmentId;
 }
