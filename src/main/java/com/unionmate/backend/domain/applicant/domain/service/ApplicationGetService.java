@@ -66,7 +66,7 @@ public class ApplicationGetService {
 		};
 	}
 
-	public List<CouncilApplicantQueryRow> getInterviewApplicantsForCouncil(
+	public List<CouncilApplicantQueryRow> getInterviewApplicantsForRecruitment(
 		Recruitment recruitment, EvaluationStatus evaluationFilterOrNull
 	) {
 		if (evaluationFilterOrNull == null) {
