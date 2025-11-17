@@ -11,6 +11,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 
+cert-server-uri: https://gp-cert-service.soyesenna.com
 server-uri: http://localhost
 
 jwt:
