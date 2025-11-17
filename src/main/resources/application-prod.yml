@@ -28,6 +28,7 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+cert-server-uri: ENC(Fa5dH8Atsi7Row6VPxZOKdWtXbdScLHa4ixdPPmUrbSzu00MDACHMASFY8xJDsz1)
 server-uri: ENC(6lfUGZZVKl08qafTAVBbmxCKLzYIrzLoYrE1JAfccv1nZ/eeE9XztA==)
 
 jwt:

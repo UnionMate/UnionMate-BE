@@ -2,10 +2,13 @@ package com.unionmate.backend.domain.auth.application.usecase;
 
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerLoginRequest;
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerRegisterRequest;
+import com.unionmate.backend.domain.auth.application.dto.response.ManagerEmailAuthResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerLoginResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerRegisterResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ReissueResponse;
+import com.unionmate.backend.domain.auth.application.dto.transfer.DomainCertRequest;
 import com.unionmate.backend.domain.auth.domain.service.AuthService;
+import com.unionmate.backend.domain.auth.exception.EmailAuthorizeFailException;
 import com.unionmate.backend.domain.auth.exception.EmailDuplicateException;
 import com.unionmate.backend.domain.auth.exception.PasswordNotMatchException;
 import com.unionmate.backend.domain.auth.exception.TokenIssuanceException;
@@ -14,8 +17,10 @@ import com.unionmate.backend.domain.council.domain.service.CouncilManagerGetServ
 import com.unionmate.backend.domain.member.domain.entity.Member;
 import com.unionmate.backend.domain.member.domain.service.MemberGetService;
 import com.unionmate.backend.domain.member.domain.service.MemberSaveService;
+import com.unionmate.backend.global.apis.ApiData;
 import com.unionmate.backend.global.kafka.event.JwtGenerateEvent;
 import com.unionmate.backend.global.kafka.event.JwtTokenEvent;
+import java.net.URI;
 import java.time.Duration;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,7 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
@@ -37,6 +43,7 @@ public class AuthUseCase {
 	private final MemberSaveService memberSaveService;
 	private final CouncilManagerGetService councilManagerGetService;
 	private final ReplyingKafkaTemplate<String, JwtGenerateEvent, JwtTokenEvent> jwtGenerateReplyingKafkaTemplate;
+	private final RestClient certRestClient;
 
 	@Value("${kafka.topics.jwt-generate-request}")
 	private String jwtGenerateRequestTopic;
@@ -49,8 +56,6 @@ public class AuthUseCase {
 		if (this.memberGetService.existsByEmail(managerRegisterRequest.email())) {
 			throw new EmailDuplicateException();
 		}
-
-		// TODO: 학교 이메일 인증
 
 		String encodePassword = this.authService.encodePassword(managerRegisterRequest.password());
 
@@ -91,6 +96,20 @@ public class AuthUseCase {
 		JwtTokenEvent tokenEvent = issueTokens(member);
 
 		return ReissueResponse.of(tokenEvent.getAccessToken(), tokenEvent.getRefreshToken());
+	}
+
+	public ManagerEmailAuthResponse authorizeEmail(String univName, String email) {
+		ApiData body = this.certRestClient.post()
+				.uri("/api/cert/univ")
+				.body(new DomainCertRequest(univName, email))
+				.retrieve()
+				.body(ApiData.class);
+
+		if (body == null) {
+			throw new EmailAuthorizeFailException();
+		}
+
+		return ManagerEmailAuthResponse.from((Boolean) body.getData());
 	}
 
 	private JwtTokenEvent issueTokens(Member member) {

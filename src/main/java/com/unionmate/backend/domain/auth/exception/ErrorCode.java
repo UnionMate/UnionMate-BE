@@ -10,6 +10,7 @@ public enum ErrorCode implements ErrorInfo {
   EXIST_EMAIL("이미 존재하는 이메일입니다", 3000),
   PASSWORD_NOT_MATCH("비밀번호가 일치하지 않습니다", 3001),
   TOKEN_ISSUANCE_FAILED("토큰 발급에 실패했습니다", 3002),
+  EMAIL_AUTHORIZE_FAIL("학교 메일 인증에 실패했습니다", 3003),
   ;
 
   private final String message;

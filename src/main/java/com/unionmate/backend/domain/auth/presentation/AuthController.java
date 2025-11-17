@@ -2,8 +2,10 @@ package com.unionmate.backend.domain.auth.presentation;
 
 import static com.unionmate.backend.domain.auth.presentation.AuthResponseCode.*;
 
+import com.unionmate.backend.domain.auth.application.dto.request.ManagerEmailAuthRequest;
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerLoginRequest;
 import com.unionmate.backend.domain.auth.application.dto.request.ManagerRegisterRequest;
+import com.unionmate.backend.domain.auth.application.dto.response.ManagerEmailAuthResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerLoginResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ManagerRegisterResponse;
 import com.unionmate.backend.domain.auth.application.dto.response.ReissueResponse;
@@ -12,6 +14,7 @@ import com.unionmate.backend.global.auth.annotation.CurrentMemberId;
 import com.unionmate.backend.global.response.CommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +54,16 @@ public class AuthController {
     return CommonResponse.success(
         REISSUE_SUCCESS,
         this.authUseCase.reissue(memberId)
+    );
+  }
+
+  @PostMapping("/manager/email")
+  public CommonResponse<ManagerEmailAuthResponse> postAuthEmail(
+      @RequestBody @Valid ManagerEmailAuthRequest request
+  ) {
+    return CommonResponse.success(
+        EMAIL_AUTHORIZE_SUCCESS,
+        this.authUseCase.authorizeEmail(request.univName(), request.email())
     );
   }
 }

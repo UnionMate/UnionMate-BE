@@ -26,6 +26,7 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+cert-server-uri: https://gp-cert-service.soyesenna.com
 server-uri: http://localhost:8000
 
 jwt:
